@@ -34,10 +34,9 @@ public class AppSecurityConfiguration {
     }
 
     private void doAuthorizeExchange(AuthorizeExchangeSpec authorizeExchangeSpec) {
-        authorizeExchangeSpec
-                .pathMatchers("/").hasRole("USER")
-                .pathMatchers("/actuator/**").hasRole("ADMIN")
-                .anyExchange().authenticated();
+        authorizeExchangeSpec.pathMatchers("/").hasRole("USER")
+                             .pathMatchers("/actuator/**").hasRole("ADMIN")
+                             .anyExchange().authenticated();
     }
 
     @Bean
