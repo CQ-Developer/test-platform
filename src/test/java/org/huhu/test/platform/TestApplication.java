@@ -17,11 +17,12 @@ class TestApplication {
     @Test
     @WithMockUser(roles = "ADMIN")
     void test() {
-        webTestClient.get()
-                     .uri("/actuator/health")
-                     .exchange()
-                     .expectStatus().is2xxSuccessful()
-                     .expectBody().jsonPath("$.status").isEqualTo("UP");
+        webTestClient
+                .get()
+                .uri("/actuator/health")
+                .exchange()
+                .expectStatus().is2xxSuccessful()
+                .expectBody().jsonPath("$.status").isEqualTo("UP");
     }
 
 }

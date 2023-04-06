@@ -28,7 +28,8 @@ public class TestPlatformSecurityConfiguration {
                 .and()
                 .authorizeExchange()
                 .pathMatchers("/actuator/**").hasRole("ADMIN")
-                .anyExchange().authenticated()
+                .pathMatchers("/rest/user/**").hasAnyRole("DEV", "ADMIN")
+                .anyExchange().permitAll()
                 .and()
                 .build();
     }

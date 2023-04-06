@@ -18,9 +18,11 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+	implementation("com.fasterxml.uuid:java-uuid-generator:4.1.0")
 	runtimeOnly("com.github.jasync-sql:jasync-r2dbc-mysql:2.1.23")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
