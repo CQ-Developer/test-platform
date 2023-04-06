@@ -9,7 +9,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @SpringBootTest
 @AutoConfigureWebTestClient
-class TestApp {
+class TestApplication {
 
     @Autowired
     WebTestClient webTestClient;

@@ -1,2 +1,7 @@
 server:
   port: 8888
+spring:
+  r2dbc:
+    url: r2dbc:mysql://172.22.181.26:3306/test-platform
+    username: root
+    password: root123
