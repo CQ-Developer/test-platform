@@ -1,0 +1,19 @@
+create table t_test_user (
+  user_id bigint not null,
+  username varchar(64) not null,
+  password varchar(128) not null,
+  enabled boolean default 1,
+  locked boolean default 0,
+  register_time datetime default current_timestamp,
+  expired_time datetime,
+  primary key (user_id),
+  unique key (username)
+);
+
+create table t_test_user_role (
+  role_id bigint not null,
+  user_id bigint not null,
+  user_role varchar(64) not null,
+  primary key (role_id),
+  unique key (user_id)
+);
