@@ -1,43 +1,25 @@
-package org.huhu.test.platform.model.table;
+package org.huhu.test.platform.model.response;
 
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Table("t_test_user")
-public class TestPlatformUser {
-
-    @Column("user_id")
-    private Long userId;
+public class QueryTestPlatformUserResponse {
 
     private String username;
 
-    private String password;
+    private List<String> userRoles;
 
     private Boolean enabled;
 
     private Boolean locked;
 
-    @Column("register_time")
+    @JsonFormat(pattern = "yyyy-MM-hh HH:mm:ss")
     private LocalDateTime registerTime;
 
-    @Column("expired_time")
+    @JsonFormat(pattern = "yyyy-MM-hh HH:mm:ss")
     private LocalDateTime expiredTime;
-
-    public TestPlatformUser() {}
-
-    public TestPlatformUser(String username) {
-        this.username = username;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
     public String getUsername() {
         return username;
@@ -47,12 +29,12 @@ public class TestPlatformUser {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public List<String> getUserRoles() {
+        return userRoles;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUserRoles(List<String> userRoles) {
+        this.userRoles = userRoles;
     }
 
     public Boolean getEnabled() {

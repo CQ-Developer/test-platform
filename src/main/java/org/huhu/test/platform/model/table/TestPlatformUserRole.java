@@ -15,6 +15,12 @@ public class TestPlatformUserRole {
     @Column("user_role")
     private String userRole;
 
+    public TestPlatformUserRole() {}
+
+    public TestPlatformUserRole(Long userId) {
+        this.userId = userId;
+    }
+
     public Long getRoleId() {
         return roleId;
     }

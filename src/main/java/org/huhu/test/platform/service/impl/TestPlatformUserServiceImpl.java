@@ -3,6 +3,8 @@ package org.huhu.test.platform.service.impl;
 import com.fasterxml.uuid.Generators;
 import org.huhu.test.platform.constant.TestPlatformRole;
 import org.huhu.test.platform.model.request.AddTestPlatformUserRequest;
+import org.huhu.test.platform.model.response.QueryTestPlatformUserResponse;
+import org.huhu.test.platform.model.response.QueryTestPlatformUsersResponse;
 import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
 import org.huhu.test.platform.repository.TestPlatformUserRepository;
@@ -18,21 +20,54 @@ import java.util.stream.Stream;
 @Service
 public class TestPlatformUserServiceImpl implements TestPlatformUserService {
 
-    private final TestPlatformUserRepository testPlatformUserRepository;
+    private final TestPlatformUserRepository userRepository;
 
-    private final TestPlatformUserRoleRepository testPlatformUserRoleRepository;
+    private final TestPlatformUserRoleRepository userRoleRepository;
 
-    public TestPlatformUserServiceImpl(TestPlatformUserRepository testPlatformUserRepository,
-            TestPlatformUserRoleRepository testPlatformUserRoleRepository) {
-        this.testPlatformUserRepository = testPlatformUserRepository;
-        this.testPlatformUserRoleRepository = testPlatformUserRoleRepository;
+    public TestPlatformUserServiceImpl(TestPlatformUserRepository userRepository,
+            TestPlatformUserRoleRepository userRoleRepository) {
+        this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @Override
-    public Mono<TestPlatformUser> queryTestPlatformUser(String username) {
-        TestPlatformUser example = new TestPlatformUser();
-        example.setUsername(username);
-        return testPlatformUserRepository.findOne(Example.of(example));
+    public Mono<QueryTestPlatformUserResponse> queryTestPlatformUser(String username) {
+        return userRepository
+                .findOne(Example.of(new TestPlatformUser(username)))
+                .flatMap(user -> userRoleRepository
+                        .findAll(Example.of(new TestPlatformUserRole(user.getUserId())))
+                        .map(TestPlatformUserRole::getUserRole)
+                        .collectList()
+                        .map(userRoles -> {
+                            QueryTestPlatformUserResponse response = new QueryTestPlatformUserResponse();
+                            response.setUsername(user.getUsername());
+                            response.setUserRoles(userRoles);
+                            response.setEnabled(user.getEnabled());
+                            response.setLocked(user.getLocked());
+                            response.setRegisterTime(user.getRegisterTime());
+                            response.setExpiredTime(user.getExpiredTime());
+                            return response;
+                        }));
+    }
+
+    @Override
+    public Flux<QueryTestPlatformUsersResponse> queryTestPlatformUsers() {
+        return userRepository
+                .findAll()
+                .flatMap(user -> {
+                    TestPlatformUserRole userRole = new TestPlatformUserRole();
+                    userRole.setUserId(user.getUserId());
+                    return userRoleRepository
+                            .findAll(Example.of(userRole))
+                            .map(TestPlatformUserRole::getUserRole)
+                            .collectList()
+                            .map(userRoles -> {
+                                QueryTestPlatformUsersResponse response = new QueryTestPlatformUsersResponse();
+                                response.setName(user.getUsername());
+                                response.setRoles(userRoles);
+                                return response;
+                            });
+                });
     }
 
     @Override
@@ -43,7 +78,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
         testPlatformUser.setUserId(userId);
         testPlatformUser.setUsername(request.getUsername());
         testPlatformUser.setPassword(request.getPassword());
-        Mono<TestPlatformUser> saveUser = testPlatformUserRepository.save(testPlatformUser);
+        Mono<TestPlatformUser> saveUser = userRepository.save(testPlatformUser);
 
         Stream<TestPlatformUserRole> roleStream = request
                 .getRoles()
@@ -54,7 +89,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                     testPlatformUserRole.setUserRole(TestPlatformRole.getRoleName(role));
                     return testPlatformUserRole;
                 });
-        Flux<TestPlatformUserRole> saveUserRoles = testPlatformUserRoleRepository.saveAll(Flux.fromStream(roleStream));
+        Flux<TestPlatformUserRole> saveUserRoles = userRoleRepository.saveAll(Flux.fromStream(roleStream));
 
         return saveUser.thenMany(saveUserRoles).then();
     }

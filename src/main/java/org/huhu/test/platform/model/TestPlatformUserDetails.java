@@ -44,17 +44,17 @@ public class TestPlatformUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return testPlatformUser.getExpiredTime().isBefore(LocalDateTime.now());
+        return testPlatformUser.getExpiredTime().isAfter(LocalDateTime.now());
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return testPlatformUser.getLocked();
+        return !testPlatformUser.getLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return testPlatformUser.getExpiredTime().isBefore(LocalDateTime.now());
+        return testPlatformUser.getExpiredTime().isAfter(LocalDateTime.now());
     }
 
     @Override
