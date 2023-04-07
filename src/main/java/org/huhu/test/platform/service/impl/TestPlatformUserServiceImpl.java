@@ -73,19 +73,19 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     @Override
     public Mono<Void> saveTestPlatformUser(AddTestPlatformUserRequest request) {
         long userId = Generators.timeBasedGenerator().generate().timestamp();
-
-        TestPlatformUser testPlatformUser = new TestPlatformUser();
+        TestPlatformUser testPlatformUser = new TestPlatformUser(request.getUsername());
         testPlatformUser.setUserId(userId);
-        testPlatformUser.setUsername(request.getUsername());
         testPlatformUser.setPassword(request.getPassword());
+        request.getEnabled().ifPresent(testPlatformUser::setEnabled);
+        request.getLocked().ifPresent(testPlatformUser::setLocked);
+        request.getExpiredTime().ifPresent(testPlatformUser::setExpiredTime);
         Mono<TestPlatformUser> saveUser = userRepository.save(testPlatformUser);
 
         Stream<TestPlatformUserRole> roleStream = request
                 .getRoles()
                 .stream()
                 .map(role -> {
-                    TestPlatformUserRole testPlatformUserRole = new TestPlatformUserRole();
-                    testPlatformUserRole.setUserId(userId);
+                    TestPlatformUserRole testPlatformUserRole = new TestPlatformUserRole(userId);
                     testPlatformUserRole.setUserRole(TestPlatformRole.getRoleName(role));
                     return testPlatformUserRole;
                 });
