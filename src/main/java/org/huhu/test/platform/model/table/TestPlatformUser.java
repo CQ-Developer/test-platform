@@ -1,6 +1,6 @@
 package org.huhu.test.platform.model.table;
 
-import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
@@ -8,19 +8,21 @@ import java.time.LocalDateTime;
 @Table("t_test_user")
 public class TestPlatformUser {
 
-    @Id
+    @Column("user_id")
     private Long userId;
 
     private String username;
 
-    private String passWord;
+    private String password;
 
     private Boolean enabled;
 
     private Boolean locked;
 
+    @Column("register_time")
     private LocalDateTime registerTime;
 
+    @Column("expired_time")
     private LocalDateTime expiredTime;
 
     public Long getUserId() {
@@ -39,12 +41,12 @@ public class TestPlatformUser {
         this.username = username;
     }
 
-    public String getPassWord() {
-        return passWord;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Boolean getEnabled() {

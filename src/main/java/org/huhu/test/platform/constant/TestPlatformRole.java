@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum TestPlatformRole {
 
-    USER(0, "user"),
+    USER(0, "USER"),
 
-    DEV(1, "dev"),
+    DEV(1, "DEV"),
 
-    ADMIN(2, "admin");
+    ADMIN(2, "ADMIN");
 
     @JsonValue
     final int id;

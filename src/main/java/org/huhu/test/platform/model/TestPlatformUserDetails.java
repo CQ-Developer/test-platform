@@ -34,7 +34,7 @@ public class TestPlatformUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return testPlatformUser.getPassWord();
+        return testPlatformUser.getPassword();
     }
 
     @Override

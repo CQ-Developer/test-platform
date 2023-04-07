@@ -42,7 +42,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
         TestPlatformUser testPlatformUser = new TestPlatformUser();
         testPlatformUser.setUserId(userId);
         testPlatformUser.setUsername(request.getUsername());
-        testPlatformUser.setPassWord(request.getPassword());
+        testPlatformUser.setPassword(request.getPassword());
         Mono<TestPlatformUser> saveUser = testPlatformUserRepository.save(testPlatformUser);
 
         Stream<TestPlatformUserRole> roleStream = request
