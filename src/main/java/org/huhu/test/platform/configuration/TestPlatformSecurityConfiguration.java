@@ -31,6 +31,8 @@ public class TestPlatformSecurityConfiguration {
                 .pathMatchers("/management/**").hasAnyRole("DEV", "ADMIN")
                 .anyExchange().permitAll()
                 .and()
+                // todo csrf开发阶段关闭
+                .csrf().disable()
                 .build();
     }
 
