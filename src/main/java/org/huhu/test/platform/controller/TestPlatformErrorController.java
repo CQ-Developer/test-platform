@@ -23,7 +23,7 @@ public class TestPlatformErrorController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<TestPlatformErrorResponse> handleException(Exception exception) {
-        logger.error("server unknow error.", exception);
+        logger.error("server unknown error.", exception);
         return ResponseEntity.ok(TestPlatformErrorResponse.serverError());
     }
 

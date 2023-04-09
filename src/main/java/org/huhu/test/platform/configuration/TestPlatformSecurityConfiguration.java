@@ -1,5 +1,6 @@
 package org.huhu.test.platform.configuration;
 
+import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -15,6 +16,9 @@ import static org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.B
 
 /**
  * 安全配置
+ *
+ * <p>spring boot actuator 配置参见 {@link EndpointRequest#toAnyEndpoint()},
+ * <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints.security">官网地址</a></p>
  *
  * @see WebFilterChainProxy
  */

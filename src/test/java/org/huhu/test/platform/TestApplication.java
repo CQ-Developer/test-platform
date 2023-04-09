@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+@WithMockUser(roles = {"DEV", "ADMIN"})
 @SpringBootTest
 @AutoConfigureWebTestClient
 class TestApplication {
@@ -15,14 +16,15 @@ class TestApplication {
     WebTestClient webTestClient;
 
     @Test
-    @WithMockUser(roles = "ADMIN")
     void test() {
         webTestClient
                 .get()
                 .uri("/actuator/health")
                 .exchange()
-                .expectStatus().is2xxSuccessful()
-                .expectBody().jsonPath("$.status").isEqualTo("UP");
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.status").exists()
+                .jsonPath("$.status").isEqualTo("UP");
     }
 
 }
