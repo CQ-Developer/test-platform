@@ -1,4 +1,4 @@
-package org.huhu.test.platform.model;
+package org.huhu.test.platform.model.security;
 
 import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;

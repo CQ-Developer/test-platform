@@ -1,6 +1,6 @@
 package org.huhu.test.platform.service.impl;
 
-import org.huhu.test.platform.model.TestPlatformUserDetails;
+import org.huhu.test.platform.model.security.TestPlatformUserDetails;
 import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
 import org.huhu.test.platform.repository.TestPlatformUserRepository;

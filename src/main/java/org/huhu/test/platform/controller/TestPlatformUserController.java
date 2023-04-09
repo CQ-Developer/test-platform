@@ -5,12 +5,7 @@ import org.huhu.test.platform.model.response.QueryTestPlatformUserResponse;
 import org.huhu.test.platform.model.response.QueryTestPlatformUsersResponse;
 import org.huhu.test.platform.service.TestPlatformUserService;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -24,15 +19,15 @@ public class TestPlatformUserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user/{username}")
-    public Mono<QueryTestPlatformUserResponse> queryUser(
-            @PathVariable("username") String username) {
-        return userService.queryTestPlatformUser(username);
+    @GetMapping("/users")
+    public Flux<QueryTestPlatformUsersResponse> queryTestPlatformUsers() {
+        return userService.queryTestPlatformUsers();
     }
 
-    @GetMapping("/users")
-    public Flux<QueryTestPlatformUsersResponse> queryUsers() {
-        return userService.queryTestPlatformUsers();
+    @GetMapping("/user/{username}")
+    public Mono<QueryTestPlatformUserResponse> queryTestPlatformUser(
+            @PathVariable("username") String username) {
+        return userService.queryTestPlatformUser(username);
     }
 
     @PutMapping("/user")

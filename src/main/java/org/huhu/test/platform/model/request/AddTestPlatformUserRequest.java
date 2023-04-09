@@ -18,7 +18,7 @@ public class AddTestPlatformUserRequest {
     private String username;
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z]\\w{5,17}$")
+    @Pattern(regexp = "^\\w{6,18}$")
     private String password;
 
     @NotNull
