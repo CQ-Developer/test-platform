@@ -1,6 +1,8 @@
 package org.huhu.test.platform.service.impl;
 
+import org.huhu.test.platform.model.request.UpdateTestPlatformGlobalVariableRequest;
 import org.huhu.test.platform.model.response.QueryTestPlatformGlobalVariableResponse;
+import org.huhu.test.platform.model.response.UpdateTestPlatformGlobalVariableResponse;
 import org.huhu.test.platform.model.table.TestPlatformGlobalVariable;
 import org.huhu.test.platform.repository.TestPlatformGlobalVariableRepository;
 import org.huhu.test.platform.service.TestPlatformGlobalVariableService;
@@ -9,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobalVariableService {
@@ -28,6 +31,25 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
                 .map(this::buildQueryResponse);
     }
 
+    @Override
+    public Mono<Void> deleteTestPlatformGlobalVariable(Long variableId) {
+        logger.info("delete global variable {}", variableId);
+        return variableRepository.deleteById(variableId);
+    }
+
+    @Override
+    public Mono<UpdateTestPlatformGlobalVariableResponse> updateTestPlatformGlobalVariable(UpdateTestPlatformGlobalVariableRequest request) {
+        TestPlatformGlobalVariable globalVariable = new TestPlatformGlobalVariable();
+        globalVariable.setVariableId(request.getVariableId());
+        globalVariable.setVariableName(request.getVariableName());
+        globalVariable.setVariableValue(request.getVariableValue());
+        globalVariable.setVariableDescription(request.getVariableDescription());
+        return variableRepository
+                .save(globalVariable)
+                .doOnNext(item -> logger.info("update global variable {}", item.getVariableId()))
+                .map(this::buildUpdateResponse);
+    }
+
     private QueryTestPlatformGlobalVariableResponse buildQueryResponse(TestPlatformGlobalVariable globalVariable) {
         QueryTestPlatformGlobalVariableResponse response = new QueryTestPlatformGlobalVariableResponse();
         response.setVariableId(globalVariable.getVariableId());
@@ -37,14 +59,13 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
         return response;
     }
 
-    @Override
-    public Flux<Void> deleteTestPlatformGlobalVariable(Long userId, Long variableId) {
-        return variableRepository
-                .findAll(Example.of(new TestPlatformGlobalVariable(userId)))
-                .map(TestPlatformGlobalVariable::getVariableId)
-                .filter(variableId::equals)
-                .doOnNext(id -> logger.info("delete global variable {}", id))
-                .flatMap(variableRepository::deleteById);
+    private UpdateTestPlatformGlobalVariableResponse buildUpdateResponse(TestPlatformGlobalVariable globalVariable) {
+        UpdateTestPlatformGlobalVariableResponse response = new UpdateTestPlatformGlobalVariableResponse();
+        response.setVariableId(response.getVariableId());
+        response.setVariableName(globalVariable.getVariableName());
+        response.setVariableValue(globalVariable.getVariableValue());
+        response.setVariableDescription(globalVariable.getVariableDescription());
+        return response;
     }
 
 }
