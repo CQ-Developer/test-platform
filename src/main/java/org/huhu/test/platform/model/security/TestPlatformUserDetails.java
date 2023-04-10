@@ -22,6 +22,10 @@ public class TestPlatformUserDetails implements UserDetails {
         this.testPlatformUserRoles = testPlatformUserRoles;
     }
 
+    public Long getUserId() {
+        return testPlatformUser.getUserId();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return testPlatformUserRoles

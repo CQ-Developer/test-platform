@@ -87,7 +87,7 @@ class TestUserController {
     void testAddTestPlatformUser() {
         doReturn(Mono.empty())
                 .when(userService)
-                .saveTestPlatformUser(any(AddTestPlatformUserRequest.class));
+                .createTestPlatformUser(any(AddTestPlatformUserRequest.class));
 
         AddTestPlatformUserRequest request = new AddTestPlatformUserRequest();
         request.setUsername("Jack");

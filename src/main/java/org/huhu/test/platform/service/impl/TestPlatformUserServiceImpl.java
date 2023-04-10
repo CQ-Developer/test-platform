@@ -71,7 +71,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     }
 
     @Override
-    public Mono<Void> saveTestPlatformUser(AddTestPlatformUserRequest request) {
+    public Mono<Void> createTestPlatformUser(AddTestPlatformUserRequest request) {
         long userId = Generators.timeBasedGenerator().generate().timestamp();
         TestPlatformUser testPlatformUser = new TestPlatformUser(request.getUsername());
         testPlatformUser.setUserId(userId);

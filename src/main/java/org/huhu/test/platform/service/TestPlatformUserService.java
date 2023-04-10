@@ -8,10 +8,23 @@ import reactor.core.publisher.Mono;
 
 public interface TestPlatformUserService {
 
-    Mono<QueryTestPlatformUserResponse> queryTestPlatformUser(String username);
-
+    /**
+     * 查询测试平台所有用户
+     */
     Flux<QueryTestPlatformUsersResponse> queryTestPlatformUsers();
 
-    Mono<Void> saveTestPlatformUser(AddTestPlatformUserRequest request);
+    /**
+     * 查询测试平台用户详情
+     *
+     * @param username 用户名
+     */
+    Mono<QueryTestPlatformUserResponse> queryTestPlatformUser(String username);
+
+    /**
+     * 创建测试平台用户
+     *
+     * @param request 请求体
+     */
+    Mono<Void> createTestPlatformUser(AddTestPlatformUserRequest request);
 
 }

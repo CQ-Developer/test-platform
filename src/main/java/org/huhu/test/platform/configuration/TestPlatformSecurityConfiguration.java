@@ -29,6 +29,7 @@ public class TestPlatformSecurityConfiguration {
                 .and()
                 .authorizeExchange()
                 .pathMatchers("/management/**").hasAnyRole("DEV", "ADMIN")
+                .pathMatchers("/global/**").hasAnyRole("USER", "DEV", "ADMIN")
                 .anyExchange().permitAll()
                 .and()
                 // todo csrf开发阶段关闭

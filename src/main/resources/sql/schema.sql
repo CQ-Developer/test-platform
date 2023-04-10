@@ -17,3 +17,13 @@ create table t_test_user_role (
   primary key (role_id),
   unique key (user_id)
 );
+
+create table t_test_global_variable (
+  variable_id bigint not null,
+  user_id bigint not null,
+  variable_name varchar(128) not null,
+  variable_value varchar(256) not null,
+  variable_description varchar(512),
+  primary key (variable_id),
+  unique key (user_id, variable_name)
+);
