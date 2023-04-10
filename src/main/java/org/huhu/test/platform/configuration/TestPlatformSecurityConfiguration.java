@@ -17,9 +17,6 @@ import static org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.B
 /**
  * 安全配置
  *
- * <p>spring boot actuator 配置参见 {@link EndpointRequest#toAnyEndpoint()},
- * <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints.security">官网地址</a></p>
- *
  * @see WebFilterChainProxy
  */
 @Configuration(proxyBeanMethods = false)
@@ -31,12 +28,21 @@ public class TestPlatformSecurityConfiguration {
                 .httpBasic()
                 .and()
                 .authorizeExchange()
-                .pathMatchers("/actuator/**").hasRole("ADMIN")
                 .pathMatchers("/management/**").hasAnyRole("DEV", "ADMIN")
                 .anyExchange().permitAll()
                 .and()
                 // todo csrf开发阶段关闭
                 .csrf().disable()
+                .build();
+    }
+
+    @Bean
+    public SecurityWebFilterChain actuatorSecurityWebFilterChain(ServerHttpSecurity serverHttpSecurity) {
+        return serverHttpSecurity
+                .securityMatcher(EndpointRequest.toAnyEndpoint())
+                .authorizeExchange()
+                .anyExchange().hasRole("ADMIN")
+                .and()
                 .build();
     }
 
