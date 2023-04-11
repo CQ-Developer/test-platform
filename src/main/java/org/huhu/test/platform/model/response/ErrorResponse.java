@@ -5,47 +5,47 @@ import org.huhu.test.platform.constant.TestPlatformError;
 import static org.huhu.test.platform.constant.TestPlatformError.CLIENT_ERROR;
 import static org.huhu.test.platform.constant.TestPlatformError.SERVER_ERROR;
 
-public class TestPlatformErrorResponse {
+public class ErrorResponse {
 
     private int code;
 
     private String message;
 
-    private TestPlatformErrorResponse(TestPlatformError error) {
+    private ErrorResponse(TestPlatformError error) {
         this.code = TestPlatformError.getErrorDetail(error, TestPlatformError::getErrorCode);
         this.message = TestPlatformError.getErrorDetail(error, TestPlatformError::getErrorMessage);
     }
 
-    public static TestPlatformErrorResponse clientError() {
-        return new TestPlatformErrorResponse(CLIENT_ERROR);
+    public static ErrorResponse clientError() {
+        return new ErrorResponse(CLIENT_ERROR);
     }
 
-    public static TestPlatformErrorResponse serverError() {
-        return new TestPlatformErrorResponse(SERVER_ERROR);
+    public static ErrorResponse serverError() {
+        return new ErrorResponse(SERVER_ERROR);
     }
 
-    public TestPlatformErrorResponse withError(TestPlatformError error) {
+    public ErrorResponse withError(TestPlatformError error) {
         this.code = TestPlatformError.getErrorDetail(error, TestPlatformError::getErrorCode);
         this.message = TestPlatformError.getErrorDetail(error, TestPlatformError::getErrorMessage);
         return this;
     }
 
-    public TestPlatformErrorResponse withCode(int code) {
+    public ErrorResponse withCode(int code) {
         this.code = code;
         return this;
     }
 
-    public TestPlatformErrorResponse withCode(TestPlatformError error) {
+    public ErrorResponse withCode(TestPlatformError error) {
         this.code = TestPlatformError.getErrorDetail(error, TestPlatformError::getErrorCode);
         return this;
     }
 
-    public TestPlatformErrorResponse withMessage(String message) {
+    public ErrorResponse withMessage(String message) {
         this.message = message;
         return this;
     }
 
-    public TestPlatformErrorResponse withMessage(TestPlatformError error) {
+    public ErrorResponse withMessage(TestPlatformError error) {
         this.message = TestPlatformError.getErrorDetail(error, TestPlatformError::getErrorMessage);
         return this;
     }

@@ -1,6 +1,6 @@
 package org.huhu.test.platform.model.response;
 
-public class UpdateTestPlatformGlobalVariableResponse {
+public class GlobalVariableUpdateResponse {
 
     private Long variableId;
 

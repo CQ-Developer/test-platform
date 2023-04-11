@@ -1,8 +1,8 @@
 package org.huhu.test.platform.controller;
 
-import org.huhu.test.platform.model.request.AddTestPlatformUserRequest;
-import org.huhu.test.platform.model.response.QueryTestPlatformUserResponse;
-import org.huhu.test.platform.model.response.QueryTestPlatformUsersResponse;
+import org.huhu.test.platform.model.request.UserCreationRequest;
+import org.huhu.test.platform.model.response.UserDetailQueryResponse;
+import org.huhu.test.platform.model.response.UserQueryResponse;
 import org.huhu.test.platform.service.TestPlatformUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +34,11 @@ class TestUserController {
 
     @Test
     void testQueryTestPlatformUsers() {
-        QueryTestPlatformUsersResponse jack = new QueryTestPlatformUsersResponse();
+        UserQueryResponse jack = new UserQueryResponse();
         jack.setName("Jack");
         jack.setRoles(List.of("DEV", "USER"));
 
-        QueryTestPlatformUsersResponse tom = new QueryTestPlatformUsersResponse();
+        UserQueryResponse tom = new UserQueryResponse();
         tom.setName("Tom");
         tom.setRoles(List.of("ADMIN", "TEST"));
 
@@ -51,13 +51,13 @@ class TestUserController {
                  .exchange()
                  .expectStatus()
                  .isOk()
-                 .expectBodyList(QueryTestPlatformUsersResponse.class)
+                 .expectBodyList(UserQueryResponse.class)
                  .hasSize(2);
     }
 
     @Test
     void testQueryTestPlatformUser() {
-        QueryTestPlatformUserResponse jack = new QueryTestPlatformUserResponse();
+        UserDetailQueryResponse jack = new UserDetailQueryResponse();
         jack.setUsername("Jack");
         jack.setUserRoles(List.of("DEV", "ADMIN"));
         jack.setEnabled(true);
@@ -87,9 +87,9 @@ class TestUserController {
     void testAddTestPlatformUser() {
         doReturn(Mono.empty())
                 .when(userService)
-                .createTestPlatformUser(any(AddTestPlatformUserRequest.class));
+                .createTestPlatformUser(any(UserCreationRequest.class));
 
-        AddTestPlatformUserRequest request = new AddTestPlatformUserRequest();
+        UserCreationRequest request = new UserCreationRequest();
         request.setUsername("Jack");
         request.setPassword("123456");
         request.setRoles(List.of(DEV, USER));
@@ -104,7 +104,7 @@ class TestUserController {
 
     @Test
     void testAddTestPlatformUserWithEmptyUsername() {
-        AddTestPlatformUserRequest request = new AddTestPlatformUserRequest();
+        UserCreationRequest request = new UserCreationRequest();
         request.setPassword("123456");
         request.setRoles(List.of(DEV, USER));
 
@@ -124,7 +124,7 @@ class TestUserController {
 
     @Test
     void testAddTestPlatformUserWithEmptyPassword() {
-        AddTestPlatformUserRequest request = new AddTestPlatformUserRequest();
+        UserCreationRequest request = new UserCreationRequest();
         request.setUsername("Jack");
         request.setRoles(List.of(DEV, USER));
 
@@ -144,7 +144,7 @@ class TestUserController {
 
     @Test
     void testAddTestPlatformUserWithEmptyRoles() {
-        AddTestPlatformUserRequest request = new AddTestPlatformUserRequest();
+        UserCreationRequest request = new UserCreationRequest();
         request.setUsername("Jack");
         request.setPassword("123456");
 
@@ -167,7 +167,7 @@ class TestUserController {
         webClient.mutateWith(SecurityMockServerConfigurers.csrf())
                  .put()
                  .uri("/management/user")
-                 .bodyValue(new AddTestPlatformUserRequest())
+                 .bodyValue(new UserCreationRequest())
                  .exchange()
                  .expectStatus().isOk()
                  .expectBody()

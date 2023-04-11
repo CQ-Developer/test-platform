@@ -1,22 +1,22 @@
-package org.huhu.test.platform.model.response;
+package org.huhu.test.platform.model.request;
 
-public class QueryTestPlatformGlobalVariableResponse {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
-    private Long variableId;
+public class GlobalVariableUpdateRequest {
 
+    @NotBlank
+    @Pattern(regexp = "^[A-Za-z0-9-_]+$")
+    @Size(max = 32)
     private String variableName;
 
+    @NotBlank
+    @Size(max = 256)
     private String variableValue;
 
+    @Size(max = 512)
     private String variableDescription;
-
-    public Long getVariableId() {
-        return variableId;
-    }
-
-    public void setVariableId(Long variableId) {
-        this.variableId = variableId;
-    }
 
     public String getVariableName() {
         return variableName;

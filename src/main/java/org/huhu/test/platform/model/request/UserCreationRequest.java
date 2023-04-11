@@ -11,14 +11,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public class AddTestPlatformUserRequest {
+public class UserCreationRequest {
 
     @NotBlank
-    @Pattern(regexp = "^[A-Za-z0-9]{4,16}$")
+    @Pattern(regexp = "^[A-Za-z0-9-_]+$")
+    @Size(min = 4, max = 16)
     private String username;
 
     @NotBlank
-    @Pattern(regexp = "^\\w{6,18}$")
+    @Pattern(regexp = "^[\\w@#:-]+$")
+    @Size(min = 6, max = 32)
     private String password;
 
     @NotNull

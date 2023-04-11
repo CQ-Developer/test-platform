@@ -1,8 +1,8 @@
 package org.huhu.test.platform.controller;
 
-import org.huhu.test.platform.model.request.UpdateTestPlatformGlobalVariableRequest;
-import org.huhu.test.platform.model.response.QueryTestPlatformGlobalVariableResponse;
-import org.huhu.test.platform.model.response.UpdateTestPlatformGlobalVariableResponse;
+import org.huhu.test.platform.model.request.GlobalVariableUpdateRequest;
+import org.huhu.test.platform.model.response.GlobalVariableQueryResponse;
+import org.huhu.test.platform.model.response.GlobalVariableUpdateResponse;
 import org.huhu.test.platform.model.vo.UpdateGlobalVariableVo;
 import org.huhu.test.platform.service.TestPlatformGlobalVariableService;
 import org.springframework.security.core.Authentication;
@@ -28,7 +28,7 @@ public class TestPlatformGlobalVariableController {
     }
 
     @GetMapping("/variable")
-    public Flux<QueryTestPlatformGlobalVariableResponse> query(Mono<Authentication> authentication) {
+    public Flux<GlobalVariableQueryResponse> query(Mono<Authentication> authentication) {
         return authentication
                 .map(Authentication::getName)
                 .flatMapMany(globalVariableService::queryTestPlatformGlobalVariables);
@@ -40,8 +40,8 @@ public class TestPlatformGlobalVariableController {
     }
 
     @PostMapping("/variable/{variableId}")
-    public Mono<UpdateTestPlatformGlobalVariableResponse> update(Mono<Authentication> authentication,
-            @PathVariable("variableId") Long variableId, Mono<UpdateTestPlatformGlobalVariableRequest> request) {
+    public Mono<GlobalVariableUpdateResponse> update(Mono<Authentication> authentication,
+            @PathVariable("variableId") Long variableId, Mono<GlobalVariableUpdateRequest> request) {
         return Mono.zip(authentication.map(Authentication::getName), Mono.just(variableId), request)
                    .map(UpdateGlobalVariableVo::fromTuple3)
                    .flatMap(globalVariableService::updateTestPlatformGlobalVariable);
@@ -52,7 +52,7 @@ public class TestPlatformGlobalVariableController {
         return authentication
                 .map(Authentication::getName)
                 .flatMapMany(globalVariableService::queryTestPlatformGlobalVariables)
-                .map(QueryTestPlatformGlobalVariableResponse::getVariableId)
+                .map(GlobalVariableQueryResponse::getVariableId)
                 .filter(variableId::equals)
                 .flatMap(globalVariableService::deleteTestPlatformGlobalVariable);
     }

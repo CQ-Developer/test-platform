@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class QueryTestPlatformUserResponse {
+public class UserDetailQueryResponse {
 
     private String username;
 

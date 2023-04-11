@@ -1,9 +1,9 @@
 package org.huhu.test.platform.service.impl;
 
 import org.huhu.test.platform.constant.TestPlatformRole;
-import org.huhu.test.platform.model.request.AddTestPlatformUserRequest;
-import org.huhu.test.platform.model.response.QueryTestPlatformUserResponse;
-import org.huhu.test.platform.model.response.QueryTestPlatformUsersResponse;
+import org.huhu.test.platform.model.request.UserCreationRequest;
+import org.huhu.test.platform.model.response.UserDetailQueryResponse;
+import org.huhu.test.platform.model.response.UserQueryResponse;
 import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
 import org.huhu.test.platform.repository.TestPlatformUserRepository;
@@ -30,7 +30,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     }
 
     @Override
-    public Mono<QueryTestPlatformUserResponse> queryTestPlatformUser(String username) {
+    public Mono<UserDetailQueryResponse> queryTestPlatformUser(String username) {
         return userRepository
                 .findOne(Example.of(new TestPlatformUser(username)))
                 .flatMap(user -> userRoleRepository
@@ -38,7 +38,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                         .map(TestPlatformUserRole::getUserRole)
                         .collectList()
                         .map(userRoles -> {
-                            QueryTestPlatformUserResponse response = new QueryTestPlatformUserResponse();
+                            UserDetailQueryResponse response = new UserDetailQueryResponse();
                             response.setUsername(user.getUsername());
                             response.setUserRoles(userRoles);
                             response.setEnabled(user.getEnabled());
@@ -50,7 +50,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     }
 
     @Override
-    public Flux<QueryTestPlatformUsersResponse> queryTestPlatformUsers() {
+    public Flux<UserQueryResponse> queryTestPlatformUsers() {
         return userRepository
                 .findAll()
                 .flatMap(user -> userRoleRepository
@@ -58,7 +58,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                         .map(TestPlatformUserRole::getUserRole)
                         .collectList()
                         .map(userRoles -> {
-                            QueryTestPlatformUsersResponse response = new QueryTestPlatformUsersResponse();
+                            UserQueryResponse response = new UserQueryResponse();
                             response.setName(user.getUsername());
                             response.setRoles(userRoles);
                             return response;
@@ -66,7 +66,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     }
 
     @Override
-    public Mono<Void> createTestPlatformUser(AddTestPlatformUserRequest request) {
+    public Mono<Void> createTestPlatformUser(UserCreationRequest request) {
         TestPlatformUser testPlatformUser = new TestPlatformUser(request.getUsername());
         testPlatformUser.setPassword(request.getPassword());
         request.getEnabled().ifPresent(testPlatformUser::setEnabled);

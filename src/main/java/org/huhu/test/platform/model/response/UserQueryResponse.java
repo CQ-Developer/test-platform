@@ -2,7 +2,7 @@ package org.huhu.test.platform.model.response;
 
 import java.util.List;
 
-public class QueryTestPlatformUsersResponse {
+public class UserQueryResponse {
 
     private String name;
 

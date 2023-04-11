@@ -1,7 +1,7 @@
 package org.huhu.test.platform.service.impl;
 
-import org.huhu.test.platform.model.response.QueryTestPlatformGlobalVariableResponse;
-import org.huhu.test.platform.model.response.UpdateTestPlatformGlobalVariableResponse;
+import org.huhu.test.platform.model.response.GlobalVariableQueryResponse;
+import org.huhu.test.platform.model.response.GlobalVariableUpdateResponse;
 import org.huhu.test.platform.model.table.TestPlatformGlobalVariable;
 import org.huhu.test.platform.model.vo.UpdateGlobalVariableVo;
 import org.huhu.test.platform.repository.TestPlatformGlobalVariableRepository;
@@ -25,7 +25,7 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
     }
 
     @Override
-    public Flux<QueryTestPlatformGlobalVariableResponse> queryTestPlatformGlobalVariables(String username) {
+    public Flux<GlobalVariableQueryResponse> queryTestPlatformGlobalVariables(String username) {
         return variableRepository
                 .findAll(Example.of(new TestPlatformGlobalVariable(username)))
                 .map(this::buildQueryResponse);
@@ -38,7 +38,7 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
     }
 
     @Override
-    public Mono<UpdateTestPlatformGlobalVariableResponse> updateTestPlatformGlobalVariable(UpdateGlobalVariableVo vo) {
+    public Mono<GlobalVariableUpdateResponse> updateTestPlatformGlobalVariable(UpdateGlobalVariableVo vo) {
         TestPlatformGlobalVariable globalVariable = new TestPlatformGlobalVariable();
         globalVariable.setVariableId(vo.variableId());
         globalVariable.setVariableName(vo.variableName());
@@ -50,8 +50,8 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
                 .map(this::buildUpdateResponse);
     }
 
-    private QueryTestPlatformGlobalVariableResponse buildQueryResponse(TestPlatformGlobalVariable globalVariable) {
-        QueryTestPlatformGlobalVariableResponse response = new QueryTestPlatformGlobalVariableResponse();
+    private GlobalVariableQueryResponse buildQueryResponse(TestPlatformGlobalVariable globalVariable) {
+        GlobalVariableQueryResponse response = new GlobalVariableQueryResponse();
         response.setVariableId(globalVariable.getVariableId());
         response.setVariableName(globalVariable.getVariableName());
         response.setVariableValue(globalVariable.getVariableValue());
@@ -59,8 +59,8 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
         return response;
     }
 
-    private UpdateTestPlatformGlobalVariableResponse buildUpdateResponse(TestPlatformGlobalVariable globalVariable) {
-        UpdateTestPlatformGlobalVariableResponse response = new UpdateTestPlatformGlobalVariableResponse();
+    private GlobalVariableUpdateResponse buildUpdateResponse(TestPlatformGlobalVariable globalVariable) {
+        GlobalVariableUpdateResponse response = new GlobalVariableUpdateResponse();
         response.setVariableId(response.getVariableId());
         response.setVariableName(globalVariable.getVariableName());
         response.setVariableValue(globalVariable.getVariableValue());

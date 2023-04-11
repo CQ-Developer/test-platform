@@ -1,7 +1,7 @@
 package org.huhu.test.platform.service;
 
-import org.huhu.test.platform.model.response.QueryTestPlatformGlobalVariableResponse;
-import org.huhu.test.platform.model.response.UpdateTestPlatformGlobalVariableResponse;
+import org.huhu.test.platform.model.response.GlobalVariableQueryResponse;
+import org.huhu.test.platform.model.response.GlobalVariableUpdateResponse;
 import org.huhu.test.platform.model.vo.UpdateGlobalVariableVo;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -13,7 +13,7 @@ public interface TestPlatformGlobalVariableService {
      *
      * @param username 用户名
      */
-    Flux<QueryTestPlatformGlobalVariableResponse> queryTestPlatformGlobalVariables(String username);
+    Flux<GlobalVariableQueryResponse> queryTestPlatformGlobalVariables(String username);
 
     /**
      * 删除测试平台全局变量
@@ -27,6 +27,6 @@ public interface TestPlatformGlobalVariableService {
      *
      * @param vo 请求体
      */
-    Mono<UpdateTestPlatformGlobalVariableResponse> updateTestPlatformGlobalVariable(UpdateGlobalVariableVo vo);
+    Mono<GlobalVariableUpdateResponse> updateTestPlatformGlobalVariable(UpdateGlobalVariableVo vo);
 
 }

@@ -1,8 +1,8 @@
 package org.huhu.test.platform.controller;
 
-import org.huhu.test.platform.model.request.AddTestPlatformUserRequest;
-import org.huhu.test.platform.model.response.QueryTestPlatformUserResponse;
-import org.huhu.test.platform.model.response.QueryTestPlatformUsersResponse;
+import org.huhu.test.platform.model.request.UserCreationRequest;
+import org.huhu.test.platform.model.response.UserDetailQueryResponse;
+import org.huhu.test.platform.model.response.UserQueryResponse;
 import org.huhu.test.platform.service.TestPlatformUserService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,17 +25,17 @@ public class TestPlatformUserController {
     }
 
     @GetMapping("/user")
-    public Flux<QueryTestPlatformUsersResponse> query() {
+    public Flux<UserQueryResponse> query() {
         return userService.queryTestPlatformUsers();
     }
 
     @GetMapping("/user/{username}")
-    public Mono<QueryTestPlatformUserResponse> query(@PathVariable("username") String username) {
+    public Mono<UserDetailQueryResponse> query(@PathVariable("username") String username) {
         return userService.queryTestPlatformUser(username);
     }
 
     @PutMapping("/user")
-    public Mono<Void> create(@RequestBody @Validated Mono<AddTestPlatformUserRequest> request) {
+    public Mono<Void> create(@RequestBody @Validated Mono<UserCreationRequest> request) {
         return request.flatMap(userService::createTestPlatformUser);
     }
 
