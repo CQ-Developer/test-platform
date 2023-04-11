@@ -27,4 +27,11 @@ public interface TestPlatformUserService {
      */
     Mono<Void> createTestPlatformUser(UserCreationRequest request);
 
+    /**
+     * 删除测试平台用户
+     *
+     * @param username 用户名
+     */
+    Mono<Void> deleteTestPlatformUser(String username);
+
 }

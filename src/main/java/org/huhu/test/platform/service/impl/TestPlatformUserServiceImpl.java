@@ -9,6 +9,8 @@ import org.huhu.test.platform.model.table.TestPlatformUserRole;
 import org.huhu.test.platform.repository.TestPlatformUserRepository;
 import org.huhu.test.platform.repository.TestPlatformUserRoleRepository;
 import org.huhu.test.platform.service.TestPlatformUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -18,6 +20,8 @@ import java.util.stream.Stream;
 
 @Service
 public class TestPlatformUserServiceImpl implements TestPlatformUserService {
+
+    private final Logger logger = LoggerFactory.getLogger(TestPlatformUserServiceImpl.class);
 
     private final TestPlatformUserRepository userRepository;
 
@@ -72,7 +76,9 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
         request.getEnabled().ifPresent(testPlatformUser::setEnabled);
         request.getLocked().ifPresent(testPlatformUser::setLocked);
         request.getExpiredTime().ifPresent(testPlatformUser::setExpiredTime);
-        Mono<TestPlatformUser> saveUser = userRepository.save(testPlatformUser);
+        Mono<TestPlatformUser> saveUser = userRepository
+                .save(testPlatformUser)
+                .doOnNext(user -> logger.info("save test platform user {}", user.getUsername()));
 
         Stream<TestPlatformUserRole> roleStream =
                 request.getRoles()
@@ -82,9 +88,25 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                            testPlatformUserRole.setUserRole(TestPlatformRole.getRoleName(role));
                            return testPlatformUserRole;
                        });
-        Flux<TestPlatformUserRole> saveUserRoles = userRoleRepository.saveAll(Flux.fromStream(roleStream));
+        Flux<TestPlatformUserRole> saveUserRoles = userRoleRepository
+                .saveAll(Flux.fromStream(roleStream))
+                .doOnNext(userRole -> logger.info("save test platform user role {}", userRole.getUserRole()));
 
         return saveUser.thenMany(saveUserRoles).then();
+    }
+
+    @Override
+    public Mono<Void> deleteTestPlatformUser(String username) {
+        return userRepository
+                .findOne(Example.of(new TestPlatformUser(username)))
+                .map(TestPlatformUser::getUserId)
+                .doOnNext(userId -> logger.info("delete test platform user {}", userId))
+                .flatMap(userRepository::deleteById)
+                .thenMany(userRoleRepository.findAll(Example.of(new TestPlatformUserRole(username))))
+                .map(TestPlatformUserRole::getRoleId)
+                .doOnNext(roleId -> logger.info("delete test platform user role {}", roleId))
+                .collectList()
+                .flatMap(userRoleRepository::deleteAllById);
     }
 
 }

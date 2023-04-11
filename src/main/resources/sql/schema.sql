@@ -1,7 +1,7 @@
 create table t_test_user (
   user_id bigint not null auto_increment,
   username varchar(16) not null,
-  password varchar(32) not null,
+  password varchar(128) not null,
   enabled boolean default 1,
   locked boolean default 0,
   register_time datetime default current_timestamp,

@@ -5,6 +5,7 @@ import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
 import org.huhu.test.platform.service.TestPlatformUserService;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,6 +38,11 @@ public class TestPlatformUserController {
     @PutMapping("/user")
     public Mono<Void> create(@RequestBody @Validated Mono<UserCreationRequest> request) {
         return request.flatMap(userService::createTestPlatformUser);
+    }
+
+    @DeleteMapping("/user/{username}")
+    public Mono<Void> delete(@PathVariable("username") String username) {
+        return userService.deleteTestPlatformUser(username);
     }
 
 }
