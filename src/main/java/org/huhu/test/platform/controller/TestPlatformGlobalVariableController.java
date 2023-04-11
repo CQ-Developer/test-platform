@@ -42,17 +42,21 @@ public class TestPlatformGlobalVariableController {
     @PutMapping("/variable")
     public Mono<GlobalVariableCreateResponse> create(Mono<Authentication> authentication,
             @Validated @RequestBody Mono<GlobalVariableCreateRequest> request) {
-        return Mono.zip(authentication.map(Authentication::getName), request, GlobalVariableCreateVo::build)
+        return Mono.zip(authentication.map(Authentication::getName), request, GlobalVariableCreateVo::new)
                    .flatMap(globalVariableService::createTestPlatformGlobalVariable);
     }
 
     @PostMapping("/variable/{variableId}")
-    public Mono<GlobalVariableUpdateResponse> update(Mono<Authentication> authentication,
+    public Flux<GlobalVariableUpdateResponse> update(Mono<Authentication> authentication,
             @PathVariable("variableId") Long variableId,
             @Validated @RequestBody Mono<GlobalVariableUpdateRequest> request) {
-        return Mono.zip(authentication.map(Authentication::getName), Mono.just(variableId), request)
-                   .map(GlobalVariableUpdateVo::build)
-                   .flatMap(globalVariableService::updateTestPlatformGlobalVariable);
+        return authentication
+                .map(Authentication::getName)
+                .flatMapMany(globalVariableService::queryTestPlatformGlobalVariables)
+                .map(GlobalVariableQueryResponse::getVariableId)
+                .filter(variableId::equals)
+                .zipWith(request, GlobalVariableUpdateVo::new)
+                .flatMap(globalVariableService::updateTestPlatformGlobalVariable);
     }
 
     @DeleteMapping("/variable/{variableId}")

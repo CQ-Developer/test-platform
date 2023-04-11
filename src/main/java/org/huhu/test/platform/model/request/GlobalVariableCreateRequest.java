@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.Optional;
+
 public class GlobalVariableCreateRequest {
 
     @NotBlank
@@ -34,8 +36,8 @@ public class GlobalVariableCreateRequest {
         this.variableValue = variableValue;
     }
 
-    public String getVariableDescription() {
-        return variableDescription;
+    public Optional<String> getVariableDescription() {
+        return Optional.ofNullable(variableDescription);
     }
 
     public void setVariableDescription(String variableDescription) {
