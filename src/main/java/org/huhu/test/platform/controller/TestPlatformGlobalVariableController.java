@@ -1,16 +1,21 @@
 package org.huhu.test.platform.controller;
 
+import org.huhu.test.platform.model.request.GlobalVariableCreateRequest;
 import org.huhu.test.platform.model.request.GlobalVariableUpdateRequest;
+import org.huhu.test.platform.model.response.GlobalVariableCreateResponse;
 import org.huhu.test.platform.model.response.GlobalVariableQueryResponse;
 import org.huhu.test.platform.model.response.GlobalVariableUpdateResponse;
-import org.huhu.test.platform.model.vo.UpdateGlobalVariableVo;
+import org.huhu.test.platform.model.vo.GlobalVariableCreateVo;
+import org.huhu.test.platform.model.vo.GlobalVariableUpdateVo;
 import org.huhu.test.platform.service.TestPlatformGlobalVariableService;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
@@ -35,15 +40,18 @@ public class TestPlatformGlobalVariableController {
     }
 
     @PutMapping("/variable")
-    public Mono<Void> create() {
-        return Mono.empty();
+    public Mono<GlobalVariableCreateResponse> create(Mono<Authentication> authentication,
+            @Validated @RequestBody Mono<GlobalVariableCreateRequest> request) {
+        return Mono.zip(authentication.map(Authentication::getName), request, GlobalVariableCreateVo::build)
+                   .flatMap(globalVariableService::createTestPlatformGlobalVariable);
     }
 
     @PostMapping("/variable/{variableId}")
     public Mono<GlobalVariableUpdateResponse> update(Mono<Authentication> authentication,
-            @PathVariable("variableId") Long variableId, Mono<GlobalVariableUpdateRequest> request) {
+            @PathVariable("variableId") Long variableId,
+            @Validated @RequestBody Mono<GlobalVariableUpdateRequest> request) {
         return Mono.zip(authentication.map(Authentication::getName), Mono.just(variableId), request)
-                   .map(UpdateGlobalVariableVo::fromTuple3)
+                   .map(GlobalVariableUpdateVo::build)
                    .flatMap(globalVariableService::updateTestPlatformGlobalVariable);
     }
 

@@ -1,9 +1,11 @@
 package org.huhu.test.platform.service.impl;
 
+import org.huhu.test.platform.model.response.GlobalVariableCreateResponse;
 import org.huhu.test.platform.model.response.GlobalVariableQueryResponse;
 import org.huhu.test.platform.model.response.GlobalVariableUpdateResponse;
 import org.huhu.test.platform.model.table.TestPlatformGlobalVariable;
-import org.huhu.test.platform.model.vo.UpdateGlobalVariableVo;
+import org.huhu.test.platform.model.vo.GlobalVariableCreateVo;
+import org.huhu.test.platform.model.vo.GlobalVariableUpdateVo;
 import org.huhu.test.platform.repository.TestPlatformGlobalVariableRepository;
 import org.huhu.test.platform.service.TestPlatformGlobalVariableService;
 import org.slf4j.Logger;
@@ -38,7 +40,7 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
     }
 
     @Override
-    public Mono<GlobalVariableUpdateResponse> updateTestPlatformGlobalVariable(UpdateGlobalVariableVo vo) {
+    public Mono<GlobalVariableUpdateResponse> updateTestPlatformGlobalVariable(GlobalVariableUpdateVo vo) {
         TestPlatformGlobalVariable globalVariable = new TestPlatformGlobalVariable();
         globalVariable.setVariableId(vo.variableId());
         globalVariable.setVariableName(vo.variableName());
@@ -48,6 +50,19 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
                 .save(globalVariable)
                 .doOnNext(item -> logger.info("update global variable {}", item.getVariableId()))
                 .map(this::buildUpdateResponse);
+    }
+
+    @Override
+    public Mono<GlobalVariableCreateResponse> createTestPlatformGlobalVariable(GlobalVariableCreateVo vo) {
+        TestPlatformGlobalVariable globalVariable = new TestPlatformGlobalVariable();
+        globalVariable.setUsername(vo.username());
+        globalVariable.setVariableName(vo.variableName());
+        globalVariable.setVariableValue(vo.variableValue());
+        globalVariable.setVariableDescription(vo.variableDescription());
+        return variableRepository
+                .save(globalVariable)
+                .doOnNext(item -> logger.info("save global variable {}", item.getVariableId()))
+                .map(this::buildCreateResponse);
     }
 
     private GlobalVariableQueryResponse buildQueryResponse(TestPlatformGlobalVariable globalVariable) {
@@ -61,7 +76,16 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
 
     private GlobalVariableUpdateResponse buildUpdateResponse(TestPlatformGlobalVariable globalVariable) {
         GlobalVariableUpdateResponse response = new GlobalVariableUpdateResponse();
-        response.setVariableId(response.getVariableId());
+        response.setVariableId(globalVariable.getVariableId());
+        response.setVariableName(globalVariable.getVariableName());
+        response.setVariableValue(globalVariable.getVariableValue());
+        response.setVariableDescription(globalVariable.getVariableDescription());
+        return response;
+    }
+
+    private GlobalVariableCreateResponse buildCreateResponse(TestPlatformGlobalVariable globalVariable) {
+        GlobalVariableCreateResponse response = new GlobalVariableCreateResponse();
+        response.setVariableId(globalVariable.getVariableId());
         response.setVariableName(globalVariable.getVariableName());
         response.setVariableValue(globalVariable.getVariableValue());
         response.setVariableDescription(globalVariable.getVariableDescription());

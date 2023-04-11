@@ -1,8 +1,10 @@
 package org.huhu.test.platform.service;
 
+import org.huhu.test.platform.model.response.GlobalVariableCreateResponse;
 import org.huhu.test.platform.model.response.GlobalVariableQueryResponse;
 import org.huhu.test.platform.model.response.GlobalVariableUpdateResponse;
-import org.huhu.test.platform.model.vo.UpdateGlobalVariableVo;
+import org.huhu.test.platform.model.vo.GlobalVariableCreateVo;
+import org.huhu.test.platform.model.vo.GlobalVariableUpdateVo;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -27,6 +29,12 @@ public interface TestPlatformGlobalVariableService {
      *
      * @param vo 请求体
      */
-    Mono<GlobalVariableUpdateResponse> updateTestPlatformGlobalVariable(UpdateGlobalVariableVo vo);
+    Mono<GlobalVariableUpdateResponse> updateTestPlatformGlobalVariable(GlobalVariableUpdateVo vo);
 
+    /**
+     * 创建测试平台全局变量
+     *
+     * @param vo 请求体
+     */
+    Mono<GlobalVariableCreateResponse> createTestPlatformGlobalVariable(GlobalVariableCreateVo vo);
 }
