@@ -1,16 +1,17 @@
 package org.huhu.test.platform.model.table;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("t_test_global_variable")
 public class TestPlatformGlobalVariable {
 
+    @Id
     @Column("variable_id")
     private Long variableId;
 
-    @Column("user_id")
-    private Long userId;
+    private String username;
 
     @Column("variable_name")
     private String variableName;
@@ -24,8 +25,8 @@ public class TestPlatformGlobalVariable {
     public TestPlatformGlobalVariable() {
     }
 
-    public TestPlatformGlobalVariable(Long userId) {
-        this.userId = userId;
+    public TestPlatformGlobalVariable(String username) {
+        this.username = username;
     }
 
     public Long getVariableId() {
@@ -36,12 +37,12 @@ public class TestPlatformGlobalVariable {
         this.variableId = variableId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getVariableName() {

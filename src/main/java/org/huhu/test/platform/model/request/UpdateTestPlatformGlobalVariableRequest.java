@@ -1,14 +1,10 @@
 package org.huhu.test.platform.model.request;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class UpdateTestPlatformGlobalVariableRequest {
-
-    @JsonIgnore
-    private Long variableId;
 
     @NotBlank
     @Pattern(regexp = "")
@@ -22,14 +18,6 @@ public class UpdateTestPlatformGlobalVariableRequest {
 
     @Size(max = 512)
     private String variableDescription;
-
-    public Long getVariableId() {
-        return variableId;
-    }
-
-    public void setVariableId(Long variableId) {
-        this.variableId = variableId;
-    }
 
     public String getVariableName() {
         return variableName;

@@ -1,9 +1,9 @@
 package org.huhu.test.platform.service.impl;
 
-import org.huhu.test.platform.model.request.UpdateTestPlatformGlobalVariableRequest;
 import org.huhu.test.platform.model.response.QueryTestPlatformGlobalVariableResponse;
 import org.huhu.test.platform.model.response.UpdateTestPlatformGlobalVariableResponse;
 import org.huhu.test.platform.model.table.TestPlatformGlobalVariable;
+import org.huhu.test.platform.model.vo.UpdateGlobalVariableVo;
 import org.huhu.test.platform.repository.TestPlatformGlobalVariableRepository;
 import org.huhu.test.platform.service.TestPlatformGlobalVariableService;
 import org.slf4j.Logger;
@@ -25,9 +25,9 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
     }
 
     @Override
-    public Flux<QueryTestPlatformGlobalVariableResponse> queryTestPlatformGlobalVariables(Long userId) {
+    public Flux<QueryTestPlatformGlobalVariableResponse> queryTestPlatformGlobalVariables(String username) {
         return variableRepository
-                .findAll(Example.of(new TestPlatformGlobalVariable(userId)))
+                .findAll(Example.of(new TestPlatformGlobalVariable(username)))
                 .map(this::buildQueryResponse);
     }
 
@@ -38,12 +38,12 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
     }
 
     @Override
-    public Mono<UpdateTestPlatformGlobalVariableResponse> updateTestPlatformGlobalVariable(UpdateTestPlatformGlobalVariableRequest request) {
+    public Mono<UpdateTestPlatformGlobalVariableResponse> updateTestPlatformGlobalVariable(UpdateGlobalVariableVo vo) {
         TestPlatformGlobalVariable globalVariable = new TestPlatformGlobalVariable();
-        globalVariable.setVariableId(request.getVariableId());
-        globalVariable.setVariableName(request.getVariableName());
-        globalVariable.setVariableValue(request.getVariableValue());
-        globalVariable.setVariableDescription(request.getVariableDescription());
+        globalVariable.setVariableId(vo.variableId());
+        globalVariable.setVariableName(vo.variableName());
+        globalVariable.setVariableValue(vo.variableValue());
+        globalVariable.setVariableDescription(vo.variableDescription());
         return variableRepository
                 .save(globalVariable)
                 .doOnNext(item -> logger.info("update global variable {}", item.getVariableId()))
