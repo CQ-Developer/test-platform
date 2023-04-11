@@ -1,24 +1,25 @@
 package org.huhu.test.platform.model.table;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("t_test_user_role")
 public class TestPlatformUserRole {
 
+    @Id
     @Column("role_id")
     private Long roleId;
 
-    @Column("user_id")
-    private Long userId;
+    private String username;
 
     @Column("user_role")
     private String userRole;
 
     public TestPlatformUserRole() {}
 
-    public TestPlatformUserRole(Long userId) {
-        this.userId = userId;
+    public TestPlatformUserRole(String username) {
+        this.username = username;
     }
 
     public Long getRoleId() {
@@ -29,12 +30,12 @@ public class TestPlatformUserRole {
         this.roleId = roleId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getUserRole() {

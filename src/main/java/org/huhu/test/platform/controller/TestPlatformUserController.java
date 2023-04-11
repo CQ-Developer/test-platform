@@ -24,7 +24,7 @@ public class TestPlatformUserController {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
+    @GetMapping("/user")
     public Flux<QueryTestPlatformUsersResponse> query() {
         return userService.queryTestPlatformUsers();
     }

@@ -47,7 +47,7 @@ class TestUserController {
                 .queryTestPlatformUsers();
 
         webClient.get()
-                 .uri("/management/users")
+                 .uri("/management/user")
                  .exchange()
                  .expectStatus()
                  .isOk()

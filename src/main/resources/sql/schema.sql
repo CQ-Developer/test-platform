@@ -1,5 +1,5 @@
 create table t_test_user (
-  user_id bigint not null,
+  user_id bigint not null auto_increment,
   username varchar(64) not null,
   password varchar(128) not null,
   enabled boolean default 1,
@@ -11,19 +11,19 @@ create table t_test_user (
 );
 
 create table t_test_user_role (
-  role_id bigint not null,
-  user_id bigint not null,
+  role_id bigint not null auto_increment,
+  username varchar(64) not null,
   user_role varchar(64) not null,
   primary key (role_id),
-  unique key (user_id)
+  unique key (username)
 );
 
 create table t_test_global_variable (
-  variable_id bigint not null,
-  user_id bigint not null,
+  variable_id bigint not null auto_increment,
+  username bigint not null,
   variable_name varchar(128) not null,
   variable_value varchar(256) not null,
   variable_description varchar(512),
   primary key (variable_id),
-  unique key (user_id, variable_name)
+  unique key (username, variable_name)
 );

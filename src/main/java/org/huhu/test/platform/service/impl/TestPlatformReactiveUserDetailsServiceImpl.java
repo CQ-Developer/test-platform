@@ -39,20 +39,16 @@ public class TestPlatformReactiveUserDetailsServiceImpl implements ReactiveUserD
 
     @Override
     public Mono<UserDetails> findByUsername(String username) {
-        TestPlatformUser example = new TestPlatformUser();
-        example.setUsername(username);
-        return testPlatformUserRepository.findOne(Example.of(example)).flatMap(this::findWithRoles);
+        return testPlatformUserRepository
+                .findOne(Example.of(new TestPlatformUser(username)))
+                .flatMap(this::findWithRoles);
     }
 
     private Mono<UserDetails> findWithRoles(TestPlatformUser testPlatformUser) {
         Mono<TestPlatformUser> user = Mono.just(testPlatformUser);
-
-        Long userId = testPlatformUser.getUserId();
-        TestPlatformUserRole example = new TestPlatformUserRole();
-        example.setUserId(userId);
-        Mono<List<TestPlatformUserRole>> roles =
-                testPlatformUserRoleRepository.findAll(Example.of(example)).collectList();
-
+        Mono<List<TestPlatformUserRole>> roles = testPlatformUserRoleRepository
+                .findAll(Example.of(new TestPlatformUserRole(testPlatformUser.getUsername())))
+                .collectList();
         return Mono.zip(user, roles, TestPlatformUserDetails::new);
     }
 

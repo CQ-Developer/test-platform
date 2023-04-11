@@ -1,6 +1,5 @@
 package org.huhu.test.platform.configuration;
 
-import com.fasterxml.uuid.Generators;
 import org.huhu.test.platform.constant.TestPlatformRole;
 import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
@@ -42,9 +41,7 @@ public class TestPlatformApplicationRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        long userId = Generators.timeBasedGenerator().generate().timestamp();
         TestPlatformUser testPlatformUser = new TestPlatformUser();
-        testPlatformUser.setUserId(userId);
         testPlatformUser.setUsername("root");
         testPlatformUser.setPassword(passwordEncoder.encode("root"));
         testPlatformUser.setEnabled(true);
@@ -56,10 +53,8 @@ public class TestPlatformApplicationRunner implements ApplicationRunner {
                 .save(testPlatformUser)
                 .doOnNext(user -> logger.info("create root user with password root"));
 
-        long userRoleId = Generators.timeBasedGenerator().generate().timestamp();
         TestPlatformUserRole testPlatformUserRole = new TestPlatformUserRole();
-        testPlatformUserRole.setRoleId(userRoleId);
-        testPlatformUserRole.setUserId(userId);
+        testPlatformUserRole.setUsername(testPlatformUser.getUsername());
         testPlatformUserRole.setUserRole(TestPlatformRole.getRoleName(ADMIN));
         Mono<TestPlatformUserRole> saveUserRole = userRoleRepository
                 .save(testPlatformUserRole)

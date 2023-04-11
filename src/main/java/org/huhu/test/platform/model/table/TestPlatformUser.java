@@ -1,5 +1,6 @@
 package org.huhu.test.platform.model.table;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 @Table("t_test_user")
 public class TestPlatformUser {
 
+    @Id
     @Column("user_id")
     private Long userId;
 
