@@ -1,9 +1,9 @@
 package org.huhu.test.platform.service;
 
-import org.huhu.test.platform.model.response.GlobalVariableCreateResponse;
+import org.huhu.test.platform.model.response.GlobalVariableModifyResponse;
 import org.huhu.test.platform.model.response.GlobalVariableQueryResponse;
-import org.huhu.test.platform.model.response.GlobalVariableUpdateResponse;
 import org.huhu.test.platform.model.vo.GlobalVariableCreateVo;
+import org.huhu.test.platform.model.vo.GlobalVariableDeleteVo;
 import org.huhu.test.platform.model.vo.GlobalVariableUpdateVo;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -18,23 +18,24 @@ public interface TestPlatformGlobalVariableService {
     Flux<GlobalVariableQueryResponse> queryTestPlatformGlobalVariables(String username);
 
     /**
-     * 删除测试平台全局变量
+     * 创建测试平台全局变量
      *
-     * @param variableId 全局变量编号
+     * @param vo 请求体
      */
-    Mono<Void> deleteTestPlatformGlobalVariable(Long variableId);
+    Mono<GlobalVariableModifyResponse> createTestPlatformGlobalVariable(GlobalVariableCreateVo vo);
 
     /**
      * 更新测试平台全局变量
      *
      * @param vo 请求体
      */
-    Mono<GlobalVariableUpdateResponse> updateTestPlatformGlobalVariable(GlobalVariableUpdateVo vo);
+    Mono<GlobalVariableModifyResponse> updateTestPlatformGlobalVariable(GlobalVariableUpdateVo vo);
 
     /**
-     * 创建测试平台全局变量
+     * 删除测试平台全局变量
      *
      * @param vo 请求体
      */
-    Mono<GlobalVariableCreateResponse> createTestPlatformGlobalVariable(GlobalVariableCreateVo vo);
+    Mono<Integer> deleteTestPlatformGlobalVariable(GlobalVariableDeleteVo vo);
+
 }

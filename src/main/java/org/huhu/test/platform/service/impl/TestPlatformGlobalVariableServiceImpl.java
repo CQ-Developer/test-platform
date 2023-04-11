@@ -1,20 +1,21 @@
 package org.huhu.test.platform.service.impl;
 
-import org.huhu.test.platform.model.request.GlobalVariableUpdateRequest;
-import org.huhu.test.platform.model.response.GlobalVariableCreateResponse;
+import org.huhu.test.platform.model.request.GlobalVariableModifyRequest;
+import org.huhu.test.platform.model.response.GlobalVariableModifyResponse;
 import org.huhu.test.platform.model.response.GlobalVariableQueryResponse;
-import org.huhu.test.platform.model.response.GlobalVariableUpdateResponse;
 import org.huhu.test.platform.model.table.TestPlatformGlobalVariable;
 import org.huhu.test.platform.model.vo.GlobalVariableCreateVo;
+import org.huhu.test.platform.model.vo.GlobalVariableDeleteVo;
 import org.huhu.test.platform.model.vo.GlobalVariableUpdateVo;
 import org.huhu.test.platform.repository.TestPlatformGlobalVariableRepository;
 import org.huhu.test.platform.service.TestPlatformGlobalVariableService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Optional;
 
 @Service
 public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobalVariableService {
@@ -30,68 +31,40 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
     @Override
     public Flux<GlobalVariableQueryResponse> queryTestPlatformGlobalVariables(String username) {
         return variableRepository
-                .findAll(Example.of(new TestPlatformGlobalVariable(username)))
-                .map(this::buildQueryResponse);
+                .findByUsername(username)
+                .map(GlobalVariableQueryResponse::build);
     }
 
     @Override
-    public Mono<Void> deleteTestPlatformGlobalVariable(Long variableId) {
-        logger.info("delete global variable {}", variableId);
-        return variableRepository.deleteById(variableId);
+    public Mono<GlobalVariableModifyResponse> updateTestPlatformGlobalVariable(GlobalVariableUpdateVo vo) {
+        var deleteVariable = Mono
+                .zip(Mono.just(vo.username()), Mono.just(vo.variableName()), GlobalVariableDeleteVo::new);
+        var createVariable = Mono
+                .zip(Mono.just(vo.username()), Mono.just(vo.request()), GlobalVariableCreateVo::new);
+        return deleteVariable
+                .flatMap(this::deleteTestPlatformGlobalVariable)
+                .then(createVariable)
+                .flatMap(this::createTestPlatformGlobalVariable);
     }
 
     @Override
-    public Mono<GlobalVariableUpdateResponse> updateTestPlatformGlobalVariable(GlobalVariableUpdateVo vo) {
-        TestPlatformGlobalVariable globalVariable = new TestPlatformGlobalVariable();
-        GlobalVariableUpdateRequest request = vo.request();
-        request.getVariableDescription().ifPresent(globalVariable::setVariableDescription);
-        globalVariable.setVariableId(vo.variableId());
-        globalVariable.setVariableName(request.getVariableName());
-        globalVariable.setVariableValue(request.getVariableValue());
+    public Mono<GlobalVariableModifyResponse> createTestPlatformGlobalVariable(GlobalVariableCreateVo vo) {
+        var globalVariable = new TestPlatformGlobalVariable(vo.username());
+        GlobalVariableModifyRequest request = vo.request();
+        globalVariable.setVariableName(request.variableName());
+        globalVariable.setVariableValue(request.variableValue());
+        Optional.ofNullable(request.variableDescription()).ifPresent(globalVariable::setVariableDescription);
         return variableRepository
                 .save(globalVariable)
-                .doOnNext(variable -> logger.info("update global variable {}", variable.getVariableId()))
-                .map(this::buildUpdateResponse);
+                .doOnNext(item -> logger.info("save global variable {}", item.getVariableName()))
+                .map(GlobalVariableModifyResponse::build);
     }
 
     @Override
-    public Mono<GlobalVariableCreateResponse> createTestPlatformGlobalVariable(GlobalVariableCreateVo vo) {
-        TestPlatformGlobalVariable globalVariable = new TestPlatformGlobalVariable();
-        globalVariable.setUsername(vo.username());
-        globalVariable.setVariableName(vo.request().getVariableName());
-        globalVariable.setVariableValue(vo.request().getVariableValue());
-        vo.request().getVariableDescription().ifPresent(globalVariable::setVariableDescription);
+    public Mono<Integer> deleteTestPlatformGlobalVariable(GlobalVariableDeleteVo vo) {
         return variableRepository
-                .save(globalVariable)
-                .doOnNext(item -> logger.info("save global variable {}", item.getVariableId()))
-                .map(this::buildCreateResponse);
-    }
-
-    private GlobalVariableQueryResponse buildQueryResponse(TestPlatformGlobalVariable globalVariable) {
-        GlobalVariableQueryResponse response = new GlobalVariableQueryResponse();
-        response.setVariableId(globalVariable.getVariableId());
-        response.setVariableName(globalVariable.getVariableName());
-        response.setVariableValue(globalVariable.getVariableValue());
-        response.setVariableDescription(globalVariable.getVariableDescription());
-        return response;
-    }
-
-    private GlobalVariableUpdateResponse buildUpdateResponse(TestPlatformGlobalVariable globalVariable) {
-        GlobalVariableUpdateResponse response = new GlobalVariableUpdateResponse();
-        response.setVariableId(globalVariable.getVariableId());
-        response.setVariableName(globalVariable.getVariableName());
-        response.setVariableValue(globalVariable.getVariableValue());
-        response.setVariableDescription(globalVariable.getVariableDescription());
-        return response;
-    }
-
-    private GlobalVariableCreateResponse buildCreateResponse(TestPlatformGlobalVariable globalVariable) {
-        GlobalVariableCreateResponse response = new GlobalVariableCreateResponse();
-        response.setVariableId(globalVariable.getVariableId());
-        response.setVariableName(globalVariable.getVariableName());
-        response.setVariableValue(globalVariable.getVariableValue());
-        response.setVariableDescription(globalVariable.getVariableDescription());
-        return response;
+                .deleteByUsernameAndVariableName(vo.username(), vo.variableName())
+                .doOnNext(i -> logger.info("delete {} global variable.", i));
     }
 
 }

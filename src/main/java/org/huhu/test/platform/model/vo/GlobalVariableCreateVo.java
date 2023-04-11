@@ -1,5 +1,5 @@
 package org.huhu.test.platform.model.vo;
 
-import org.huhu.test.platform.model.request.GlobalVariableCreateRequest;
+import org.huhu.test.platform.model.request.GlobalVariableModifyRequest;
 
-public record GlobalVariableCreateVo(String username, GlobalVariableCreateRequest request) {}
+public record GlobalVariableCreateVo(String username, GlobalVariableModifyRequest request) {}

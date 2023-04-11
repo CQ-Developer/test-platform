@@ -22,8 +22,7 @@ public class TestPlatformGlobalVariable {
     @Column("variable_description")
     private String variableDescription;
 
-    public TestPlatformGlobalVariable() {
-    }
+    public TestPlatformGlobalVariable() {}
 
     public TestPlatformGlobalVariable(String username) {
         this.username = username;

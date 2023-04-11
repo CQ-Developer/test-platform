@@ -1,26 +1,21 @@
 package org.huhu.test.platform.controller;
 
-import org.huhu.test.platform.model.request.GlobalVariableCreateRequest;
-import org.huhu.test.platform.model.request.GlobalVariableUpdateRequest;
-import org.huhu.test.platform.model.response.GlobalVariableCreateResponse;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import org.huhu.test.platform.model.request.GlobalVariableModifyRequest;
+import org.huhu.test.platform.model.response.GlobalVariableModifyResponse;
 import org.huhu.test.platform.model.response.GlobalVariableQueryResponse;
-import org.huhu.test.platform.model.response.GlobalVariableUpdateResponse;
 import org.huhu.test.platform.model.vo.GlobalVariableCreateVo;
+import org.huhu.test.platform.model.vo.GlobalVariableDeleteVo;
 import org.huhu.test.platform.model.vo.GlobalVariableUpdateVo;
 import org.huhu.test.platform.service.TestPlatformGlobalVariableService;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Validated
 @RestController
 @RequestMapping("/global")
 public class TestPlatformGlobalVariableController {
@@ -40,33 +35,26 @@ public class TestPlatformGlobalVariableController {
     }
 
     @PutMapping("/variable")
-    public Mono<GlobalVariableCreateResponse> create(Mono<Authentication> authentication,
-            @Validated @RequestBody Mono<GlobalVariableCreateRequest> request) {
+    public Mono<GlobalVariableModifyResponse> create(Mono<Authentication> authentication,
+            @Validated @RequestBody Mono<GlobalVariableModifyRequest> request) {
         return Mono.zip(authentication.map(Authentication::getName), request, GlobalVariableCreateVo::new)
                    .flatMap(globalVariableService::createTestPlatformGlobalVariable);
     }
 
-    @PostMapping("/variable/{variableId}")
-    public Flux<GlobalVariableUpdateResponse> update(Mono<Authentication> authentication,
-            @PathVariable("variableId") Long variableId,
-            @Validated @RequestBody Mono<GlobalVariableUpdateRequest> request) {
-        return authentication
-                .map(Authentication::getName)
-                .flatMapMany(globalVariableService::queryTestPlatformGlobalVariables)
-                .map(GlobalVariableQueryResponse::getVariableId)
-                .filter(variableId::equals)
-                .zipWith(request, GlobalVariableUpdateVo::new)
-                .flatMap(globalVariableService::updateTestPlatformGlobalVariable);
+    @PostMapping("/variable/{variableName}")
+    public Mono<GlobalVariableModifyResponse> update(Mono<Authentication> authentication,
+            @PathVariable("variableName") @Pattern(regexp = "^[A-Za-z0-9-_]{1,32}$") String variableName,
+            @Validated @RequestBody Mono<GlobalVariableModifyRequest> request) {
+        return Mono.zip(authentication.map(Authentication::getName), Mono.just(variableName), request)
+                   .map(GlobalVariableUpdateVo::build)
+                   .flatMap(globalVariableService::updateTestPlatformGlobalVariable);
     }
 
-    @DeleteMapping("/variable/{variableId}")
-    public Flux<Void> delete(Mono<Authentication> authentication, @PathVariable("variableId") Long variableId) {
-        return authentication
-                .map(Authentication::getName)
-                .flatMapMany(globalVariableService::queryTestPlatformGlobalVariables)
-                .map(GlobalVariableQueryResponse::getVariableId)
-                .filter(variableId::equals)
-                .flatMap(globalVariableService::deleteTestPlatformGlobalVariable);
+    @DeleteMapping("/variable/{variableName}")
+    public Mono<Integer> delete(Mono<Authentication> authentication,
+            @PathVariable("variableName") @Size(max = 32) @Pattern(regexp = "^[A-Za-z0-9-_]+$") String variableName) {
+        return Mono.zip(authentication.map(Authentication::getName), Mono.just(variableName), GlobalVariableDeleteVo::new)
+                   .flatMap(globalVariableService::deleteTestPlatformGlobalVariable);
     }
 
 }

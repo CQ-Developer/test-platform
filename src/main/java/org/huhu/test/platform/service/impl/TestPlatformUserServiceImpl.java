@@ -48,6 +48,9 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                 .flatMap(UserQueryResponse::build);
     }
 
+    /**
+     * todo 添加事务控制
+     */
     @Override
     public Mono<Void> createTestPlatformUser(UserCreationRequest request) {
         String username = request.getUsername();
@@ -67,6 +70,9 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
         return saveUser.thenMany(saveUserRoles).then();
     }
 
+    /**
+     * todo 添加事务控制
+     */
     @Override
     public Mono<Void> deleteTestPlatformUser(String username) {
         var deleteUser = userRepository.deleteByUsername(username);
