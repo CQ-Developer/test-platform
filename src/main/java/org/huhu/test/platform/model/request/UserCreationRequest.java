@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import org.huhu.test.platform.constant.TestPlatformRole;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,7 +24,7 @@ public class UserCreationRequest {
 
     @NotNull
     @Size(min = 1, max = 3)
-    private List<TestPlatformRole> roles;
+    private List<@Pattern(regexp = "^(USER|DEV|ADMIN)$") String> roles;
 
     private Boolean enabled;
 
@@ -50,11 +49,11 @@ public class UserCreationRequest {
         this.password = password;
     }
 
-    public List<TestPlatformRole> getRoles() {
+    public List<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<TestPlatformRole> roles) {
+    public void setRoles(List<String> roles) {
         this.roles = roles;
     }
 

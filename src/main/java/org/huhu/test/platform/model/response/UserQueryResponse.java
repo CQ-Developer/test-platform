@@ -1,27 +1,18 @@
 package org.huhu.test.platform.model.response;
 
+import org.huhu.test.platform.model.table.TestPlatformUserRole;
+import reactor.core.publisher.GroupedFlux;
+import reactor.core.publisher.Mono;
+
 import java.util.List;
 
-public class UserQueryResponse {
+public record UserQueryResponse(String username, List<String> userRoles) {
 
-    private String name;
-
-    private List<String> roles;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
+    public static Mono<UserQueryResponse> build(
+            GroupedFlux<String, TestPlatformUserRole> groupedFlux) {
+        var username = Mono.just(groupedFlux.key());
+        var userRoles = groupedFlux.map(TestPlatformUserRole::getUserRole).collectList();
+        return Mono.zip(username, userRoles, UserQueryResponse::new);
     }
 
 }

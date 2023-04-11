@@ -22,6 +22,13 @@ public class TestPlatformUserRole {
         this.username = username;
     }
 
+    public static TestPlatformUserRole build(String userRole, String username) {
+        var testPlatformUserRole = new TestPlatformUserRole();
+        testPlatformUserRole.setUsername(username);
+        testPlatformUserRole.setUserRole(userRole);
+        return testPlatformUserRole;
+    }
+
     public Long getRoleId() {
         return roleId;
     }
