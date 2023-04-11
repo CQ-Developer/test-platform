@@ -13,13 +13,11 @@ import java.util.Optional;
 public class UserCreationRequest {
 
     @NotBlank
-    @Pattern(regexp = "^[A-Za-z0-9-_]+$")
-    @Size(min = 4, max = 16)
+    @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$")
     private String username;
 
     @NotBlank
-    @Pattern(regexp = "^[\\w@#:-]+$")
-    @Size(min = 6, max = 32)
+    @Pattern(regexp = "^[\\w@#:-]{6,32}$")
     private String password;
 
     @NotNull
