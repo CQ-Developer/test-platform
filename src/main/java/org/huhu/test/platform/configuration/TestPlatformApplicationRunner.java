@@ -11,7 +11,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.data.domain.Example;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -20,8 +19,10 @@ import static org.huhu.test.platform.constant.TestPlatformRole.ADMIN;
 
 /**
  * 创建一个默认的root用户
+ *
+ * @deprecated 使用脚本创建默认用户
  */
-@Component
+@Deprecated
 public class TestPlatformApplicationRunner implements ApplicationRunner {
 
     private final PasswordEncoder passwordEncoder;
