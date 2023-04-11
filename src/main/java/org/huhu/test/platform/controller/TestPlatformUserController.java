@@ -1,5 +1,6 @@
 package org.huhu.test.platform.controller;
 
+import jakarta.validation.constraints.Pattern;
 import org.huhu.test.platform.model.request.UserCreationRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Validated
 @RestController
 @RequestMapping("/management")
 public class TestPlatformUserController {
@@ -31,17 +33,19 @@ public class TestPlatformUserController {
     }
 
     @GetMapping("/user/{username}")
-    public Mono<UserDetailQueryResponse> query(@PathVariable("username") String username) {
+    public Mono<UserDetailQueryResponse> query(
+            @PathVariable("username") @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$") String username) {
         return userService.queryTestPlatformUser(username);
     }
 
     @PutMapping("/user")
-    public Mono<Void> create(@RequestBody @Validated Mono<UserCreationRequest> request) {
+    public Mono<Void> create(@Validated @RequestBody Mono<UserCreationRequest> request) {
         return request.flatMap(userService::createTestPlatformUser);
     }
 
     @DeleteMapping("/user/{username}")
-    public Mono<Void> delete(@PathVariable("username") String username) {
+    public Mono<Void> delete(
+            @PathVariable("username") @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$") String username) {
         return userService.deleteTestPlatformUser(username);
     }
 

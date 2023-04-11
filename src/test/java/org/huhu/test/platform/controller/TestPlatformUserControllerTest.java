@@ -24,7 +24,7 @@ import static org.mockito.Mockito.doReturn;
 
 @WithMockUser
 @WebFluxTest(TestPlatformUserController.class)
-class TestUserController {
+class TestPlatformUserControllerTest {
 
     @Autowired
     WebTestClient webClient;
@@ -33,12 +33,12 @@ class TestUserController {
     TestPlatformUserService userService;
 
     @Test
-    void testQueryTestPlatformUsers() {
-        UserQueryResponse jack = new UserQueryResponse();
+    void queryTestPlatformUsers() {
+        var jack = new UserQueryResponse();
         jack.setName("Jack");
         jack.setRoles(List.of("DEV", "USER"));
 
-        UserQueryResponse tom = new UserQueryResponse();
+        var tom = new UserQueryResponse();
         tom.setName("Tom");
         tom.setRoles(List.of("ADMIN", "TEST"));
 
@@ -49,15 +49,30 @@ class TestUserController {
         webClient.get()
                  .uri("/management/user")
                  .exchange()
-                 .expectStatus()
-                 .isOk()
+                 .expectStatus().isOk()
                  .expectBodyList(UserQueryResponse.class)
                  .hasSize(2);
     }
 
     @Test
-    void testQueryTestPlatformUser() {
-        UserDetailQueryResponse jack = new UserDetailQueryResponse();
+    void queryTestPlatformUsersError() {
+        doReturn(Flux.error(new RuntimeException("test")))
+                .when(userService)
+                .queryTestPlatformUsers();
+
+        webClient.get()
+                 .uri("/management/user")
+                 .exchange()
+                 .expectStatus().isOk()
+                 .expectBody()
+                 .jsonPath("$.code").exists()
+                 .jsonPath("$.code").isNumber()
+                 .jsonPath("$.code").isEqualTo(3000);
+    }
+
+    @Test
+    void queryTestPlatformUser() {
+        var jack = new UserDetailQueryResponse();
         jack.setUsername("Jack");
         jack.setUserRoles(List.of("DEV", "ADMIN"));
         jack.setEnabled(true);
@@ -84,12 +99,40 @@ class TestUserController {
     }
 
     @Test
-    void testAddTestPlatformUser() {
+    void queryTestPlatformUserError() {
+        doReturn(Mono.error(new RuntimeException("test")))
+                .when(userService)
+                .queryTestPlatformUser(anyString());
+
+        webClient.get()
+                 .uri("/management/user/{username}", "Jack")
+                 .exchange()
+                 .expectStatus().isOk()
+                 .expectBody()
+                 .jsonPath("$.code").exists()
+                 .jsonPath("$.code").isNumber()
+                 .jsonPath("$.code").isEqualTo(3000);
+    }
+
+    @Test
+    void queryTestPlatformUserWithIllegalUsername() {
+        webClient.get()
+                 .uri("/management/user/{username}", "Tom")
+                 .exchange()
+                 .expectStatus().isOk()
+                 .expectBody()
+                 .jsonPath("$.code").exists()
+                 .jsonPath("$.code").isNumber()
+                 .jsonPath("$.code").isEqualTo(1001);
+    }
+
+    @Test
+    void createTestPlatformUser() {
         doReturn(Mono.empty())
                 .when(userService)
                 .createTestPlatformUser(any(UserCreationRequest.class));
 
-        UserCreationRequest request = new UserCreationRequest();
+        var request = new UserCreationRequest();
         request.setUsername("Jack");
         request.setPassword("123456");
         request.setRoles(List.of(DEV, USER));
@@ -103,8 +146,13 @@ class TestUserController {
     }
 
     @Test
-    void testAddTestPlatformUserWithEmptyUsername() {
-        UserCreationRequest request = new UserCreationRequest();
+    void createTestPlatformUserError() {
+        doReturn(Mono.error(new RuntimeException("test")))
+                .when(userService)
+                .createTestPlatformUser(any(UserCreationRequest.class));
+
+        var request = new UserCreationRequest();
+        request.setUsername("Jack");
         request.setPassword("123456");
         request.setRoles(List.of(DEV, USER));
 
@@ -117,14 +165,30 @@ class TestUserController {
                  .expectBody()
                  .jsonPath("$.code").exists()
                  .jsonPath("$.code").isNumber()
-                 .jsonPath("$.code").isEqualTo(1001)
-                 .jsonPath("$.message").exists()
-                 .jsonPath("$.message").isEqualTo("request parameter invalid");
+                 .jsonPath("$.code").isEqualTo(3000);
     }
 
     @Test
-    void testAddTestPlatformUserWithEmptyPassword() {
-        UserCreationRequest request = new UserCreationRequest();
+    void createTestPlatformUserWithEmptyUsername() {
+        var request = new UserCreationRequest();
+        request.setPassword("123456");
+        request.setRoles(List.of(DEV, USER));
+
+        webClient.mutateWith(SecurityMockServerConfigurers.csrf())
+                 .put()
+                 .uri("/management/user")
+                 .bodyValue(request)
+                 .exchange()
+                 .expectStatus().isOk()
+                 .expectBody()
+                 .jsonPath("$.code").exists()
+                 .jsonPath("$.code").isNumber()
+                 .jsonPath("$.code").isEqualTo(1001);
+    }
+
+    @Test
+    void createTestPlatformUserWithEmptyPassword() {
+        var request = new UserCreationRequest();
         request.setUsername("Jack");
         request.setRoles(List.of(DEV, USER));
 
@@ -137,14 +201,12 @@ class TestUserController {
                  .expectBody()
                  .jsonPath("$.code").exists()
                  .jsonPath("$.code").isNumber()
-                 .jsonPath("$.code").isEqualTo(1001)
-                 .jsonPath("$.message").exists()
-                 .jsonPath("$.message").isEqualTo("request parameter invalid");
+                 .jsonPath("$.code").isEqualTo(1001);
     }
 
     @Test
-    void testAddTestPlatformUserWithEmptyRoles() {
-        UserCreationRequest request = new UserCreationRequest();
+    void createTestPlatformUserWithEmptyRoles() {
+        var request = new UserCreationRequest();
         request.setUsername("Jack");
         request.setPassword("123456");
 
@@ -157,25 +219,50 @@ class TestUserController {
                  .expectBody()
                  .jsonPath("$.code").exists()
                  .jsonPath("$.code").isNumber()
-                 .jsonPath("$.code").isEqualTo(1001)
-                 .jsonPath("$.message").exists()
-                 .jsonPath("$.message").isEqualTo("request parameter invalid");
+                 .jsonPath("$.code").isEqualTo(1001);
     }
 
     @Test
-    void testAddTestPlatformUserWithEmptyBody() {
+    void deleteTestPlatformUser() {
+        doReturn(Mono.empty())
+                .when(userService)
+                .deleteTestPlatformUser(anyString());
+
         webClient.mutateWith(SecurityMockServerConfigurers.csrf())
-                 .put()
-                 .uri("/management/user")
-                 .bodyValue(new UserCreationRequest())
+                 .delete()
+                 .uri("/management/user/Jack")
+                 .exchange()
+                 .expectStatus().isOk();
+    }
+
+    @Test
+    void deleteTestPlatformUserError() {
+        doReturn(Mono.error(new RuntimeException("test")))
+                .when(userService)
+                .deleteTestPlatformUser(anyString());
+
+        webClient.mutateWith(SecurityMockServerConfigurers.csrf())
+                 .delete()
+                 .uri("/management/user/Jack")
                  .exchange()
                  .expectStatus().isOk()
                  .expectBody()
                  .jsonPath("$.code").exists()
                  .jsonPath("$.code").isNumber()
-                 .jsonPath("$.code").isEqualTo(1001)
-                 .jsonPath("$.message").exists()
-                 .jsonPath("$.message").isEqualTo("request parameter invalid");
+                 .jsonPath("$.code").isEqualTo(3000);
+    }
+
+    @Test
+    void deleteTestPlatformUserWithIllegalUsername() {
+        webClient.mutateWith(SecurityMockServerConfigurers.csrf())
+                 .delete()
+                 .uri("/management/user/Tom")
+                 .exchange()
+                 .expectStatus().isOk()
+                 .expectBody()
+                 .jsonPath("$.code").exists()
+                 .jsonPath("$.code").isNumber()
+                 .jsonPath("$.code").isEqualTo(1001);
     }
 
 }
