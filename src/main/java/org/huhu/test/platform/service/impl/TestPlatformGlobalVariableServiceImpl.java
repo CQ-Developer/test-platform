@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+
 @Service
 public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobalVariableService {
 
@@ -45,7 +47,7 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
         globalVariable.setVariableId(vo.variableId());
         globalVariable.setVariableName(vo.variableName());
         globalVariable.setVariableValue(vo.variableValue());
-        globalVariable.setVariableDescription(vo.variableDescription());
+        Optional.ofNullable(vo.variableDescription()).ifPresent(globalVariable::setVariableDescription);
         return variableRepository
                 .save(globalVariable)
                 .doOnNext(item -> logger.info("update global variable {}", item.getVariableId()))
@@ -58,7 +60,7 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
         globalVariable.setUsername(vo.username());
         globalVariable.setVariableName(vo.variableName());
         globalVariable.setVariableValue(vo.variableValue());
-        globalVariable.setVariableDescription(vo.variableDescription());
+        Optional.ofNullable(vo.variableDescription()).ifPresent(globalVariable::setVariableDescription);
         return variableRepository
                 .save(globalVariable)
                 .doOnNext(item -> logger.info("save global variable {}", item.getVariableId()))
