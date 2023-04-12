@@ -1,5 +1,6 @@
 package org.huhu.test.platform.service.impl;
 
+import org.huhu.test.platform.exception.UserNotFoundException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
@@ -10,6 +11,7 @@ import org.huhu.test.platform.repository.TestPlatformUserRoleRepository;
 import org.huhu.test.platform.service.TestPlatformUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -20,12 +22,15 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
 
     private final Logger logger = LoggerFactory.getLogger(TestPlatformUserServiceImpl.class);
 
+    private final PasswordEncoder passwordEncoder;
+
     private final TestPlatformUserRepository userRepository;
 
     private final TestPlatformUserRoleRepository userRoleRepository;
 
-    public TestPlatformUserServiceImpl(TestPlatformUserRepository userRepository,
-            TestPlatformUserRoleRepository userRoleRepository) {
+    TestPlatformUserServiceImpl(PasswordEncoder passwordEncoder,
+            TestPlatformUserRepository userRepository, TestPlatformUserRoleRepository userRoleRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
     }
@@ -33,7 +38,8 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     @Override
     public Mono<UserDetailQueryResponse> queryTestPlatformUser(String username) {
         var findUser = userRepository
-                .findByUsername(username);
+                .findByUsername(username)
+                .switchIfEmpty(Mono.error(new UserNotFoundException()));
         var findUserRoles = userRoleRepository
                 .findByUsername(username)
                 .map(TestPlatformUserRole::getRoleName)
@@ -52,18 +58,23 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     @Override
     @Transactional
     public Mono<Void> createTestPlatformUser(UserCreateRequest request) {
-        var findUser = userRepository
-                .findByUsername(request.username());
+        var testPlatformUser = TestPlatformUser.from(request);
+        testPlatformUser.setPassword(passwordEncoder.encode(request.password()));
+
         var saveUser = userRepository
-                .save(TestPlatformUser.from(request))
+                .save(testPlatformUser)
                 .doOnNext(i -> logger.info("create user {}", i.getUsername()));
+
         var saveRole = userRoleRepository
                 .saveAll(TestPlatformUserRole.from(request))
                 .doOnNext(i -> logger.info("create user {} with role {}", i.getUsername(), i.getRoleName()));
-        return findUser.flatMap(i -> saveUser)
-                       .flatMapMany(i -> saveRole)
-                       .switchIfEmpty(Mono.empty())
-                       .then();
+
+        return userRepository
+                .findByUsername(request.username())
+                .flatMap(i -> Mono.error(new UserNotFoundException()))
+                .switchIfEmpty(saveUser)
+                .thenMany(saveRole)
+                .then();
     }
 
     @Override
