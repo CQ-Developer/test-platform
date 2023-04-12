@@ -28,23 +28,23 @@ public class TestPlatformUserController {
     }
 
     @GetMapping
-    public Flux<UserQueryResponse> query() {
+    public Flux<UserQueryResponse> queryUser() {
         return userService.queryTestPlatformUsers();
     }
 
     @GetMapping("/{username}")
-    public Mono<UserDetailQueryResponse> query(
+    public Mono<UserDetailQueryResponse> queryUser(
             @PathVariable("username") @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$") String username) {
         return userService.queryTestPlatformUser(username);
     }
 
     @PutMapping
-    public Mono<Void> create(@Validated @RequestBody Mono<UserCreateRequest> request) {
+    public Mono<Void> createUser(@Validated @RequestBody Mono<UserCreateRequest> request) {
         return request.flatMap(userService::createTestPlatformUser);
     }
 
     @DeleteMapping("/{username}")
-    public Mono<Void> delete(
+    public Mono<Void> deleteUser(
             @PathVariable("username") @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$") String username) {
         // todo 不允许删除root用户
         return userService.deleteTestPlatformUser(username);

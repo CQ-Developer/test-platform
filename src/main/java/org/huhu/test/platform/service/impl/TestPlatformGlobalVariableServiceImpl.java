@@ -1,7 +1,5 @@
 package org.huhu.test.platform.service.impl;
 
-import org.huhu.test.platform.model.request.GlobalVariableModifyRequest;
-import org.huhu.test.platform.model.response.GlobalVariableModifyResponse;
 import org.huhu.test.platform.model.response.GlobalVariableQueryResponse;
 import org.huhu.test.platform.model.table.TestPlatformGlobalVariable;
 import org.huhu.test.platform.model.vo.GlobalVariableCreateVo;
@@ -14,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Optional;
 
 @Service
 public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobalVariableService {
@@ -36,35 +32,36 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
     }
 
     @Override
-    public Mono<GlobalVariableModifyResponse> updateTestPlatformGlobalVariable(GlobalVariableUpdateVo vo) {
+    public Mono<Void> updateTestPlatformGlobalVariable(GlobalVariableUpdateVo vo) {
+        var username = Mono.just(vo.username());
+        // 删除全局变量
+        var variableName = Mono.just(vo.variableName());
         var deleteVariable = Mono
-                .zip(Mono.just(vo.username()), Mono.just(vo.variableName()), GlobalVariableDeleteVo::new);
+                .zip(username, variableName, GlobalVariableDeleteVo::new)
+                .flatMap(this::deleteTestPlatformGlobalVariable);
+        // 新增全局变量
+        var request = Mono.just(vo.request());
         var createVariable = Mono
-                .zip(Mono.just(vo.username()), Mono.just(vo.request()), GlobalVariableCreateVo::new);
-        return deleteVariable
-                .flatMap(this::deleteTestPlatformGlobalVariable)
-                .then(createVariable)
+                .zip(username, request, GlobalVariableCreateVo::new)
                 .flatMap(this::createTestPlatformGlobalVariable);
+        // 执行
+        return deleteVariable.then(createVariable);
     }
 
     @Override
-    public Mono<GlobalVariableModifyResponse> createTestPlatformGlobalVariable(GlobalVariableCreateVo vo) {
-        var globalVariable = new TestPlatformGlobalVariable(vo.username());
-        GlobalVariableModifyRequest request = vo.request();
-        globalVariable.setVariableName(request.variableName());
-        globalVariable.setVariableValue(request.variableValue());
-        Optional.ofNullable(request.variableDescription()).ifPresent(globalVariable::setVariableDescription);
+    public Mono<Void> createTestPlatformGlobalVariable(GlobalVariableCreateVo vo) {
         return variableRepository
-                .save(globalVariable)
+                .save(TestPlatformGlobalVariable.from(vo))
                 .doOnNext(item -> logger.info("save global variable {}", item.getVariableName()))
-                .map(GlobalVariableModifyResponse::from);
+                .then();
     }
 
     @Override
-    public Mono<Integer> deleteTestPlatformGlobalVariable(GlobalVariableDeleteVo vo) {
+    public Mono<Void> deleteTestPlatformGlobalVariable(GlobalVariableDeleteVo vo) {
         return variableRepository
                 .deleteByUsernameAndVariableName(vo.username(), vo.variableName())
-                .doOnNext(i -> logger.info("delete {} global variable.", i));
+                .doOnNext(i -> logger.info("delete {} global variable.", i))
+                .then();
     }
 
 }

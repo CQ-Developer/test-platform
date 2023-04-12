@@ -11,10 +11,9 @@ import org.huhu.test.platform.service.TestPlatformUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.time.LocalDateTime;
 
 @Service
 public class TestPlatformUserServiceImpl implements TestPlatformUserService {
@@ -50,36 +49,20 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                 .flatMap(UserQueryResponse::from);
     }
 
-    /**
-     * todo 添加事务控制
-     */
     @Override
+    @Transactional
     public Mono<Void> createTestPlatformUser(UserCreateRequest request) {
-        // todo 检查用户是否存在
-        String username = request.username();
-        logger.info("delete user {}", username);
-        // 创建用户
-        var user = new TestPlatformUser();
-        user.setUsername(request.username());
-        user.setPassword(request.password());
-        user.setExpiredTime(LocalDateTime.now().plusYears(1L));
-        // 保存用户
-        var saveUser = userRepository.save(user);
-        // 保存角色
-        var saveUserRoles = Flux
-                .zip(Flux.fromIterable(request.roles()),
-                     Flux.just(username).repeat(),
-                     TestPlatformUserRole::fromRoleNameUsername)
-                .collectList()
-                .flatMapMany(userRoleRepository::saveAll);
-        // 执行
-        return saveUser.thenMany(saveUserRoles).then();
+        var saveUser = userRepository
+                .save(TestPlatformUser.from(request))
+                .doOnNext(i -> logger.info("create user {}", i.getUsername()));
+        var saveRole = userRoleRepository
+                .saveAll(TestPlatformUserRole.from(request))
+                .doOnNext(i -> logger.info("create user {} with role {}", i.getUsername(), i.getRoleName()));
+        return saveUser.thenMany(saveRole).then();
     }
 
-    /**
-     * todo 添加事务控制
-     */
     @Override
+    @Transactional
     public Mono<Void> deleteTestPlatformUser(String username) {
         var deleteUser = userRepository
                 .deleteByUsername(username)

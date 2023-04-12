@@ -1,5 +1,6 @@
 package org.huhu.test.platform.configuration;
 
+import org.huhu.test.platform.constant.TestPlatformRoleName;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,9 @@ import org.springframework.security.web.server.WebFilterChainProxy;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.BCryptVersion.$2A;
 
 /**
@@ -28,9 +32,15 @@ public class TestPlatformSecurityConfiguration {
                 .httpBasic()
                 .and()
                 .authorizeExchange()
-                .pathMatchers("/management/**").hasAnyRole("DEV", "ADMIN")
-                .pathMatchers("/global/**").hasAnyRole("USER", "DEV", "ADMIN")
-                .anyExchange().permitAll()
+                .pathMatchers("/management/user/*")
+                .hasAnyRole(TestPlatformRoleName.top(1))
+                .pathMatchers(GET, "/management/role/*")
+                .hasAnyRole(TestPlatformRoleName.all())
+                .pathMatchers(PUT, "/management/role/*")
+                .hasAnyRole(TestPlatformRoleName.top(1))
+                .pathMatchers(DELETE, "/management/role/*")
+                .hasAnyRole(TestPlatformRoleName.top(1))
+                .anyExchange().authenticated()
                 .and()
                 // todo csrf开发阶段关闭
                 .csrf().disable()
@@ -42,7 +52,7 @@ public class TestPlatformSecurityConfiguration {
         return serverHttpSecurity
                 .securityMatcher(EndpointRequest.toAnyEndpoint())
                 .authorizeExchange()
-                .anyExchange().hasRole("ADMIN")
+                .anyExchange().hasAnyRole(TestPlatformRoleName.top(2))
                 .and()
                 .build();
     }
@@ -51,7 +61,14 @@ public class TestPlatformSecurityConfiguration {
     public PasswordEncoder passwordEncoder() throws NoSuchAlgorithmException {
         SecureRandom secureRandom = SecureRandom.getInstanceStrong();
         secureRandom.setSeed(System.currentTimeMillis());
-        return new BCryptPasswordEncoder($2A, 18, secureRandom);
+        return new BCryptPasswordEncoder($2A, 8, secureRandom);
+    }
+
+    public static void main(String[] args) throws Exception {
+        SecureRandom secureRandom = SecureRandom.getInstanceStrong();
+        secureRandom.setSeed(System.currentTimeMillis());
+        var passwordEncoder = new BCryptPasswordEncoder($2A, 8, secureRandom);
+        System.out.println(passwordEncoder.encode("chen"));
     }
 
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.server.MethodNotAllowedException;
+import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
 
 import static org.huhu.test.platform.constant.TestPlatformError.CLIENT_REQUEST_PARAMETER_INVALID;
@@ -17,7 +18,7 @@ public class TestPlatformErrorController {
 
     private final Logger logger = LoggerFactory.getLogger(TestPlatformErrorController.class);
 
-    @ExceptionHandler({WebExchangeBindException.class, ConstraintViolationException.class})
+    @ExceptionHandler({WebExchangeBindException.class, ConstraintViolationException.class, ServerWebInputException.class})
     public Mono<ErrorResponse> handleWebExchangeBindException(Exception exception) {
         logger.error("request parameter error.", exception);
         return Mono.just(ErrorResponse.clientError().withError(CLIENT_REQUEST_PARAMETER_INVALID));

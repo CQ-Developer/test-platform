@@ -12,8 +12,8 @@ import reactor.core.publisher.Mono;
  * @param variableValue 全局变量值
  * @param variableDescription 全局变量描述
  *
- * @see org.huhu.test.platform.controller.TestPlatformGlobalVariableController#create(Mono, Mono)
- * @see org.huhu.test.platform.controller.TestPlatformGlobalVariableController#update(Mono, String, Mono)
+ * @see org.huhu.test.platform.controller.TestPlatformGlobalVariableController#createGlobalVariable(Mono, Mono)
+ * @see org.huhu.test.platform.controller.TestPlatformGlobalVariableController#updateGlobalVariable(Mono, String, Mono)
  */
 public record GlobalVariableModifyRequest(
         @NotBlank

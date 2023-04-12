@@ -1,10 +1,12 @@
 package org.huhu.test.platform.model.table;
 
 import org.huhu.test.platform.constant.TestPlatformRoleName;
+import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.request.UserRoleModifyRequest;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+import reactor.core.publisher.Flux;
 
 @Table("t_test_user_role")
 public class TestPlatformUserRole {
@@ -25,12 +27,15 @@ public class TestPlatformUserRole {
         this.username = username;
     }
 
-    public static TestPlatformUserRole fromRoleNameUsername(TestPlatformRoleName roleName, String username) {
-        return new TestPlatformUserRole(roleName, username);
+    public static TestPlatformUserRole from(UserRoleModifyRequest request) {
+        return new TestPlatformUserRole(request.roleName(), request.username());
     }
 
-    public static TestPlatformUserRole fromRequest(UserRoleModifyRequest request) {
-        return new TestPlatformUserRole(request.roleName(), request.username());
+    public static Flux<TestPlatformUserRole> from(UserCreateRequest request) {
+        var roles = request.roles();
+        var roleName = Flux.fromIterable(roles);
+        var username = Flux.just(request.username()).repeat(roles.size() - 1);
+        return Flux.zip(roleName, username, TestPlatformUserRole::new);
     }
 
     public Long getRoleId() {

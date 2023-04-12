@@ -16,7 +16,7 @@ import java.util.List;
  * @param password 密码
  * @param roles 用户角色
  *
- * @see org.huhu.test.platform.controller.TestPlatformUserController#create(Mono)
+ * @see org.huhu.test.platform.controller.TestPlatformUserController#createUser(Mono)
  */
 public record UserCreateRequest(
         @NotBlank

@@ -16,7 +16,7 @@ import java.util.List;
  * @param registerTime 注册时间
  * @param expiredTime 到期时间
  *
- * @see org.huhu.test.platform.controller.TestPlatformUserController#query(String)
+ * @see org.huhu.test.platform.controller.TestPlatformUserController#queryUser(String)
  */
 public record UserDetailQueryResponse(
         String username,

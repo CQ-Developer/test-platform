@@ -1,7 +1,6 @@
 package org.huhu.test.platform.controller;
 
 import org.huhu.test.platform.model.request.GlobalVariableModifyRequest;
-import org.huhu.test.platform.model.response.GlobalVariableModifyResponse;
 import org.huhu.test.platform.model.vo.GlobalVariableCreateVo;
 import org.huhu.test.platform.service.TestPlatformGlobalVariableService;
 import org.junit.jupiter.api.Test;
@@ -31,8 +30,7 @@ class TestPlatformGlobalVariableControllerTest {
 
     @Test
     void create() {
-        var response = new GlobalVariableModifyResponse("someName", "someValue", "someDescription");
-        Mockito.doReturn(Mono.just(response))
+        Mockito.doReturn(Mono.empty())
                .when(globalVariableService)
                .createTestPlatformGlobalVariable(ArgumentMatchers.any(GlobalVariableCreateVo.class));
         var request = new GlobalVariableModifyRequest("someName", "someValue", "someDescription");
@@ -41,11 +39,7 @@ class TestPlatformGlobalVariableControllerTest {
                  .uri("/global/variable")
                  .bodyValue(request)
                  .exchange()
-                 .expectStatus().isOk()
-                 .expectBody()
-                 .jsonPath("$.variableName").isEqualTo("someName")
-                 .jsonPath("$.variableValue").isEqualTo("someValue")
-                 .jsonPath("$.variableDescription").isEqualTo("someDescription");
+                 .expectStatus().isOk();
     }
 
     @Test

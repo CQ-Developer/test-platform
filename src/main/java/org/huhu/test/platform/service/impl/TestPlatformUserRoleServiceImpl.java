@@ -32,7 +32,7 @@ public class TestPlatformUserRoleServiceImpl implements TestPlatformUserRoleServ
     @Override
     public Mono<Void> createTestPlatformUserRole(UserRoleModifyRequest request) {
         return userRoleRepository
-                .save(TestPlatformUserRole.fromRequest(request))
+                .save(TestPlatformUserRole.from(request))
                 .doOnNext(item -> logger.info("save user role {}", item.getRoleName()))
                 .then();
     }

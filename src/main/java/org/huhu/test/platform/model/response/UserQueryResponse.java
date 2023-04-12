@@ -13,7 +13,7 @@ import java.util.List;
  * @param username 用户名
  * @param userRoles 用户角色
  *
- * @see org.huhu.test.platform.controller.TestPlatformUserController#query()
+ * @see org.huhu.test.platform.controller.TestPlatformUserController#queryUser()
  */
 public record UserQueryResponse(
         String username,

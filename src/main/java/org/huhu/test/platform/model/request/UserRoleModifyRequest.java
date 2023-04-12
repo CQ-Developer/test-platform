@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
  * @param username 用户名
  * @param roleName 角色名
  *
- * @see org.huhu.test.platform.controller.TestPlatformUserRoleController#create(Mono)
+ * @see org.huhu.test.platform.controller.TestPlatformUserRoleController#createUserRole(Mono)
  */
 public record UserRoleModifyRequest(
         @NotBlank

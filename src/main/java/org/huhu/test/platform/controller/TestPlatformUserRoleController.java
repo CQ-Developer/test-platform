@@ -26,19 +26,19 @@ public class TestPlatformUserRoleController {
     }
 
     @GetMapping
-    public Flux<TestPlatformRoleName> query(Mono<Authentication> authentication) {
+    public Flux<TestPlatformRoleName> queryUserRole(Mono<Authentication> authentication) {
         return authentication
                 .map(Authentication::getName)
                 .flatMapMany(userRoleService::queryTestPlatformUserRole);
     }
 
     @PutMapping
-    public Mono<Void> create(@Validated @RequestBody Mono<UserRoleModifyRequest> request) {
+    public Mono<Void> createUserRole(@Validated @RequestBody Mono<UserRoleModifyRequest> request) {
         return request.flatMap(userRoleService::createTestPlatformUserRole);
     }
 
     @DeleteMapping
-    public Mono<Void> delete(@Validated @RequestBody Mono<UserRoleModifyRequest> request) {
+    public Mono<Void> deleteUserRole(@Validated @RequestBody Mono<UserRoleModifyRequest> request) {
         return request.flatMap(userRoleService::deleteTestPlatformUseRole);
     }
 

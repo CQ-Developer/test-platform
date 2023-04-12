@@ -1,8 +1,12 @@
 package org.huhu.test.platform.model.table;
 
+import org.huhu.test.platform.model.request.GlobalVariableModifyRequest;
+import org.huhu.test.platform.model.vo.GlobalVariableCreateVo;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+
+import java.util.Optional;
 
 @Table("t_test_global_variable")
 public class TestPlatformGlobalVariable {
@@ -22,10 +26,15 @@ public class TestPlatformGlobalVariable {
     @Column("variable_description")
     private String variableDescription;
 
-    public TestPlatformGlobalVariable() {}
-
-    public TestPlatformGlobalVariable(String username) {
-        this.username = username;
+    public static TestPlatformGlobalVariable from(GlobalVariableCreateVo vo) {
+        var globalVariable = new TestPlatformGlobalVariable();
+        globalVariable.setUsername(vo.username());
+        GlobalVariableModifyRequest request = vo.request();
+        globalVariable.setVariableName(request.variableName());
+        globalVariable.setVariableValue(request.variableValue());
+        Optional.ofNullable(request.variableDescription())
+                .ifPresent(globalVariable::setVariableDescription);
+        return globalVariable;
     }
 
     public Long getVariableId() {
