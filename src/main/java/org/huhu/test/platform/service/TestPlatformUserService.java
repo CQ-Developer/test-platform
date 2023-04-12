@@ -1,6 +1,6 @@
 package org.huhu.test.platform.service;
 
-import org.huhu.test.platform.model.request.UserCreationRequest;
+import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
 import reactor.core.publisher.Flux;
@@ -25,7 +25,7 @@ public interface TestPlatformUserService {
      *
      * @param request 请求体
      */
-    Mono<Void> createTestPlatformUser(UserCreationRequest request);
+    Mono<Void> createTestPlatformUser(UserCreateRequest request);
 
     /**
      * 删除测试平台用户

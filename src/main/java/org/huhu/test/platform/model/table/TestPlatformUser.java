@@ -27,12 +27,6 @@ public class TestPlatformUser {
     @Column("expired_time")
     private LocalDateTime expiredTime;
 
-    public TestPlatformUser() {}
-
-    public TestPlatformUser(String username) {
-        this.username = username;
-    }
-
     public Long getUserId() {
         return userId;
     }

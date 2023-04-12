@@ -1,6 +1,6 @@
 package org.huhu.test.platform.service.impl;
 
-import org.huhu.test.platform.model.request.UserCreationRequest;
+import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
 import org.huhu.test.platform.model.table.TestPlatformUser;
@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.LocalDateTime;
 
 @Service
 public class TestPlatformUserServiceImpl implements TestPlatformUserService {
@@ -35,9 +37,9 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                 .findByUsername(username);
         var findUserRoles = userRoleRepository
                 .findByUsername(username)
-                .map(TestPlatformUserRole::getUserRole)
+                .map(TestPlatformUserRole::getRoleName)
                 .collectList();
-        return Mono.zip(findUser, findUserRoles, UserDetailQueryResponse::build);
+        return Mono.zip(findUser, findUserRoles, UserDetailQueryResponse::from);
     }
 
     @Override
@@ -45,28 +47,32 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
         return userRoleRepository
                 .findAll()
                 .groupBy(TestPlatformUserRole::getUsername)
-                .flatMap(UserQueryResponse::build);
+                .flatMap(UserQueryResponse::from);
     }
 
     /**
      * todo 添加事务控制
      */
     @Override
-    public Mono<Void> createTestPlatformUser(UserCreationRequest request) {
-        String username = request.getUsername();
+    public Mono<Void> createTestPlatformUser(UserCreateRequest request) {
+        // todo 检查用户是否存在
+        String username = request.username();
         logger.info("delete user {}", username);
-
-        var user = new TestPlatformUser(username);
-        user.setPassword(request.getPassword());
-        request.getEnabled().ifPresent(user::setEnabled);
-        request.getLocked().ifPresent(user::setLocked);
-        request.getExpiredTime().ifPresent(user::setExpiredTime);
+        // 创建用户
+        var user = new TestPlatformUser();
+        user.setUsername(request.username());
+        user.setPassword(request.password());
+        user.setExpiredTime(LocalDateTime.now().plusYears(1L));
+        // 保存用户
         var saveUser = userRepository.save(user);
+        // 保存角色
         var saveUserRoles = Flux
-                .zip(Flux.fromIterable(request.getRoles()), Flux.just(username).repeat(), TestPlatformUserRole::build)
+                .zip(Flux.fromIterable(request.roles()),
+                     Flux.just(username).repeat(),
+                     TestPlatformUserRole::fromRoleNameUsername)
                 .collectList()
                 .flatMapMany(userRoleRepository::saveAll);
-
+        // 执行
         return saveUser.thenMany(saveUserRoles).then();
     }
 
@@ -75,9 +81,13 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
      */
     @Override
     public Mono<Void> deleteTestPlatformUser(String username) {
-        var deleteUser = userRepository.deleteByUsername(username);
-        var deleteUserRole = userRoleRepository.deleteByUsername(username);
-        return deleteUser.then(deleteUserRole);
+        var deleteUser = userRepository
+                .deleteByUsername(username)
+                .doOnNext(count -> logger.info("delete {} user", count));
+        var deleteUserRole = userRoleRepository
+                .deleteByUsername(username)
+                .doOnNext(count -> logger.info("delete {} role", count));
+        return deleteUser.then(deleteUserRole).then();
     }
 
 }

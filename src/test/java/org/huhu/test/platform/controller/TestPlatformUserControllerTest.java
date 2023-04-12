@@ -1,6 +1,6 @@
 package org.huhu.test.platform.controller;
 
-import org.huhu.test.platform.model.request.UserCreationRequest;
+import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
 import org.huhu.test.platform.service.TestPlatformUserService;
@@ -16,6 +16,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import static org.huhu.test.platform.constant.TestPlatformRoleName.ADMIN;
+import static org.huhu.test.platform.constant.TestPlatformRoleName.DEV;
+import static org.huhu.test.platform.constant.TestPlatformRoleName.USER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -32,8 +35,8 @@ class TestPlatformUserControllerTest {
 
     @Test
     void queryTestPlatformUsers() {
-        var jack = new UserQueryResponse("Jack", List.of("DEV", "USER"));
-        var tom = new UserQueryResponse("Tom", List.of("ADMIN", "TEST"));
+        var jack = new UserQueryResponse("Jack", List.of(DEV, USER));
+        var tom = new UserQueryResponse("Tom", List.of(ADMIN));
 
         doReturn(Flux.just(jack, tom))
                 .when(userService)
@@ -65,7 +68,8 @@ class TestPlatformUserControllerTest {
 
     @Test
     void queryTestPlatformUser() {
-        var jack = new UserDetailQueryResponse("Jack", List.of("DEV", "ADMIN"), true, null, null, null);
+        var jack = new UserDetailQueryResponse(
+                "Jack", List.of(DEV, ADMIN), true, null, null, null);
 
         doReturn(Mono.just(jack))
                 .when(userService)
@@ -120,13 +124,10 @@ class TestPlatformUserControllerTest {
     void createTestPlatformUser() {
         doReturn(Mono.empty())
                 .when(userService)
-                .createTestPlatformUser(any(UserCreationRequest.class));
+                .createTestPlatformUser(any(UserCreateRequest.class));
 
-        var request = new UserCreationRequest();
-        request.setUsername("Jack");
-        request.setPassword("123456");
-        request.setRoles(List.of("DEV", "USER"));
-
+        var request = new UserCreateRequest(
+                "Jack", "123456", List.of(DEV, USER));
         webClient.mutateWith(SecurityMockServerConfigurers.csrf())
                  .put()
                  .uri("/management/user")
@@ -139,13 +140,10 @@ class TestPlatformUserControllerTest {
     void createTestPlatformUserError() {
         doReturn(Mono.error(new RuntimeException("test")))
                 .when(userService)
-                .createTestPlatformUser(any(UserCreationRequest.class));
+                .createTestPlatformUser(any(UserCreateRequest.class));
 
-        var request = new UserCreationRequest();
-        request.setUsername("Jack");
-        request.setPassword("123456");
-        request.setRoles(List.of("DEV", "USER"));
-
+        var request = new UserCreateRequest(
+                "Jack", "123456", List.of(DEV, USER));
         webClient.mutateWith(SecurityMockServerConfigurers.csrf())
                  .put()
                  .uri("/management/user")
@@ -160,10 +158,8 @@ class TestPlatformUserControllerTest {
 
     @Test
     void createTestPlatformUserWithEmptyUsername() {
-        var request = new UserCreationRequest();
-        request.setPassword("123456");
-        request.setRoles(List.of("DEV", "USER"));
-
+        var request = new UserCreateRequest(
+                null, "123456", List.of(DEV, USER));
         webClient.mutateWith(SecurityMockServerConfigurers.csrf())
                  .put()
                  .uri("/management/user")
@@ -178,10 +174,8 @@ class TestPlatformUserControllerTest {
 
     @Test
     void createTestPlatformUserWithEmptyPassword() {
-        var request = new UserCreationRequest();
-        request.setUsername("Jack");
-        request.setRoles(List.of("DEV", "USER"));
-
+        var request = new UserCreateRequest(
+                "Jack", null, List.of(DEV, USER));
         webClient.mutateWith(SecurityMockServerConfigurers.csrf())
                  .put()
                  .uri("/management/user")
@@ -196,10 +190,8 @@ class TestPlatformUserControllerTest {
 
     @Test
     void createTestPlatformUserWithEmptyRoles() {
-        var request = new UserCreationRequest();
-        request.setUsername("Jack");
-        request.setPassword("123456");
-
+        var request = new UserCreateRequest(
+                "Jack", "123456", null);
         webClient.mutateWith(SecurityMockServerConfigurers.csrf())
                  .put()
                  .uri("/management/user")

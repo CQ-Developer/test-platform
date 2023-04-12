@@ -1,5 +1,6 @@
 package org.huhu.test.platform.model.security;
 
+import org.huhu.test.platform.constant.TestPlatformRoleName;
 import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,8 +27,9 @@ public class TestPlatformUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return testPlatformUserRoles
                 .stream()
-                .map(TestPlatformUserRole::getUserRole)
-                .map(role -> "ROLE_" + role)
+                .map(TestPlatformUserRole::getRoleName)
+                .map(TestPlatformRoleName::name)
+                .map("ROLE_"::concat)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toSet());
     }

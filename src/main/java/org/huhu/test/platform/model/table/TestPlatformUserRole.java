@@ -1,5 +1,7 @@
 package org.huhu.test.platform.model.table;
 
+import org.huhu.test.platform.constant.TestPlatformRoleName;
+import org.huhu.test.platform.model.request.UserRoleModifyRequest;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -11,22 +13,24 @@ public class TestPlatformUserRole {
     @Column("role_id")
     private Long roleId;
 
-    private String username;
+    @Column("role_name")
+    private TestPlatformRoleName roleName;
 
-    @Column("user_role")
-    private String userRole;
+    private String username;
 
     public TestPlatformUserRole() {}
 
-    public TestPlatformUserRole(String username) {
+    public TestPlatformUserRole(TestPlatformRoleName roleName, String username) {
+        this.roleName = roleName;
         this.username = username;
     }
 
-    public static TestPlatformUserRole build(String userRole, String username) {
-        var testPlatformUserRole = new TestPlatformUserRole();
-        testPlatformUserRole.setUsername(username);
-        testPlatformUserRole.setUserRole(userRole);
-        return testPlatformUserRole;
+    public static TestPlatformUserRole fromRoleNameUsername(TestPlatformRoleName roleName, String username) {
+        return new TestPlatformUserRole(roleName, username);
+    }
+
+    public static TestPlatformUserRole fromRequest(UserRoleModifyRequest request) {
+        return new TestPlatformUserRole(request.roleName(), request.username());
     }
 
     public Long getRoleId() {
@@ -45,12 +49,12 @@ public class TestPlatformUserRole {
         this.username = username;
     }
 
-    public String getUserRole() {
-        return userRole;
+    public TestPlatformRoleName getRoleName() {
+        return roleName;
     }
 
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
+    public void setRoleName(TestPlatformRoleName roleName) {
+        this.roleName = roleName;
     }
 
 }

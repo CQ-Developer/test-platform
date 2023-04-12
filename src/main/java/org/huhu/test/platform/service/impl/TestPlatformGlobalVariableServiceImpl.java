@@ -32,7 +32,7 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
     public Flux<GlobalVariableQueryResponse> queryTestPlatformGlobalVariables(String username) {
         return variableRepository
                 .findByUsername(username)
-                .map(GlobalVariableQueryResponse::build);
+                .map(GlobalVariableQueryResponse::from);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
         return variableRepository
                 .save(globalVariable)
                 .doOnNext(item -> logger.info("save global variable {}", item.getVariableName()))
-                .map(GlobalVariableModifyResponse::build);
+                .map(GlobalVariableModifyResponse::from);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.huhu.test.platform.controller;
 
 import jakarta.validation.constraints.Pattern;
-import org.huhu.test.platform.model.request.UserCreationRequest;
+import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
 import org.huhu.test.platform.service.TestPlatformUserService;
@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 
 @Validated
 @RestController
-@RequestMapping("/management")
+@RequestMapping("/management/user")
 public class TestPlatformUserController {
 
     private final TestPlatformUserService userService;
@@ -27,25 +27,26 @@ public class TestPlatformUserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user")
+    @GetMapping
     public Flux<UserQueryResponse> query() {
         return userService.queryTestPlatformUsers();
     }
 
-    @GetMapping("/user/{username}")
+    @GetMapping("/{username}")
     public Mono<UserDetailQueryResponse> query(
             @PathVariable("username") @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$") String username) {
         return userService.queryTestPlatformUser(username);
     }
 
-    @PutMapping("/user")
-    public Mono<Void> create(@Validated @RequestBody Mono<UserCreationRequest> request) {
+    @PutMapping
+    public Mono<Void> create(@Validated @RequestBody Mono<UserCreateRequest> request) {
         return request.flatMap(userService::createTestPlatformUser);
     }
 
-    @DeleteMapping("/user/{username}")
+    @DeleteMapping("/{username}")
     public Mono<Void> delete(
             @PathVariable("username") @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$") String username) {
+        // todo 不允许删除root用户
         return userService.deleteTestPlatformUser(username);
     }
 

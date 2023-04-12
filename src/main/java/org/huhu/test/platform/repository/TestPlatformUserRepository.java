@@ -8,6 +8,6 @@ public interface TestPlatformUserRepository extends R2dbcRepository<TestPlatform
 
     Mono<TestPlatformUser> findByUsername(String username);
 
-    Mono<Void> deleteByUsername(String username);
+    Mono<Integer> deleteByUsername(String username);
 
 }
