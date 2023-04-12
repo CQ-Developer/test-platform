@@ -21,7 +21,7 @@ public class TestPlatformUserRoleController {
 
     private final TestPlatformUserRoleService userRoleService;
 
-    public TestPlatformUserRoleController(TestPlatformUserRoleService userRoleService) {
+    TestPlatformUserRoleController(TestPlatformUserRoleService userRoleService) {
         this.userRoleService = userRoleService;
     }
 

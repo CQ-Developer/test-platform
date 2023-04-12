@@ -20,7 +20,7 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
 
     private final TestPlatformGlobalVariableRepository variableRepository;
 
-    public TestPlatformGlobalVariableServiceImpl(TestPlatformGlobalVariableRepository variableRepository) {
+    TestPlatformGlobalVariableServiceImpl(TestPlatformGlobalVariableRepository variableRepository) {
         this.variableRepository = variableRepository;
     }
 

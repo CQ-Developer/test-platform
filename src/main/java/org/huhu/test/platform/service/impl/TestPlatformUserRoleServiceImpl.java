@@ -18,7 +18,7 @@ public class TestPlatformUserRoleServiceImpl implements TestPlatformUserRoleServ
 
     private final TestPlatformUserRoleRepository userRoleRepository;
 
-    public TestPlatformUserRoleServiceImpl(TestPlatformUserRoleRepository userRoleRepository) {
+    TestPlatformUserRoleServiceImpl(TestPlatformUserRoleRepository userRoleRepository) {
         this.userRoleRepository = userRoleRepository;
     }
 

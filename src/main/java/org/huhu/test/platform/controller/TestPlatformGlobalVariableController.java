@@ -28,7 +28,7 @@ public class TestPlatformGlobalVariableController {
 
     private final TestPlatformGlobalVariableService globalVariableService;
 
-    public TestPlatformGlobalVariableController(
+    TestPlatformGlobalVariableController(
             TestPlatformGlobalVariableService globalVariableService) {
         this.globalVariableService = globalVariableService;
     }

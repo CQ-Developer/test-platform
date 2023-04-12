@@ -26,7 +26,7 @@ public class TestPlatformReactiveUserDetailsServiceImpl implements ReactiveUserD
 
     private final PasswordEncoder passwordEncoder;
 
-    public TestPlatformReactiveUserDetailsServiceImpl(PasswordEncoder passwordEncoder,
+    TestPlatformReactiveUserDetailsServiceImpl(PasswordEncoder passwordEncoder,
             TestPlatformUserRepository userRepository,
             TestPlatformUserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;

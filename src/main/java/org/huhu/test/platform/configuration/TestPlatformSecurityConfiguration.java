@@ -64,11 +64,4 @@ public class TestPlatformSecurityConfiguration {
         return new BCryptPasswordEncoder($2A, 8, secureRandom);
     }
 
-    public static void main(String[] args) throws Exception {
-        SecureRandom secureRandom = SecureRandom.getInstanceStrong();
-        secureRandom.setSeed(System.currentTimeMillis());
-        var passwordEncoder = new BCryptPasswordEncoder($2A, 8, secureRandom);
-        System.out.println(passwordEncoder.encode("chen"));
-    }
-
 }

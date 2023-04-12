@@ -4,9 +4,9 @@ import org.huhu.test.platform.constant.TestPlatformError;
 
 import static org.huhu.test.platform.constant.TestPlatformError.CLIENT_REQUEST_USERNAME_INVALID;
 
-public class UserNotFoundException extends TestPlatformException {
+public class UsernameInvalidException extends TestPlatformException {
 
-    public UserNotFoundException() {
+    public UsernameInvalidException() {
         super(CLIENT_REQUEST_USERNAME_INVALID);
     }
 

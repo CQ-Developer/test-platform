@@ -1,6 +1,6 @@
 package org.huhu.test.platform.service.impl;
 
-import org.huhu.test.platform.exception.UserNotFoundException;
+import org.huhu.test.platform.exception.UsernameInvalidException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
@@ -39,7 +39,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     public Mono<UserDetailQueryResponse> queryTestPlatformUser(String username) {
         var findUser = userRepository
                 .findByUsername(username)
-                .switchIfEmpty(Mono.error(new UserNotFoundException()));
+                .switchIfEmpty(Mono.error(new UsernameInvalidException()));
         var findUserRoles = userRoleRepository
                 .findByUsername(username)
                 .map(TestPlatformUserRole::getRoleName)
@@ -71,7 +71,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
 
         return userRepository
                 .findByUsername(request.username())
-                .flatMap(i -> Mono.error(new UserNotFoundException()))
+                .flatMap(i -> Mono.error(new UsernameInvalidException()))
                 .switchIfEmpty(saveUser)
                 .thenMany(saveRole)
                 .then();

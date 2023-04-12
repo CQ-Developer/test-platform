@@ -1,6 +1,7 @@
 package org.huhu.test.platform.controller;
 
 import jakarta.validation.constraints.Pattern;
+import org.huhu.test.platform.exception.UsernameInvalidException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
@@ -47,7 +48,9 @@ public class TestPlatformUserController {
     @DeleteMapping("/{username}")
     public Mono<Void> deleteUser(
             @PathVariable("username") @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$") String username) {
-        // todo 不允许删除root用户
+        if ("root".equals(username)) {
+            return Mono.error(new UsernameInvalidException());
+        }
         return userService.deleteTestPlatformUser(username);
     }
 
