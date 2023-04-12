@@ -52,13 +52,18 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     @Override
     @Transactional
     public Mono<Void> createTestPlatformUser(UserCreateRequest request) {
+        var findUser = userRepository
+                .findByUsername(request.username());
         var saveUser = userRepository
                 .save(TestPlatformUser.from(request))
                 .doOnNext(i -> logger.info("create user {}", i.getUsername()));
         var saveRole = userRoleRepository
                 .saveAll(TestPlatformUserRole.from(request))
                 .doOnNext(i -> logger.info("create user {} with role {}", i.getUsername(), i.getRoleName()));
-        return saveUser.thenMany(saveRole).then();
+        return findUser.flatMap(i -> saveUser)
+                       .flatMapMany(i -> saveRole)
+                       .switchIfEmpty(Mono.empty())
+                       .then();
     }
 
     @Override

@@ -5,8 +5,8 @@ import java.util.function.Function;
 public enum TestPlatformError {
 
     CLIENT_ERROR(1000, "client request error"),
-
     CLIENT_REQUEST_PARAMETER_INVALID(1001, "request parameter invalid"),
+    CLIENT_REQUEST_USERNAME_INVALID(1002, "request username invalid"),
 
     THIRD_PARTY_SERVICE_ERROR(2000, "third party service error"),
 

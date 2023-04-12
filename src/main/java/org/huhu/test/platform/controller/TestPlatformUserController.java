@@ -1,6 +1,7 @@
 package org.huhu.test.platform.controller;
 
 import jakarta.validation.constraints.Pattern;
+import org.huhu.test.platform.exception.UserNotFoundException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
@@ -35,7 +36,9 @@ public class TestPlatformUserController {
     @GetMapping("/{username}")
     public Mono<UserDetailQueryResponse> queryUser(
             @PathVariable("username") @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$") String username) {
-        return userService.queryTestPlatformUser(username);
+        return userService
+                .queryTestPlatformUser(username)
+                .switchIfEmpty(Mono.error(new UserNotFoundException()));
     }
 
     @PutMapping
