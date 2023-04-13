@@ -7,6 +7,6 @@ import org.huhu.test.platform.constant.TestPlatformRoleName;
  *
  * @param username 用户名
  * @param roleName 角色名
- * @see org.huhu.test.platform.controller.TestPlatformUserRoleController#deleteUserRole(String)
+ * @see org.huhu.test.platform.controller.TestPlatformUserRoleController#deleteUserRole(TestPlatformRoleName, String)
  */
 public record UserRoleDeleteVo(String username, TestPlatformRoleName roleName) {}
