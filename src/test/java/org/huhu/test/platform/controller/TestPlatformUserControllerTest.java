@@ -1,11 +1,15 @@
 package org.huhu.test.platform.controller;
 
+import cn.hutool.core.util.StrUtil;
+import org.huhu.test.platform.constant.TestPlatformRoleName;
+import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.request.UserRenewRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
 import org.huhu.test.platform.service.TestPlatformUserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -17,6 +21,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.huhu.test.platform.constant.TestPlatformRoleName.ADMIN;
 import static org.huhu.test.platform.constant.TestPlatformRoleName.DEV;
@@ -96,7 +101,39 @@ class TestPlatformUserControllerTest {
 
     @Test
     void createUser() {
-        // todo 待完成
+        doReturn(Mono.empty())
+                .when(userService)
+                .createTestPlatformUser(any(UserCreateRequest.class));
+        var request = new UserCreateRequest("Jack", "Jack_123", List.of(USER, DEV));
+        webTestClient
+                .mutateWith(csrf())
+                .put()
+                .uri("/management/user")
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @ParameterizedTest
+    @CsvSource({"'', Jack_123, 'USER,DEV'", "'J-', Jack_123, 'USER,DEV'",
+            "Jack, '', 'USER,DEV'", "Jack, 'J^ck_123', 'USER,DEV'",
+            "Jack, Jack_123, ''"})
+    void createUserInvalidParameter(String name, String pass, String role) {
+        var roles = Stream
+                .of(role.split(","))
+                .filter(StrUtil::isNotBlank)
+                .map(TestPlatformRoleName::valueOf)
+                .toList();
+        var request = new UserCreateRequest(name, pass, roles);
+        webTestClient
+                .mutateWith(csrf())
+                .put()
+                .uri("/management/user")
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.code").isEqualTo(1000);
     }
 
     @Test
