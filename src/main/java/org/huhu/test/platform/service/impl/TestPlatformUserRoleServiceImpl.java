@@ -1,8 +1,9 @@
 package org.huhu.test.platform.service.impl;
 
 import org.huhu.test.platform.constant.TestPlatformRoleName;
-import org.huhu.test.platform.model.request.UserRoleModifyRequest;
+import org.huhu.test.platform.model.request.UserRoleCreateRequest;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
+import org.huhu.test.platform.model.vo.UserRoleDeleteVo;
 import org.huhu.test.platform.repository.TestPlatformUserRoleRepository;
 import org.huhu.test.platform.service.TestPlatformUserRoleService;
 import org.slf4j.Logger;
@@ -30,7 +31,8 @@ public class TestPlatformUserRoleServiceImpl implements TestPlatformUserRoleServ
     }
 
     @Override
-    public Mono<Void> createTestPlatformUserRole(UserRoleModifyRequest request) {
+    public Mono<Void> createTestPlatformUserRole(UserRoleCreateRequest request) {
+        // todo 确定当前用户没有该角色
         return userRoleRepository
                 .save(TestPlatformUserRole.from(request))
                 .doOnNext(item -> logger.info("save user role {}", item.getRoleName()))
@@ -38,9 +40,9 @@ public class TestPlatformUserRoleServiceImpl implements TestPlatformUserRoleServ
     }
 
     @Override
-    public Mono<Void> deleteTestPlatformUseRole(UserRoleModifyRequest request) {
+    public Mono<Void> deleteTestPlatformUseRole(UserRoleDeleteVo vo) {
         return userRoleRepository
-                .deleteByUsernameAndRoleName(request.username(), request.roleName())
+                .deleteByUsernameAndRoleName(vo.username(), vo.roleName())
                 .doOnNext(count -> logger.info("delete {} role.", count))
                 .then();
     }

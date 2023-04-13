@@ -1,18 +1,24 @@
 package org.huhu.test.platform.controller;
 
+import jakarta.validation.constraints.Pattern;
 import org.huhu.test.platform.constant.TestPlatformRoleName;
-import org.huhu.test.platform.model.request.UserRoleModifyRequest;
+import org.huhu.test.platform.model.request.UserRoleCreateRequest;
+import org.huhu.test.platform.model.vo.UserRoleDeleteVo;
 import org.huhu.test.platform.service.TestPlatformUserRoleService;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
 
 @Validated
 @RestController
@@ -33,13 +39,14 @@ public class TestPlatformUserRoleController {
     }
 
     @PutMapping
-    public Mono<Void> createUserRole(@Validated @RequestBody Mono<UserRoleModifyRequest> request) {
+    public Mono<Void> createUserRole(@Validated @RequestBody Mono<UserRoleCreateRequest> request) {
         return request.flatMap(userRoleService::createTestPlatformUserRole);
     }
 
-    @DeleteMapping
-    public Mono<Void> deleteUserRole(@Validated @RequestBody Mono<UserRoleModifyRequest> request) {
-        return request.flatMap(userRoleService::deleteTestPlatformUseRole);
+    @DeleteMapping("/{roleName}")
+    public Mono<Void> deleteUserRole(@PathVariable("roleName") TestPlatformRoleName roleName,
+            @RequestParam("username") @Pattern(regexp = USERNAME) String username) {
+        return userRoleService.deleteTestPlatformUseRole(new UserRoleDeleteVo(username, roleName));
     }
 
 }

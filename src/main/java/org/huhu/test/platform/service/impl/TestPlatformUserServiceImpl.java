@@ -96,6 +96,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
         var deleteUserRole = userRoleRepository
                 .deleteByUsername(username)
                 .doOnNext(i -> logger.info("delete {} role", i));
+        // todo 删除用户的全局变量
         return deleteUser.then(deleteUserRole).then();
     }
 

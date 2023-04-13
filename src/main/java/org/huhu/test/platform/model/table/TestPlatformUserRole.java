@@ -2,7 +2,7 @@ package org.huhu.test.platform.model.table;
 
 import org.huhu.test.platform.constant.TestPlatformRoleName;
 import org.huhu.test.platform.model.request.UserCreateRequest;
-import org.huhu.test.platform.model.request.UserRoleModifyRequest;
+import org.huhu.test.platform.model.request.UserRoleCreateRequest;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -27,7 +27,7 @@ public class TestPlatformUserRole {
         this.username = username;
     }
 
-    public static TestPlatformUserRole from(UserRoleModifyRequest request) {
+    public static TestPlatformUserRole from(UserRoleCreateRequest request) {
         return new TestPlatformUserRole(request.roleName(), request.username());
     }
 

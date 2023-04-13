@@ -16,7 +16,7 @@ import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
  *
  * @see org.huhu.test.platform.controller.TestPlatformUserRoleController#createUserRole(Mono)
  */
-public record UserRoleModifyRequest(
+public record UserRoleCreateRequest(
         @NotBlank
         @Pattern(regexp = USERNAME)
         String username,
