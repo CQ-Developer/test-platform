@@ -26,7 +26,7 @@ import static org.springframework.security.test.web.reactive.server.SecurityMock
  * 测试平台全局变量单元测试
  *
  * @author 18551681083@163.com
- * @see org.huhu.test.platform.controller.TestPlatformGlobalVariableController
+ * @see TestPlatformGlobalVariableController
  * @since 0.0.1
  */
 @WithMockUser
@@ -50,10 +50,8 @@ class TestPlatformGlobalVariableControllerTest {
                 .get()
                 .uri("/variable/global")
                 .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBodyList(GlobalVariableQueryResponse.class)
-                .hasSize(2);
+                .expectStatus().isOk()
+                .expectBodyList(GlobalVariableQueryResponse.class).hasSize(2);
     }
 
     @Test
@@ -68,8 +66,7 @@ class TestPlatformGlobalVariableControllerTest {
                 .uri("/variable/global")
                 .bodyValue(request)
                 .exchange()
-                .expectStatus()
-                .isOk();
+                .expectStatus().isOk();
     }
 
     @ParameterizedTest
@@ -82,11 +79,9 @@ class TestPlatformGlobalVariableControllerTest {
                 .uri("/variable/global")
                 .bodyValue(request)
                 .exchange()
-                .expectStatus()
-                .isOk()
+                .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$.code")
-                .isEqualTo(1000);
+                .jsonPath("$.code").isEqualTo(1000);
     }
 
     @Test
@@ -101,8 +96,7 @@ class TestPlatformGlobalVariableControllerTest {
                 .uri("/variable/global/{variableName}", "name")
                 .bodyValue(request)
                 .exchange()
-                .expectStatus()
-                .isOk();
+                .expectStatus().isOk();
     }
 
     @ParameterizedTest
@@ -118,11 +112,9 @@ class TestPlatformGlobalVariableControllerTest {
                 .uri("/variable/global/{variableName}", path)
                 .bodyValue(request)
                 .exchange()
-                .expectStatus()
-                .isOk()
+                .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$.code")
-                .isEqualTo(1000);
+                .jsonPath("$.code").isEqualTo(1000);
     }
 
     @Test
@@ -135,8 +127,7 @@ class TestPlatformGlobalVariableControllerTest {
                 .delete()
                 .uri("/variable/global/{variableName}", "name")
                 .exchange()
-                .expectStatus()
-                .isOk();
+                .expectStatus().isOk();
     }
 
     @Test
@@ -149,11 +140,9 @@ class TestPlatformGlobalVariableControllerTest {
                 .delete()
                 .uri("/variable/global/{variableName}", "a-")
                 .exchange()
-                .expectStatus()
-                .isOk()
+                .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$.code")
-                .isEqualTo(1000);
+                .jsonPath("$.code").isEqualTo(1000);
     }
 
 }

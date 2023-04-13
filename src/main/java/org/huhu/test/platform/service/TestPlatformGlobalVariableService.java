@@ -7,6 +7,12 @@ import org.huhu.test.platform.model.vo.GlobalVariableUpdateVo;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * 测试平台全局变量 {@link org.springframework.stereotype.Service} 接口
+ *
+ * @author 18551681083@163.com
+ * @since 0.0.1
+ */
 public interface TestPlatformGlobalVariableService {
 
     /**

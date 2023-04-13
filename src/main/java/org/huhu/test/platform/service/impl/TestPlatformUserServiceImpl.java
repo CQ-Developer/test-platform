@@ -61,7 +61,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     }
 
     @Override
-    public Flux<UserQueryResponse> queryTestPlatformUsers() {
+    public Flux<UserQueryResponse> queryTestPlatformUser() {
         return userRoleRepository
                 .findAll()
                 .groupBy(TestPlatformUserRole::getUsername)

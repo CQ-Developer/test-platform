@@ -32,8 +32,8 @@ public class TestPlatformSecurityConfiguration {
                 .and()
                 .authorizeExchange()
                 .pathMatchers("/management/user/*").hasRole(ADMIN.name())
-                .pathMatchers(GET, "/management/role/*").authenticated()
-                .pathMatchers("/management/role/*").hasRole(ADMIN.name())
+                .pathMatchers(GET, "/management/role").authenticated()
+                .pathMatchers("/management/role").hasRole(ADMIN.name())
                 .anyExchange().authenticated()
                 .and()
                 // todo csrf开发阶段关闭

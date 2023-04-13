@@ -7,12 +7,18 @@ import org.huhu.test.platform.model.response.UserQueryResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * 测试平台用户 {@link org.springframework.stereotype.Service} 接口
+ *
+ * @author 18551681083@163.com
+ * @since 0.0.1
+ */
 public interface TestPlatformUserService {
 
     /**
      * 查询测试平台所有用户
      */
-    Flux<UserQueryResponse> queryTestPlatformUsers();
+    Flux<UserQueryResponse> queryTestPlatformUser();
 
     /**
      * 查询测试平台用户详情

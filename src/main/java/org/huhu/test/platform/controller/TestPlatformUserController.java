@@ -22,6 +22,12 @@ import reactor.core.publisher.Mono;
 
 import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
 
+/**
+ * 测试平台用户 {@link RestController} 类
+ *
+ * @author 18551681083@163.com
+ * @since 0.0.1
+ */
 @Validated
 @RestController
 @RequestMapping("/management/user")
@@ -35,7 +41,7 @@ public class TestPlatformUserController {
 
     @GetMapping
     public Flux<UserQueryResponse> queryUser() {
-        return userService.queryTestPlatformUsers();
+        return userService.queryTestPlatformUser();
     }
 
     @GetMapping("/{username}")
@@ -55,6 +61,7 @@ public class TestPlatformUserController {
         }
         return userService.deleteTestPlatformUser(username);
     }
+
     @PostMapping("/renew")
     public Mono<Void> renewUser(@Validated @RequestBody Mono<UserRenewRequest> request) {
         return request.flatMap(userService::renewTestPlatformUser);

@@ -23,6 +23,12 @@ import reactor.core.publisher.Mono;
 
 import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.VARIABLE_NAME;
 
+/**
+ * 测试平台全局变量 {@link RestController} 类
+ *
+ * @author 18551681083@163.com
+ * @since 0.0.1
+ */
 @Validated
 @RestController
 @RequestMapping("/variable/global")
