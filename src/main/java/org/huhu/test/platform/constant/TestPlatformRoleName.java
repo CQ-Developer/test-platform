@@ -1,8 +1,11 @@
 package org.huhu.test.platform.constant;
 
-import java.util.Arrays;
-import java.util.Comparator;
-
+/**
+ * 测试平台角色枚举类
+ *
+ * @author 18551681083@163.com
+ * @since 0.0.1
+ */
 public enum TestPlatformRoleName {
 
     /**
@@ -20,30 +23,25 @@ public enum TestPlatformRoleName {
      */
     ADMIN(3);
 
+    /**
+     * 权限级别
+     */
     final int level;
 
+    /**
+     * 构造器
+     *
+     * @param level 权限级别
+     */
     TestPlatformRoleName(int level) {
         this.level = level;
     }
 
-    int getLevel() {
+    /**
+     * 获取角色权限级别
+     */
+    public int getLevel() {
         return level;
-    }
-
-    public static String[] all() {
-        return from(values().length, Comparator.comparingInt(TestPlatformRoleName::getLevel));
-    }
-
-    public static String[] top(int n) {
-        return from(n, Comparator.comparingInt(TestPlatformRoleName::getLevel).reversed());
-    }
-
-    private static String[] from(int n, Comparator<TestPlatformRoleName> comparator) {
-        return Arrays.stream(values())
-                     .sorted(comparator)
-                     .limit(n)
-                     .map(TestPlatformRoleName::name)
-                     .toArray(String[]::new);
     }
 
 }
