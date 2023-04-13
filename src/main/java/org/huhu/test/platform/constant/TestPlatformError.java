@@ -1,7 +1,5 @@
 package org.huhu.test.platform.constant;
 
-import java.util.function.Function;
-
 public enum TestPlatformError {
 
     CLIENT_ERROR(1000, "client request error"),
@@ -19,10 +17,6 @@ public enum TestPlatformError {
     TestPlatformError(int errorCode, String errorMessage) {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
-    }
-
-    public static <T> T getErrorDetail(TestPlatformError item, Function<TestPlatformError, T> getDetail) {
-        return getDetail.apply(item);
     }
 
     public int getErrorCode() {
