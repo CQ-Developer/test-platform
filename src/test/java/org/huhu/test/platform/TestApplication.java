@@ -7,9 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-@WithMockUser(roles = {"DEV", "ADMIN"})
 @SpringBootTest
 @AutoConfigureWebTestClient
+@WithMockUser(roles = {"DEV", "ADMIN"})
 class TestApplication {
 
     @Autowired
