@@ -1,7 +1,7 @@
 package org.huhu.test.platform.controller;
 
 import jakarta.validation.constraints.Pattern;
-import org.huhu.test.platform.exception.UsernameInvalidException;
+import org.huhu.test.platform.exception.ClientTestPlatformException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.request.UserRenewRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
@@ -49,7 +49,7 @@ public class TestPlatformUserController {
     @DeleteMapping("/{username}")
     public Mono<Void> deleteUser(@PathVariable("username") @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$") String username) {
         if ("root".equals(username)) {
-            return Mono.error(new UsernameInvalidException());
+            return Mono.error(new ClientTestPlatformException());
         }
         return userService.deleteTestPlatformUser(username);
     }

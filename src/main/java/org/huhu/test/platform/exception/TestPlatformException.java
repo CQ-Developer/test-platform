@@ -1,16 +1,21 @@
 package org.huhu.test.platform.exception;
 
-import org.huhu.test.platform.constant.TestPlatformError;
+import org.huhu.test.platform.constant.TestPlatformErrorCode;
 
 /**
- * 用户名无法定位到一个用户
+ * 测试平台统统一异常
+ *
+ * @author 18551681083@163.com
+ * @since 0.0.1
  */
 public abstract class TestPlatformException extends RuntimeException {
 
-    protected TestPlatformException(TestPlatformError error) {
-        super(error.getErrorMessage());
+    public TestPlatformException() {}
+
+    public TestPlatformException(Throwable throwable) {
+        super(throwable);
     }
 
-    public abstract TestPlatformError getTestPlatformError();
+    public abstract TestPlatformErrorCode getTestPlatformError();
 
 }

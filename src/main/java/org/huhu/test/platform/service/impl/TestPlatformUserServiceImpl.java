@@ -1,6 +1,6 @@
 package org.huhu.test.platform.service.impl;
 
-import org.huhu.test.platform.exception.UsernameInvalidException;
+import org.huhu.test.platform.exception.ClientTestPlatformException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.request.UserRenewRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
@@ -41,7 +41,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     private final TestPlatformUserRoleRepository userRoleRepository;
 
     TestPlatformUserServiceImpl(PasswordEncoder passwordEncoder, R2dbcEntityTemplate entityTemplate,
-            TestPlatformUserRepository userRepository, TestPlatformUserRoleRepository userRoleRepository) {
+                                TestPlatformUserRepository userRepository, TestPlatformUserRoleRepository userRoleRepository) {
         this.passwordEncoder = passwordEncoder;
         this.entityTemplate = entityTemplate;
         this.userRepository = userRepository;
@@ -52,7 +52,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     public Mono<UserDetailQueryResponse> queryTestPlatformUser(String username) {
         var findUser = userRepository
                 .findByUsername(username)
-                .switchIfEmpty(Mono.error(new UsernameInvalidException()));
+                .switchIfEmpty(Mono.error(new ClientTestPlatformException()));
         var findUserRoles = userRoleRepository
                 .findByUsername(username)
                 .map(TestPlatformUserRole::getRoleName)
@@ -81,7 +81,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                 .doOnNext(i -> logger.info("create user {} with role {}", i.getUsername(), i.getRoleName()));
         return userRepository
                 .findByUsername(request.username())
-                .flatMap(i -> Mono.error(new UsernameInvalidException()))
+                .flatMap(i -> Mono.error(new ClientTestPlatformException()))
                 .switchIfEmpty(saveUser)
                 .thenMany(saveRole)
                 .then();

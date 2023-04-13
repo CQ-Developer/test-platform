@@ -6,32 +6,22 @@ package org.huhu.test.platform.constant;
  * @author 18551681083@163.com
  * @since 0.0.1
  */
-public enum TestPlatformError {
+public enum TestPlatformErrorCode {
 
     /**
      * 客户端请求错误
      */
-    CLIENT_ERROR(1000, "client request error"),
-
-    /**
-     * 客户端请求参数错误
-     */
-    CLIENT_REQUEST_PARAMETER_INVALID(1001, "request parameter invalid"),
-
-    /**
-     * 客户端请求的用户名非法
-     */
-    CLIENT_REQUEST_USERNAME_INVALID(1002, "request username invalid"),
+    CLIENT_ERROR(1000, "client error"),
 
     /**
      * 第三方服务错误
      */
-    THIRD_PARTY_SERVICE_ERROR(2000, "third party service error"),
+    SERVICE_ERROR(2000, "service error"),
 
     /**
      * 服务端错误
      */
-    SERVER_ERROR(3000, "server occurred an unknown error");
+    SERVER_ERROR(3000, "server error");
 
     /**
      * 错误码
@@ -43,7 +33,13 @@ public enum TestPlatformError {
      */
     final String errorMessage;
 
-    TestPlatformError(int errorCode, String errorMessage) {
+    /**
+     * 构造器
+     *
+     * @param errorCode 错误码
+     * @param errorMessage 错误信息
+     */
+    TestPlatformErrorCode(int errorCode, String errorMessage) {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }
