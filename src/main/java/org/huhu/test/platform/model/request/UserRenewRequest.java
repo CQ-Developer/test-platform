@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDateTime;
 
+import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
+
 /**
  * 测试平台用户刷新请求
  *
@@ -13,7 +15,7 @@ import java.time.LocalDateTime;
  */
 public record UserRenewRequest(
         @NotBlank
-        @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$")
+        @Pattern(regexp = USERNAME)
         String username,
 
         LocalDateTime expiredTime) {}

@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
+
 @Validated
 @RestController
 @RequestMapping("/management/user")
@@ -37,7 +39,7 @@ public class TestPlatformUserController {
     }
 
     @GetMapping("/{username}")
-    public Mono<UserDetailQueryResponse> queryUser(@PathVariable("username") @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$") String username) {
+    public Mono<UserDetailQueryResponse> queryUser(@PathVariable("username") @Pattern(regexp = USERNAME) String username) {
         return userService.queryTestPlatformUser(username);
     }
 
@@ -47,7 +49,7 @@ public class TestPlatformUserController {
     }
 
     @DeleteMapping("/{username}")
-    public Mono<Void> deleteUser(@PathVariable("username") @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$") String username) {
+    public Mono<Void> deleteUser(@PathVariable("username") @Pattern(regexp = USERNAME) String username) {
         if ("root".equals(username)) {
             return Mono.error(new ClientTestPlatformException());
         }
@@ -59,22 +61,22 @@ public class TestPlatformUserController {
     }
 
     @GetMapping("/enable")
-    public Mono<Void> enableUser(@RequestParam("username") @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$") String username) {
+    public Mono<Void> enableUser(@RequestParam("username") @Pattern(regexp = USERNAME) String username) {
         return userService.enableTestPlatformUser(username);
     }
 
     @GetMapping("/disable")
-    public Mono<Void> disableUser(@RequestParam("username") @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$") String username) {
+    public Mono<Void> disableUser(@RequestParam("username") @Pattern(regexp = USERNAME) String username) {
         return userService.disableTestPlatformUser(username);
     }
 
     @GetMapping("/lock")
-    public Mono<Void> lockUser(@RequestParam("username") @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$") String username) {
+    public Mono<Void> lockUser(@RequestParam("username") @Pattern(regexp = USERNAME) String username) {
         return userService.lockTestPlatformUser(username);
     }
 
     @GetMapping("/unlock")
-    public Mono<Void> unlockUser(@RequestParam("username") @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$") String username) {
+    public Mono<Void> unlockUser(@RequestParam("username") @Pattern(regexp = USERNAME) String username) {
         return userService.unlockTestPlatformUser(username);
     }
 

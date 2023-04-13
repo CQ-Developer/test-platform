@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Pattern;
 import org.huhu.test.platform.constant.TestPlatformRoleName;
 import reactor.core.publisher.Mono;
 
+import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
+
 /**
  * 测试平台用户角色创建请求
  *
@@ -16,7 +18,7 @@ import reactor.core.publisher.Mono;
  */
 public record UserRoleModifyRequest(
         @NotBlank
-        @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$")
+        @Pattern(regexp = USERNAME)
         String username,
 
         @NotNull

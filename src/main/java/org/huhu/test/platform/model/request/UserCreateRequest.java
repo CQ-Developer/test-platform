@@ -9,6 +9,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.PASSWORD;
+import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
+
 /**
  * 测试平台用户创建请求
  *
@@ -20,11 +23,11 @@ import java.util.List;
  */
 public record UserCreateRequest(
         @NotBlank
-        @Pattern(regexp = "^[A-Za-z0-9-_]{4,16}$")
+        @Pattern(regexp = USERNAME)
         String username,
 
         @NotBlank
-        @Pattern(regexp = "^[\\w@#:-]{6,32}$")
+        @Pattern(regexp = PASSWORD)
         String password,
 
         @NotNull

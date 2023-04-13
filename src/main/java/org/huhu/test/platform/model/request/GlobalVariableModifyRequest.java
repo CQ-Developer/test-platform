@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import reactor.core.publisher.Mono;
 
+import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.VARIABLE_NAME;
+
 /**
  * 测试平台全局变量变更请求
  *
@@ -17,10 +19,11 @@ import reactor.core.publisher.Mono;
  */
 public record GlobalVariableModifyRequest(
         @NotBlank
-        @Pattern(regexp = "^[A-Za-z0-9-_]{1,32}$")
+        @Pattern(regexp = VARIABLE_NAME)
         String variableName,
 
-        @NotBlank @Size(max = 256)
+        @NotBlank
+        @Size(max = 256)
         String variableValue,
 
         @Size(max = 512)

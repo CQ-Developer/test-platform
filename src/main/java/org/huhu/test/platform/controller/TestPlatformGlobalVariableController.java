@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.VARIABLE_NAME;
+
 @Validated
 @RestController
 @RequestMapping("/global/variable")
@@ -49,7 +51,7 @@ public class TestPlatformGlobalVariableController {
 
     @PostMapping("/{variableName}")
     public Mono<Void> updateGlobalVariable(Mono<Authentication> authentication,
-            @PathVariable("variableName") @Pattern(regexp = "^[A-Za-z0-9-_]{1,32}$") String variableName,
+            @PathVariable("variableName") @Pattern(regexp = VARIABLE_NAME) String variableName,
             @Validated @RequestBody Mono<GlobalVariableModifyRequest> request) {
         var username = authentication.map(Authentication::getName);
         return Mono.zip(username, Mono.just(variableName), request)
@@ -59,7 +61,7 @@ public class TestPlatformGlobalVariableController {
 
     @DeleteMapping("/{variableName}")
     public Mono<Void> deleteGlobalVariable(Mono<Authentication> authentication,
-            @PathVariable("variableName") @Size(max = 32) @Pattern(regexp = "^[A-Za-z0-9-_]+$") String variableName) {
+            @PathVariable("variableName") @Size(max = 32) @Pattern(regexp = VARIABLE_NAME) String variableName) {
         var username = authentication.map(Authentication::getName);
         return Mono.zip(username, Mono.just(variableName), GlobalVariableDeleteVo::new)
                    .flatMap(globalVariableService::deleteTestPlatformGlobalVariable);
