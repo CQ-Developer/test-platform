@@ -25,7 +25,7 @@ import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.VARIABLE_
 
 @Validated
 @RestController
-@RequestMapping("/global/variable")
+@RequestMapping("/variable/global")
 public class TestPlatformGlobalVariableController {
 
     private final TestPlatformGlobalVariableService globalVariableService;
