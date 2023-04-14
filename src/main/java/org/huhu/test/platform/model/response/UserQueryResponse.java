@@ -13,7 +13,9 @@ import java.util.List;
  * @param username 用户名
  * @param userRoles 用户角色
  *
+ * @author 18551681083@163.com
  * @see org.huhu.test.platform.controller.TestPlatformUserController#queryUser()
+ * @since 0.0.1
  */
 public record UserQueryResponse(
         String username,

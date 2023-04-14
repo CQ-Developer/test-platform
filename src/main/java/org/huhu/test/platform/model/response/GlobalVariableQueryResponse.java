@@ -10,7 +10,9 @@ import reactor.core.publisher.Mono;
  * @param variableValue 变量值
  * @param variableDescription 变量描述
  *
+ * @author 18551681083@163.com
  * @see org.huhu.test.platform.controller.TestPlatformGlobalVariableController#queryGlobalVariable(Mono)
+ * @since 0.0.1
  */
 public record GlobalVariableQueryResponse(
         String variableName,

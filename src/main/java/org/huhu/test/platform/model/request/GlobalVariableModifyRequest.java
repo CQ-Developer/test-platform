@@ -14,8 +14,10 @@ import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.VARIABLE_
  * @param variableValue 全局变量值
  * @param variableDescription 全局变量描述
  *
+ * @author 18551681083@163.com
  * @see org.huhu.test.platform.controller.TestPlatformGlobalVariableController#createGlobalVariable(Mono, Mono)
  * @see org.huhu.test.platform.controller.TestPlatformGlobalVariableController#updateGlobalVariable(Mono, String, Mono)
+ * @since 0.0.1
  */
 public record GlobalVariableModifyRequest(
         @NotBlank

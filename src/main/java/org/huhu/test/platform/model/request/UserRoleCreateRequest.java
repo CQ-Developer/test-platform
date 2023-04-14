@@ -14,7 +14,9 @@ import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
  * @param username 用户名
  * @param roleName 角色名
  *
+ * @author 18551681083@163.com
  * @see org.huhu.test.platform.controller.TestPlatformUserRoleController#createUserRole(Mono)
+ * @since 0.0.1
  */
 public record UserRoleCreateRequest(
         @NotBlank
