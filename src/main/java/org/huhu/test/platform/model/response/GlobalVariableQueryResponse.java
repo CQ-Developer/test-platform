@@ -19,6 +19,11 @@ public record GlobalVariableQueryResponse(
         String variableValue,
         String variableDescription) {
 
+    /**
+     * 基于 {@link TestPlatformGlobalVariable} 创建响应
+     *
+     * @param globalVariable 全局变量表
+     */
     public static GlobalVariableQueryResponse from(TestPlatformGlobalVariable globalVariable) {
         return new GlobalVariableQueryResponse(
                 globalVariable.getVariableName(),
