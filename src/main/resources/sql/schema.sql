@@ -14,7 +14,7 @@ create table if not exists t_test_user (
 drop table if exists t_test_user_role;
 create table if not exists t_test_user_role (
   role_id bigint not null auto_increment,
-  role_name varchar(8) not null,
+  role_name enum('USER', 'DEV', 'ADMIN') not null default 'USER',
   username varchar(16) not null,
   primary key (role_id),
   unique key (username, role_name)
