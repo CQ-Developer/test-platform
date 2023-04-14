@@ -1,9 +1,12 @@
 package org.huhu.test.platform.controller;
 
+import cn.hutool.core.util.StrUtil;
 import org.huhu.test.platform.constant.TestPlatformRoleName;
 import org.huhu.test.platform.model.request.UserRoleCreateRequest;
 import org.huhu.test.platform.service.TestPlatformUserRoleService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -64,6 +67,23 @@ class TestPlatformUserRoleControllerTest {
                 .expectStatus().isOk();
     }
 
+    @ParameterizedTest
+    @CsvSource({"'', DEV", "n-me, DEV", "name, "})
+    void createUserRoleInvalidParameter(String name, String role) {
+        var roleName = StrUtil.isEmpty(role)
+                ? null : TestPlatformRoleName.valueOf(role);
+        var request = new UserRoleCreateRequest(name, roleName);
+        webTestClient
+                .mutateWith(csrf())
+                .put()
+                .uri("/management/role")
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.code").isEqualTo(1000);
+    }
+
     @Test
     void deleteUserRole() {
         webTestClient
@@ -72,6 +92,19 @@ class TestPlatformUserRoleControllerTest {
                 .uri("/management/role/{roleName}?username={username}", "USER", "Jack")
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @ParameterizedTest
+    @CsvSource({"TEST, Jack", "USER, J-ck"})
+    void deleteUserRoleInvalidParameter(String roleName, String username) {
+        webTestClient
+                .mutateWith(csrf())
+                .delete()
+                .uri("/management/role/{roleName}?username={username}", roleName, username)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.code").isEqualTo(1000);
     }
 
 }

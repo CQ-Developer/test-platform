@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.server.MethodNotAllowedException;
 import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
@@ -31,7 +30,7 @@ public class TestPlatformErrorController {
      *
      * @param exception 异常
      */
-    @ExceptionHandler({WebExchangeBindException.class, ConstraintViolationException.class,
+    @ExceptionHandler({ConstraintViolationException.class,
             ServerWebInputException.class, MethodNotAllowedException.class})
     public Mono<ErrorResponse> handleClientError(Exception exception) {
         logger.error("client request error.", exception);
