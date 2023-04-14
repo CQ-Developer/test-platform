@@ -3,10 +3,10 @@ create table if not exists t_test_user (
   user_id bigint not null auto_increment,
   username varchar(16) not null,
   password varchar(128) not null,
-  enabled boolean default 1,
-  locked boolean default 0,
-  register_time datetime default now(),
-  expired_time datetime default now(),
+  enabled boolean not null default 1,
+  locked boolean not null default 0,
+  register_time datetime not null default now(),
+  expired_time datetime not null default now(),
   primary key (user_id),
   unique key (username)
 );
