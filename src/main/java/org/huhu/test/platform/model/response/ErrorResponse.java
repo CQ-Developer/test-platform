@@ -15,10 +15,20 @@ import org.huhu.test.platform.exception.TestPlatformException;
  */
 public record ErrorResponse(Integer code, String message) {
 
+    /**
+     * 基于 {@link TestPlatformErrorCode} 创建错误响应
+     *
+     * @param error 错误码
+     */
     public static ErrorResponse from(TestPlatformErrorCode error) {
         return new ErrorResponse(error.getErrorCode(), error.getErrorMessage());
     }
 
+    /**
+     * 基于 {@link TestPlatformException} 创建错误响应
+     *
+     * @param exception 异常
+     */
     public static ErrorResponse from(TestPlatformException exception) {
         return from(exception.getTestPlatformError());
     }
