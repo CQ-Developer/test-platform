@@ -16,6 +16,9 @@ public abstract class TestPlatformException extends RuntimeException {
         super(throwable);
     }
 
+    /**
+     * 返回测试平台错误码
+     */
     public abstract TestPlatformErrorCode getTestPlatformError();
 
 }
