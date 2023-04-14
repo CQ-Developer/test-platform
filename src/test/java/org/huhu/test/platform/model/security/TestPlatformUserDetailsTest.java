@@ -7,7 +7,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 import static org.huhu.test.platform.constant.TestPlatformRoleName.ADMIN;
 import static org.huhu.test.platform.constant.TestPlatformRoleName.DEV;
@@ -36,7 +35,7 @@ class TestPlatformUserDetailsTest {
 
         TestPlatformUserRole admin = new TestPlatformUserRole(ADMIN, "jack");
         TestPlatformUserRole dev = new TestPlatformUserRole(DEV, "jack");
-        var userRoles = List.of(dev, admin);
+        var userRoles = List.of(admin, dev);
 
         var userDetails = new TestPlatformUserDetails(user, userRoles);
         assertEquals("jack", userDetails.getUsername());
@@ -45,7 +44,7 @@ class TestPlatformUserDetailsTest {
         assertTrue(userDetails.isAccountNonLocked());
         assertTrue(userDetails.isAccountNonExpired());
         assertTrue(userDetails.isCredentialsNonExpired());
-        assertIterableEquals(Set.of(
+        assertIterableEquals(List.of(
                         new SimpleGrantedAuthority("ROLE_ADMIN"),
                         new SimpleGrantedAuthority("ROLE_DEV")),
                 userDetails.getAuthorities());

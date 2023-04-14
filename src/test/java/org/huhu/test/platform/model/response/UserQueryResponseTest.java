@@ -1,6 +1,7 @@
 package org.huhu.test.platform.model.response;
 
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
+import org.huhu.test.platform.util.ConvertUtils;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
@@ -30,7 +31,7 @@ class UserQueryResponseTest {
         var response = Flux
                 .just(jackUser, jackDev, rootUser, rootAdmin)
                 .groupBy(TestPlatformUserRole::getUsername)
-                .flatMap(UserQueryResponse::from)
+                .flatMap(ConvertUtils::monoFrom)
                 .sort(Comparator.comparing(UserQueryResponse::username));
         StepVerifier
                 .create(response)

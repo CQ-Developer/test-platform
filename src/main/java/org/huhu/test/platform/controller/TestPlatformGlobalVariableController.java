@@ -6,8 +6,8 @@ import org.huhu.test.platform.model.request.GlobalVariableModifyRequest;
 import org.huhu.test.platform.model.response.GlobalVariableQueryResponse;
 import org.huhu.test.platform.model.vo.GlobalVariableCreateVo;
 import org.huhu.test.platform.model.vo.GlobalVariableDeleteVo;
-import org.huhu.test.platform.model.vo.GlobalVariableUpdateVo;
 import org.huhu.test.platform.service.TestPlatformGlobalVariableService;
+import org.huhu.test.platform.util.ConvertUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -61,7 +61,7 @@ public class TestPlatformGlobalVariableController {
             @Validated @RequestBody Mono<GlobalVariableModifyRequest> request) {
         var username = authentication.map(Authentication::getName);
         return Mono.zip(username, Mono.just(variableName), request)
-                   .map(GlobalVariableUpdateVo::build)
+                   .map(ConvertUtils::from)
                    .flatMap(globalVariableService::updateTestPlatformGlobalVariable);
     }
 

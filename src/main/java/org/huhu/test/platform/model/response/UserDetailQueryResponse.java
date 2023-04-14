@@ -1,7 +1,6 @@
 package org.huhu.test.platform.model.response;
 
 import org.huhu.test.platform.constant.TestPlatformRoleName;
-import org.huhu.test.platform.model.table.TestPlatformUser;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,16 +25,4 @@ public record UserDetailQueryResponse(
         Boolean enabled,
         Boolean locked,
         LocalDateTime registerTime,
-        LocalDateTime expiredTime) {
-
-    public static UserDetailQueryResponse from(TestPlatformUser user, List<TestPlatformRoleName> userRoles) {
-        return new UserDetailQueryResponse(
-                user.getUsername(),
-                userRoles,
-                user.getEnabled(),
-                user.getLocked(),
-                user.getRegisterTime(),
-                user.getExpiredTime());
-    }
-
-}
+        LocalDateTime expiredTime) {}

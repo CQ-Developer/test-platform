@@ -1,6 +1,5 @@
 package org.huhu.test.platform.model.table;
 
-import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -27,14 +26,6 @@ public class TestPlatformUser {
 
     @Column("expired_time")
     private LocalDateTime expiredTime;
-
-    public static TestPlatformUser from(UserCreateRequest request) {
-        var user = new TestPlatformUser();
-        user.setUsername(request.username());
-        user.setPassword(request.password());
-        user.setExpiredTime(LocalDateTime.now().plusYears(1L));
-        return user;
-    }
 
     public Long getUserId() {
         return userId;

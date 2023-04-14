@@ -1,9 +1,6 @@
 package org.huhu.test.platform.model.response;
 
 import org.huhu.test.platform.constant.TestPlatformRoleName;
-import org.huhu.test.platform.model.table.TestPlatformUserRole;
-import reactor.core.publisher.GroupedFlux;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -19,13 +16,4 @@ import java.util.List;
  */
 public record UserQueryResponse(
         String username,
-        List<TestPlatformRoleName> userRoles) {
-
-    public static Mono<UserQueryResponse> from(
-            GroupedFlux<String, TestPlatformUserRole> groupedFlux) {
-        var username = Mono.just(groupedFlux.key());
-        var roleNames = groupedFlux.map(TestPlatformUserRole::getRoleName).collectList();
-        return Mono.zip(username, roleNames, UserQueryResponse::new);
-    }
-
-}
+        List<TestPlatformRoleName> userRoles) {}

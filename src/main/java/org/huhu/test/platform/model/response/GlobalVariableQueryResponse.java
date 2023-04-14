@@ -1,6 +1,5 @@
 package org.huhu.test.platform.model.response;
 
-import org.huhu.test.platform.model.table.TestPlatformGlobalVariable;
 import reactor.core.publisher.Mono;
 
 /**
@@ -17,18 +16,4 @@ import reactor.core.publisher.Mono;
 public record GlobalVariableQueryResponse(
         String variableName,
         String variableValue,
-        String variableDescription) {
-
-    /**
-     * 基于 {@link TestPlatformGlobalVariable} 创建响应
-     *
-     * @param globalVariable 全局变量表
-     */
-    public static GlobalVariableQueryResponse from(TestPlatformGlobalVariable globalVariable) {
-        return new GlobalVariableQueryResponse(
-                globalVariable.getVariableName(),
-                globalVariable.getVariableValue(),
-                globalVariable.getVariableDescription());
-    }
-
-}
+        String variableDescription) {}

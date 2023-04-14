@@ -6,6 +6,7 @@ import org.huhu.test.platform.model.table.TestPlatformUserRole;
 import org.huhu.test.platform.model.vo.UserRoleDeleteVo;
 import org.huhu.test.platform.repository.TestPlatformUserRoleRepository;
 import org.huhu.test.platform.service.TestPlatformUserRoleService;
+import org.huhu.test.platform.util.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class TestPlatformUserRoleServiceImpl implements TestPlatformUserRoleServ
     public Mono<Void> createTestPlatformUserRole(UserRoleCreateRequest request) {
         // todo 确定当前用户没有该角色
         return userRoleRepository
-                .save(TestPlatformUserRole.from(request))
+                .save(ConvertUtils.from(request))
                 .doOnNext(item -> logger.info("save user role {}", item.getRoleName()))
                 .then();
     }

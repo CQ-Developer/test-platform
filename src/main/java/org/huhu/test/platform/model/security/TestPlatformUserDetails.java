@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TestPlatformUserDetails implements UserDetails {
 
@@ -29,9 +28,10 @@ public class TestPlatformUserDetails implements UserDetails {
                 .stream()
                 .map(TestPlatformUserRole::getRoleName)
                 .map(TestPlatformRoleName::name)
+                .distinct()
                 .map("ROLE_"::concat)
                 .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.huhu.test.platform.model.response;
 
-import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -24,14 +23,8 @@ class UserDetailQueryResponseTest {
 
     @Test
     void testFromTestPlatformUserAndTestPlatformRoleNames() {
-        var user = new TestPlatformUser();
-        user.setUsername("Jack");
-        user.setEnabled(true);
-        user.setLocked(false);
-        user.setRegisterTime(LocalDateTime.of(2022, 1, 1, 1, 1, 1));
-        user.setExpiredTime(LocalDateTime.of(2023, 1, 1, 1, 1, 1));
-        var userRoles = List.of(USER, DEV);
-        var response = UserDetailQueryResponse.from(user, userRoles);
+        var response = new UserDetailQueryResponse("Jack", List.of(USER, DEV), true, false,
+                LocalDateTime.of(2022, 1, 1, 1, 1, 1), LocalDateTime.of(2023, 1, 1, 1, 1, 1));
         assertEquals("Jack", response.username());
         assertTrue(response.enabled());
         assertFalse(response.locked());

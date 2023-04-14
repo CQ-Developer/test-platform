@@ -3,6 +3,7 @@ package org.huhu.test.platform.controller;
 import jakarta.validation.ConstraintViolationException;
 import org.huhu.test.platform.exception.TestPlatformException;
 import org.huhu.test.platform.model.response.ErrorResponse;
+import org.huhu.test.platform.util.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,7 +35,7 @@ public class TestPlatformErrorController {
             ServerWebInputException.class, MethodNotAllowedException.class})
     public Mono<ErrorResponse> handleClientError(Exception exception) {
         logger.error("client request error.", exception);
-        return Mono.just(ErrorResponse.from(CLIENT_ERROR));
+        return Mono.just(ConvertUtils.from(CLIENT_ERROR));
     }
 
     /**
@@ -45,7 +46,7 @@ public class TestPlatformErrorController {
     @ExceptionHandler(TestPlatformException.class)
     public Mono<ErrorResponse> handleTestPlatformError(TestPlatformException exception) {
         logger.info("test platform error.", exception);
-        return Mono.just(ErrorResponse.from(exception));
+        return Mono.just(ConvertUtils.from(exception));
     }
 
     /**
@@ -54,9 +55,9 @@ public class TestPlatformErrorController {
      * @param exception 异常
      */
     @ExceptionHandler(Exception.class)
-    public Mono<ErrorResponse> HandleUnknownError(Exception exception) {
+    public Mono<ErrorResponse> handleUnknownError(Exception exception) {
         logger.error("server unknown error.", exception);
-        return Mono.just(ErrorResponse.from(SERVER_ERROR));
+        return Mono.just(ConvertUtils.from(SERVER_ERROR));
     }
 
 }

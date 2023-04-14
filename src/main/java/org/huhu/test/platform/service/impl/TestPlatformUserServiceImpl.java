@@ -10,6 +10,7 @@ import org.huhu.test.platform.model.table.TestPlatformUserRole;
 import org.huhu.test.platform.repository.TestPlatformUserRepository;
 import org.huhu.test.platform.repository.TestPlatformUserRoleRepository;
 import org.huhu.test.platform.service.TestPlatformUserService;
+import org.huhu.test.platform.util.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
@@ -41,7 +42,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     private final TestPlatformUserRoleRepository userRoleRepository;
 
     TestPlatformUserServiceImpl(PasswordEncoder passwordEncoder, R2dbcEntityTemplate entityTemplate,
-                                TestPlatformUserRepository userRepository, TestPlatformUserRoleRepository userRoleRepository) {
+            TestPlatformUserRepository userRepository, TestPlatformUserRoleRepository userRoleRepository) {
         this.passwordEncoder = passwordEncoder;
         this.entityTemplate = entityTemplate;
         this.userRepository = userRepository;
@@ -57,7 +58,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                 .findByUsername(username)
                 .map(TestPlatformUserRole::getRoleName)
                 .collectList();
-        return Mono.zip(findUser, findUserRoles, UserDetailQueryResponse::from);
+        return Mono.zip(findUser, findUserRoles, ConvertUtils::from);
     }
 
     @Override
@@ -65,19 +66,19 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
         return userRoleRepository
                 .findAll()
                 .groupBy(TestPlatformUserRole::getUsername)
-                .flatMap(UserQueryResponse::from);
+                .flatMap(ConvertUtils::monoFrom);
     }
 
     @Override
     @Transactional
     public Mono<Void> createTestPlatformUser(UserCreateRequest request) {
-        var testPlatformUser = TestPlatformUser.from(request);
+        var testPlatformUser = ConvertUtils.from(request);
         testPlatformUser.setPassword(passwordEncoder.encode(request.password()));
         var saveUser = userRepository
                 .save(testPlatformUser)
                 .doOnNext(i -> logger.info("create user {}", i.getUsername()));
         var saveRole = userRoleRepository
-                .saveAll(TestPlatformUserRole.from(request))
+                .saveAll(ConvertUtils.fluxFrom(request))
                 .doOnNext(i -> logger.info("create user {} with role {}", i.getUsername(), i.getRoleName()));
         return userRepository
                 .findByUsername(request.username())

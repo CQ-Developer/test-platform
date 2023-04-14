@@ -1,12 +1,18 @@
 package org.huhu.test.platform.model.vo;
 
+import org.huhu.test.platform.controller.TestPlatformGlobalVariableController;
 import org.huhu.test.platform.model.request.GlobalVariableModifyRequest;
-import reactor.util.function.Tuple3;
+import reactor.core.publisher.Mono;
 
-public record GlobalVariableUpdateVo(String username, String variableName, GlobalVariableModifyRequest request) {
-
-    public static GlobalVariableUpdateVo build(Tuple3<String, String, GlobalVariableModifyRequest> tuple3) {
-        return new GlobalVariableUpdateVo(tuple3.getT1(), tuple3.getT2(), tuple3.getT3());
-    }
-
-}
+/**
+ * 测试平台变量更新值对象
+ *
+ * @param username 用户名
+ * @param variableName 变量名
+ * @param request 变量变更请求
+ *
+ * @author 18551681083@163.com
+ * @see TestPlatformGlobalVariableController#updateGlobalVariable(Mono, String, Mono)
+ * @since 0.0.1
+ */
+public record GlobalVariableUpdateVo(String username, String variableName, GlobalVariableModifyRequest request) {}

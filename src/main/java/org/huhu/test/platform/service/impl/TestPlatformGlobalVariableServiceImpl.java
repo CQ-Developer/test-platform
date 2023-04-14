@@ -1,12 +1,12 @@
 package org.huhu.test.platform.service.impl;
 
 import org.huhu.test.platform.model.response.GlobalVariableQueryResponse;
-import org.huhu.test.platform.model.table.TestPlatformGlobalVariable;
 import org.huhu.test.platform.model.vo.GlobalVariableCreateVo;
 import org.huhu.test.platform.model.vo.GlobalVariableDeleteVo;
 import org.huhu.test.platform.model.vo.GlobalVariableUpdateVo;
 import org.huhu.test.platform.repository.TestPlatformGlobalVariableRepository;
 import org.huhu.test.platform.service.TestPlatformGlobalVariableService;
+import org.huhu.test.platform.util.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
     public Flux<GlobalVariableQueryResponse> queryTestPlatformGlobalVariables(String username) {
         return variableRepository
                 .findByUsername(username)
-                .map(GlobalVariableQueryResponse::from);
+                .map(ConvertUtils::from);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class TestPlatformGlobalVariableServiceImpl implements TestPlatformGlobal
     @Override
     public Mono<Void> createTestPlatformGlobalVariable(GlobalVariableCreateVo vo) {
         return variableRepository
-                .save(TestPlatformGlobalVariable.from(vo))
+                .save(ConvertUtils.from(vo))
                 .doOnNext(item -> logger.info("save global variable {}", item.getVariableName()))
                 .then();
     }
