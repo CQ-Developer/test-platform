@@ -65,7 +65,7 @@ class TestPlatformUserControllerTest {
     }
 
     @Test
-    void testQueryUser() {
+    void queryUserDetail() {
         var registerTime = LocalDateTime.of(2023, 4, 13, 0, 0);
         var expiredTime = registerTime.plusYears(1L);
         var jack = new UserDetailQueryResponse("Jack", List.of(DEV, ADMIN),
@@ -89,7 +89,7 @@ class TestPlatformUserControllerTest {
     }
 
     @Test
-    void testQueryUserInvalidParameter() {
+    void queryUserDetailInvalidParameter() {
         webTestClient
                 .get()
                 .uri("/management/user/{username}", "n-")
