@@ -111,7 +111,8 @@ class TestPlatformUserControllerTest {
                 .uri("/management/user")
                 .bodyValue(request)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody().isEmpty();
     }
 
     @ParameterizedTest
@@ -146,7 +147,8 @@ class TestPlatformUserControllerTest {
                 .delete()
                 .uri("/management/user/{username}", "Jack")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody().isEmpty();
     }
 
     @Test
@@ -191,7 +193,8 @@ class TestPlatformUserControllerTest {
                 .uri("/management/user/renew")
                 .bodyValue(request)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody().isEmpty();
     }
 
     @Test
@@ -218,7 +221,8 @@ class TestPlatformUserControllerTest {
                 .get()
                 .uri("/management/user/{path}?username={username}", path, "Jack")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody().isEmpty();
     }
 
     @ParameterizedTest

@@ -64,7 +64,8 @@ class TestPlatformUserRoleControllerTest {
                 .uri("/management/role")
                 .bodyValue(request)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody().isEmpty();
     }
 
     @ParameterizedTest
@@ -91,7 +92,8 @@ class TestPlatformUserRoleControllerTest {
                 .delete()
                 .uri("/management/role/{roleName}?username={username}", "USER", "Jack")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody().isEmpty();
     }
 
     @ParameterizedTest

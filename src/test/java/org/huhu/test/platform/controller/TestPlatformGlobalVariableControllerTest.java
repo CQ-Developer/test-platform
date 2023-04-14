@@ -66,7 +66,8 @@ class TestPlatformGlobalVariableControllerTest {
                 .uri("/variable/global")
                 .bodyValue(request)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody().isEmpty();
     }
 
     @ParameterizedTest
@@ -96,7 +97,8 @@ class TestPlatformGlobalVariableControllerTest {
                 .uri("/variable/global/{variableName}", "name")
                 .bodyValue(request)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody().isEmpty();
     }
 
     @ParameterizedTest
@@ -127,7 +129,8 @@ class TestPlatformGlobalVariableControllerTest {
                 .delete()
                 .uri("/variable/global/{variableName}", "name")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody().isEmpty();
     }
 
     @Test
