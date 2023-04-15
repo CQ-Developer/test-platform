@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.huhu.test.platform.constant.TestPlatformRoleName.DEV;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
@@ -22,7 +22,7 @@ class UserCreateRequestTest {
         var request = new UserCreateRequest("Jack", "jack123", List.of(DEV));
         assertEquals("Jack", request.username());
         assertEquals("jack123", request.password());
-        assertIterableEquals(List.of(DEV), request.roles());
+        assertIterableEquals(List.of(DEV), request.roleLevel());
     }
 
 }

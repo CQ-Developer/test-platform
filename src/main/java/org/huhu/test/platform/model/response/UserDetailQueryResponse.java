@@ -1,6 +1,6 @@
 package org.huhu.test.platform.model.response;
 
-import org.huhu.test.platform.constant.TestPlatformRoleName;
+import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
  * 测试平台你用户详情查询响应
  *
  * @param username 用户名
- * @param userRoles 用户角色
+ * @param roleLevels 用户角色
  * @param enabled 是否启用
  * @param locked 是否锁定
  * @param registerTime 注册时间
@@ -21,7 +21,7 @@ import java.util.List;
  */
 public record UserDetailQueryResponse(
         String username,
-        List<TestPlatformRoleName> userRoles,
+        List<TestPlatformRoleLevel> roleLevels,
         Boolean enabled,
         Boolean locked,
         LocalDateTime registerTime,

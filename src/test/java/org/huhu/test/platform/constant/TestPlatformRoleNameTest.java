@@ -2,16 +2,16 @@ package org.huhu.test.platform.constant;
 
 import org.junit.jupiter.api.Test;
 
-import static org.huhu.test.platform.constant.TestPlatformRoleName.ADMIN;
-import static org.huhu.test.platform.constant.TestPlatformRoleName.DEV;
-import static org.huhu.test.platform.constant.TestPlatformRoleName.USER;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ADMIN;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.USER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * 测试平台角色名单元测试
+ * 测试平台角色級別单元测试
  *
  * @author 18551681083@163.com
- * @see org.huhu.test.platform.constant.TestPlatformRoleName
+ * @see Byte
  * @since 0.0.1
  */
 class TestPlatformRoleNameTest {

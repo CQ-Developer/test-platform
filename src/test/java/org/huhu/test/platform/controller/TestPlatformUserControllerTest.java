@@ -1,7 +1,7 @@
 package org.huhu.test.platform.controller;
 
 import cn.hutool.core.util.StrUtil;
-import org.huhu.test.platform.constant.TestPlatformRoleName;
+import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.request.UserRenewRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
@@ -23,9 +23,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.huhu.test.platform.constant.TestPlatformRoleName.ADMIN;
-import static org.huhu.test.platform.constant.TestPlatformRoleName.DEV;
-import static org.huhu.test.platform.constant.TestPlatformRoleName.USER;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ADMIN;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.USER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -80,8 +80,8 @@ class TestPlatformUserControllerTest {
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.username").isEqualTo("Jack")
-                .jsonPath("$.userRoles[0]").isEqualTo("DEV")
-                .jsonPath("$.userRoles[1]").isEqualTo("ADMIN")
+                .jsonPath("$.roleLevels[0]").isEqualTo(2)
+                .jsonPath("$.roleLevels[1]").isEqualTo(3)
                 .jsonPath("$.enabled").isEqualTo(true)
                 .jsonPath("$.locked").isEqualTo(false)
                 .jsonPath("$.registerTime").isEqualTo("2023-04-13T00:00:00")
@@ -120,12 +120,12 @@ class TestPlatformUserControllerTest {
             "Jack, '', 'USER,DEV'", "Jack, 'J^ck_123', 'USER,DEV'",
             "Jack, Jack_123, ''"})
     void createUserInvalidParameter(String name, String pass, String role) {
-        var roles = Stream
+        var roleLevels = Stream
                 .of(role.split(","))
                 .filter(StrUtil::isNotBlank)
-                .map(TestPlatformRoleName::valueOf)
+                .map(TestPlatformRoleLevel::valueOf)
                 .toList();
-        var request = new UserCreateRequest(name, pass, roles);
+        var request = new UserCreateRequest(name, pass, roleLevels);
         webTestClient
                 .mutateWith(csrf())
                 .put()

@@ -1,6 +1,6 @@
 package org.huhu.test.platform.repository;
 
-import org.huhu.test.platform.constant.TestPlatformRoleName;
+import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
@@ -26,8 +26,8 @@ public interface TestPlatformUserRoleRepository extends R2dbcRepository<TestPlat
      * 删除用户角色
      *
      * @param username 用户名
-     * @param roleName 角色名
+     * @param roleLevel 角色級別
      */
-    Mono<Integer> deleteByUsernameAndRoleName(String username, TestPlatformRoleName roleName);
+    Mono<Integer> deleteByUsernameAndRoleLevel(String username, TestPlatformRoleLevel roleLevel);
 
 }

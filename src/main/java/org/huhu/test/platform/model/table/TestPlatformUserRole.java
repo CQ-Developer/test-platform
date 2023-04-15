@@ -1,6 +1,6 @@
 package org.huhu.test.platform.model.table;
 
-import org.huhu.test.platform.constant.TestPlatformRoleName;
+import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -12,15 +12,15 @@ public class TestPlatformUserRole {
     @Column("role_id")
     private Long roleId;
 
-    @Column("role_name")
-    private TestPlatformRoleName roleName;
+    @Column("role_level")
+    private TestPlatformRoleLevel roleLevel;
 
     private String username;
 
     public TestPlatformUserRole() {}
 
-    public TestPlatformUserRole(TestPlatformRoleName roleName, String username) {
-        this.roleName = roleName;
+    public TestPlatformUserRole(TestPlatformRoleLevel roleLevel, String username) {
+        this.roleLevel = roleLevel;
         this.username = username;
     }
 
@@ -40,12 +40,12 @@ public class TestPlatformUserRole {
         this.username = username;
     }
 
-    public TestPlatformRoleName getRoleName() {
-        return roleName;
+    public TestPlatformRoleLevel getRoleLevel() {
+        return roleLevel;
     }
 
-    public void setRoleName(TestPlatformRoleName roleName) {
-        this.roleName = roleName;
+    public void setRoleLevel(TestPlatformRoleLevel roleLevel) {
+        this.roleLevel = roleLevel;
     }
 
 }

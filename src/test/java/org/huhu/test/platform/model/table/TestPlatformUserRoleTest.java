@@ -2,7 +2,7 @@ package org.huhu.test.platform.model.table;
 
 import org.junit.jupiter.api.Test;
 
-import static org.huhu.test.platform.constant.TestPlatformRoleName.ADMIN;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ADMIN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -18,10 +18,10 @@ class TestPlatformUserRoleTest {
     void testPlatformUserRole() {
         var userRole = new TestPlatformUserRole();
         userRole.setRoleId(0L);
-        userRole.setRoleName(ADMIN);
+        userRole.setRoleLevel(ADMIN);
         userRole.setUsername("root");
         assertEquals(0L, userRole.getRoleId());
-        assertEquals(ADMIN, userRole.getRoleName());
+        assertEquals(ADMIN, userRole.getRoleLevel());
         assertEquals("root", userRole.getUsername());
     }
 

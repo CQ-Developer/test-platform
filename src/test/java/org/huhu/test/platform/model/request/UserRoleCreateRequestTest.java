@@ -1,9 +1,9 @@
 package org.huhu.test.platform.model.request;
 
-import org.huhu.test.platform.constant.TestPlatformRoleName;
+import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import org.junit.jupiter.api.Test;
 
-import static org.huhu.test.platform.constant.TestPlatformRoleName.USER;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.USER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -19,7 +19,7 @@ class UserRoleCreateRequestTest {
     void testUserRoleCreateRequest() {
         var request = new UserRoleCreateRequest("Jack", USER);
         assertEquals("Jack", request.username());
-        assertEquals(TestPlatformRoleName.valueOf("USER"), request.roleName());
+        assertEquals(TestPlatformRoleLevel.valueOf("USER"), request.roleName());
     }
 
 }

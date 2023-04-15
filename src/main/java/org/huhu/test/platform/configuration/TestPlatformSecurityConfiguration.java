@@ -11,8 +11,8 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-import static org.huhu.test.platform.constant.TestPlatformRoleName.ADMIN;
-import static org.huhu.test.platform.constant.TestPlatformRoleName.DEV;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ADMIN;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.BCryptVersion.$2A;
 

@@ -14,10 +14,10 @@ create table if not exists t_test_user (
 drop table if exists t_test_user_role;
 create table if not exists t_test_user_role (
   role_id bigint not null auto_increment,
-  role_name enum('USER', 'DEV', 'ADMIN') not null default 'USER',
+  role_level tinyint not null default 1,
   username varchar(16) not null,
   primary key (role_id),
-  unique key (username, role_name)
+  unique key (username, role_level)
 );
 
 drop table if exists t_test_global_variable;

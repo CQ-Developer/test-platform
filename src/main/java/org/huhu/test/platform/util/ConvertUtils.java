@@ -1,7 +1,7 @@
 package org.huhu.test.platform.util;
 
 import org.huhu.test.platform.constant.TestPlatformErrorCode;
-import org.huhu.test.platform.constant.TestPlatformRoleName;
+import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import org.huhu.test.platform.exception.TestPlatformException;
 import org.huhu.test.platform.model.request.GlobalVariableModifyRequest;
 import org.huhu.test.platform.model.request.UserCreateRequest;
@@ -66,13 +66,13 @@ public class ConvertUtils {
     }
 
     /**
-     * 将 {@link TestPlatformUser} {@link TestPlatformRoleName} 转换到 {@link UserDetailQueryResponse}
+     * 将 {@link TestPlatformUser} {@link Byte} 转换到 {@link UserDetailQueryResponse}
      *
      * @param user 用户
-     * @param userRoles 用户角色
+     * @param roleLevels 用户角色
      */
-    public static UserDetailQueryResponse from(TestPlatformUser user, List<TestPlatformRoleName> userRoles) {
-        return new UserDetailQueryResponse(user.getUsername(), userRoles,
+    public static UserDetailQueryResponse from(TestPlatformUser user, List<TestPlatformRoleLevel> roleLevels) {
+        return new UserDetailQueryResponse(user.getUsername(), roleLevels,
                 user.getEnabled(), user.getLocked(), user.getRegisterTime(), user.getExpiredTime());
     }
 
@@ -84,7 +84,7 @@ public class ConvertUtils {
     public static Mono<UserQueryResponse> monoFrom(
             GroupedFlux<String, TestPlatformUserRole> groupedFlux) {
         var username = Mono.just(groupedFlux.key());
-        var roleNames = groupedFlux.map(TestPlatformUserRole::getRoleName).collectList();
+        var roleNames = groupedFlux.map(TestPlatformUserRole::getRoleLevel).collectList();
         return Mono.zip(username, roleNames, UserQueryResponse::new);
     }
 
@@ -132,7 +132,7 @@ public class ConvertUtils {
      * @param request 用户角色创建请求
      */
     public static Flux<TestPlatformUserRole> fluxFrom(UserCreateRequest request) {
-        var roles = request.roles();
+        var roles = request.roleLevel();
         var roleName = Flux.fromIterable(roles);
         var username = Flux.just(request.username()).repeat(roles.size() - 1);
         return Flux.zip(roleName, username, TestPlatformUserRole::new);

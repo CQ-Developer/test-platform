@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import org.huhu.test.platform.constant.TestPlatformRoleName;
+import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -17,7 +17,7 @@ import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
  *
  * @param username 用户名
  * @param password 密码
- * @param roles 用户角色
+ * @param roleLevel 用户角色
  *
  * @author 18551681083@163.com
  * @see org.huhu.test.platform.controller.TestPlatformUserController#createUser(Mono)
@@ -34,4 +34,4 @@ public record UserCreateRequest(
 
         @NotNull
         @Size(min = 1, max = 3)
-        List<TestPlatformRoleName> roles) {}
+        List<TestPlatformRoleLevel> roleLevel) {}

@@ -9,9 +9,9 @@ import reactor.test.StepVerifier;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.huhu.test.platform.constant.TestPlatformRoleName.ADMIN;
-import static org.huhu.test.platform.constant.TestPlatformRoleName.DEV;
-import static org.huhu.test.platform.constant.TestPlatformRoleName.USER;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ADMIN;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.USER;
 
 /**
  * 测试平台用户查询响应单元测试

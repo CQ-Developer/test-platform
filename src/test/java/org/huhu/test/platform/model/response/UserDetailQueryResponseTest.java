@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.huhu.test.platform.constant.TestPlatformRoleName.DEV;
-import static org.huhu.test.platform.constant.TestPlatformRoleName.USER;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.USER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
@@ -30,7 +30,7 @@ class UserDetailQueryResponseTest {
         assertFalse(response.locked());
         assertEquals(LocalDateTime.parse("2022-01-01T01:01:01"), response.registerTime());
         assertEquals(LocalDateTime.parse("2023-01-01T01:01:01"), response.expiredTime());
-        assertIterableEquals(List.of(USER, DEV), response.userRoles());
+        assertIterableEquals(List.of(USER, DEV), response.roleLevels());
     }
 
 }

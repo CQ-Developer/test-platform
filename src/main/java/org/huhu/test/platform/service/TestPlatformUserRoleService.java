@@ -1,6 +1,6 @@
 package org.huhu.test.platform.service;
 
-import org.huhu.test.platform.constant.TestPlatformRoleName;
+import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import org.huhu.test.platform.model.request.UserRoleCreateRequest;
 import org.huhu.test.platform.model.vo.UserRoleDeleteVo;
 import reactor.core.publisher.Flux;
@@ -27,5 +27,6 @@ public interface TestPlatformUserRoleService {
      *
      * @param username 用户名
      */
-    Flux<TestPlatformRoleName> queryTestPlatformUserRole(String username);
+    Flux<TestPlatformRoleLevel> queryTestPlatformUserRole(String username);
+
 }

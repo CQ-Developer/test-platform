@@ -1,7 +1,7 @@
 package org.huhu.test.platform.controller;
 
 import cn.hutool.core.util.StrUtil;
-import org.huhu.test.platform.constant.TestPlatformRoleName;
+import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import org.huhu.test.platform.model.request.UserRoleCreateRequest;
 import org.huhu.test.platform.service.TestPlatformUserRoleService;
 import org.junit.jupiter.api.Test;
@@ -15,8 +15,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import static org.huhu.test.platform.constant.TestPlatformRoleName.DEV;
-import static org.huhu.test.platform.constant.TestPlatformRoleName.USER;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.USER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -49,7 +49,7 @@ class TestPlatformUserRoleControllerTest {
                 .uri("/management/role")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(TestPlatformRoleName.class).hasSize(2);
+                .expectBodyList(TestPlatformRoleLevel.class).hasSize(2);
     }
 
     @Test
@@ -72,7 +72,7 @@ class TestPlatformUserRoleControllerTest {
     @CsvSource({"'', DEV", "n-me, DEV", "name, "})
     void createUserRoleInvalidParameter(String name, String role) {
         var roleName = StrUtil.isEmpty(role)
-                ? null : TestPlatformRoleName.valueOf(role);
+                ? null : TestPlatformRoleLevel.valueOf(role);
         var request = new UserRoleCreateRequest(name, roleName);
         webTestClient
                 .mutateWith(csrf())
@@ -90,7 +90,7 @@ class TestPlatformUserRoleControllerTest {
         webTestClient
                 .mutateWith(csrf())
                 .delete()
-                .uri("/management/role/{roleName}?username={username}", "USER", "Jack")
+                .uri("/management/role/{roleLevel}?username={username}", "USER", "Jack")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().isEmpty();
@@ -98,11 +98,11 @@ class TestPlatformUserRoleControllerTest {
 
     @ParameterizedTest
     @CsvSource({"TEST, Jack", "USER, J-ck"})
-    void deleteUserRoleInvalidParameter(String roleName, String username) {
+    void deleteUserRoleInvalidParameter(String roleLevel, String username) {
         webTestClient
                 .mutateWith(csrf())
                 .delete()
-                .uri("/management/role/{roleName}?username={username}", roleName, username)
+                .uri("/management/role/{roleLevel}?username={username}", roleLevel, username)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()

@@ -1,6 +1,6 @@
 package org.huhu.test.platform.model.response;
 
-import org.huhu.test.platform.constant.TestPlatformRoleName;
+import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 
 import java.util.List;
 
@@ -16,4 +16,4 @@ import java.util.List;
  */
 public record UserQueryResponse(
         String username,
-        List<TestPlatformRoleName> userRoles) {}
+        List<TestPlatformRoleLevel> userRoles) {}

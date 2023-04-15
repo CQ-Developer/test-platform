@@ -2,7 +2,7 @@ package org.huhu.test.platform.model.vo;
 
 import org.junit.jupiter.api.Test;
 
-import static org.huhu.test.platform.constant.TestPlatformRoleName.ADMIN;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ADMIN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -18,7 +18,7 @@ class UserRoleDeleteVoTest {
     void testUserRoleDeleteVo() {
         var vo = new UserRoleDeleteVo("root", ADMIN);
         assertEquals("root", vo.username());
-        assertEquals(ADMIN, vo.roleName());
+        assertEquals(ADMIN, vo.roleLevel());
     }
 
 }
