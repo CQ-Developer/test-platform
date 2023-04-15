@@ -19,7 +19,7 @@ class UserRoleCreateRequestTest {
     void testUserRoleCreateRequest() {
         var request = new UserRoleCreateRequest("Jack", USER);
         assertEquals("Jack", request.username());
-        assertEquals(TestPlatformRoleLevel.valueOf("USER"), request.roleName());
+        assertEquals(TestPlatformRoleLevel.valueOf("USER"), request.roleLevel());
     }
 
 }

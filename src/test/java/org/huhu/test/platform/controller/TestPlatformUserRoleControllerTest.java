@@ -71,9 +71,9 @@ class TestPlatformUserRoleControllerTest {
     @ParameterizedTest
     @CsvSource({"'', DEV", "n-me, DEV", "name, "})
     void createUserRoleInvalidParameter(String name, String role) {
-        var roleName = StrUtil.isEmpty(role)
+        var roleLevel = StrUtil.isEmpty(role)
                 ? null : TestPlatformRoleLevel.valueOf(role);
-        var request = new UserRoleCreateRequest(name, roleName);
+        var request = new UserRoleCreateRequest(name, roleLevel);
         webTestClient
                 .mutateWith(csrf())
                 .put()

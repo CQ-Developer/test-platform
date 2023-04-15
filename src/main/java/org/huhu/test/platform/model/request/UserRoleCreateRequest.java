@@ -12,7 +12,7 @@ import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
  * 测试平台用户角色创建请求
  *
  * @param username 用户名
- * @param roleName 角色級別
+ * @param roleLevel 角色級別
  *
  * @author 18551681083@163.com
  * @see org.huhu.test.platform.controller.TestPlatformUserRoleController#createUserRole(Mono)
@@ -24,4 +24,4 @@ public record UserRoleCreateRequest(
         String username,
 
         @NotNull
-        TestPlatformRoleLevel roleName) {}
+        TestPlatformRoleLevel roleLevel) {}

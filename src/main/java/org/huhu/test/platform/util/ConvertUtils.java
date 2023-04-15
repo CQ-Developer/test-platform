@@ -124,7 +124,7 @@ public class ConvertUtils {
      * @param request 用户角色创建请求
      */
     public static TestPlatformUserRole from(UserRoleCreateRequest request) {
-        return new TestPlatformUserRole(request.roleName(), request.username());
+        return new TestPlatformUserRole(request.roleLevel(), request.username());
     }
 
     /**
@@ -134,9 +134,9 @@ public class ConvertUtils {
      */
     public static Flux<TestPlatformUserRole> fluxFrom(UserCreateRequest request) {
         var roles = request.roleLevel();
-        var roleName = Flux.fromIterable(roles);
+        var roleLevel = Flux.fromIterable(roles);
         var username = Flux.just(request.username()).repeat(roles.size() - 1);
-        return Flux.zip(roleName, username, TestPlatformUserRole::new);
+        return Flux.zip(roleLevel, username, TestPlatformUserRole::new);
     }
 
     /**

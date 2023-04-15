@@ -1,6 +1,8 @@
 server:
   port: 8888
 spring:
+  webflux:
+    base-path: /api
   r2dbc:
     url: r2dbc:mysql://127.0.0.1:3306/test-platform?useUnicode=true&characterEncoding=utf8
     username: root
