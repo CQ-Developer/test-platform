@@ -1,7 +1,8 @@
 package org.huhu.test.platform.constant;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.huhu.test.platform.exception.ServerTestPlatformException;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import org.huhu.test.platform.exception.ClientTestPlatformException;
 
 /**
  * 测试平台角色枚举类
@@ -14,50 +15,48 @@ public enum TestPlatformRoleLevel {
     /**
      * 用户
      */
-    @JsonProperty("1")
-    USER((byte) 1),
+    USER(1),
 
     /**
      * 开发
      */
-    @JsonProperty("2")
-    DEV((byte) 2),
+    DEV(2),
 
     /**
      * 管理员
      */
-    @JsonProperty("3")
-    ADMIN((byte) 3);
+    ADMIN(3);
 
     /**
      * 权限级别
      */
-    final byte level;
+    final int level;
 
     /**
      * 构造器
      *
      * @param level 权限级别
      */
-    TestPlatformRoleLevel(byte level) {
+    TestPlatformRoleLevel(int level) {
         this.level = level;
     }
 
     /**
      * 获取角色权限级别
      */
-    public byte getLevel() {
+    @JsonValue
+    public int getLevel() {
         return level;
     }
 
-    public static TestPlatformRoleLevel fromLevel(byte level) {
-        for (TestPlatformRoleLevel item : values()) {
-            var roleLevel = item.getLevel();
-            if (roleLevel == level) {
-                return item;
+    @JsonCreator
+    public static TestPlatformRoleLevel jsonDeserialize(int roleLevel) {
+        for (TestPlatformRoleLevel testPlatformRoleLevel : values()) {
+            if (testPlatformRoleLevel.level == roleLevel) {
+                return testPlatformRoleLevel;
             }
         }
-        throw new ServerTestPlatformException("role level invalid");
+        throw new ClientTestPlatformException("client role level invalid");
     }
 
 }

@@ -2,6 +2,7 @@ package org.huhu.test.platform.util;
 
 import org.huhu.test.platform.constant.TestPlatformErrorCode;
 import org.huhu.test.platform.constant.TestPlatformRoleLevel;
+import org.huhu.test.platform.exception.ServerTestPlatformException;
 import org.huhu.test.platform.exception.TestPlatformException;
 import org.huhu.test.platform.model.request.GlobalVariableModifyRequest;
 import org.huhu.test.platform.model.request.UserCreateRequest;
@@ -38,7 +39,7 @@ public class ConvertUtils {
     private ConvertUtils() {}
 
     /**
-     * 将 {@link TestPlatformErrorCode} 转换到 {@link ErrorResponse}
+     * 将 {@link TestPlatformErrorCode} 转换到为 {@link ErrorResponse}
      *
      * @param error 错误码
      */
@@ -47,7 +48,7 @@ public class ConvertUtils {
     }
 
     /**
-     * 将 {@link TestPlatformException} 转换到 {@link TestPlatformException}
+     * 将 {@link TestPlatformException} 转换到为 {@link TestPlatformException}
      *
      * @param exception 异常
      */
@@ -56,7 +57,7 @@ public class ConvertUtils {
     }
 
     /**
-     * 将 {@link TestPlatformGlobalVariable} 转换到 {@link GlobalVariableQueryResponse}
+     * 将 {@link TestPlatformGlobalVariable} 转换到为 {@link GlobalVariableQueryResponse}
      *
      * @param globalVariable 全局变量表
      */
@@ -66,7 +67,7 @@ public class ConvertUtils {
     }
 
     /**
-     * 将 {@link TestPlatformUser} {@link Byte} 转换到 {@link UserDetailQueryResponse}
+     * 将 {@link TestPlatformUser} {@link Byte} 转换到为 {@link UserDetailQueryResponse}
      *
      * @param user 用户
      * @param roleLevels 用户角色
@@ -77,7 +78,7 @@ public class ConvertUtils {
     }
 
     /**
-     * 将 {@link TestPlatformUserRole} 转换到 {@link Mono<UserQueryResponse>}
+     * 将 {@link TestPlatformUserRole} 转换到为 {@link Mono<UserQueryResponse>}
      *
      * @param groupedFlux 用户名分组
      */
@@ -89,7 +90,7 @@ public class ConvertUtils {
     }
 
     /**
-     * 将 {@link GlobalVariableCreateVo} 转换到 {@link TestPlatformGlobalVariable}
+     * 将 {@link GlobalVariableCreateVo} 转换到为 {@link TestPlatformGlobalVariable}
      *
      * @param vo 变量创建值对象
      */
@@ -105,7 +106,7 @@ public class ConvertUtils {
     }
 
     /**
-     * 将 {@link UserCreateRequest} 转换到 {@link TestPlatformUser}
+     * 将 {@link UserCreateRequest} 转换到为 {@link TestPlatformUser}
      *
      * @param request 用户创建请求
      */
@@ -118,7 +119,7 @@ public class ConvertUtils {
     }
 
     /**
-     * 将 {@link UserRoleCreateRequest} 转换到 {@link UserRoleCreateRequest}
+     * 将 {@link UserRoleCreateRequest} 转换到为 {@link UserRoleCreateRequest}
      *
      * @param request 用户角色创建请求
      */
@@ -127,7 +128,7 @@ public class ConvertUtils {
     }
 
     /**
-     * 将 {@link UserRoleCreateRequest} 转换到 {@link Flux<TestPlatformUserRole>}
+     * 将 {@link UserRoleCreateRequest} 转换到为 {@link Flux<TestPlatformUserRole>}
      *
      * @param request 用户角色创建请求
      */
@@ -139,12 +140,26 @@ public class ConvertUtils {
     }
 
     /**
-     * 将 {@link Tuple3} 转换到 {@link GlobalVariableUpdateVo}
+     * 将 {@link Tuple3} 转换到为 {@link GlobalVariableUpdateVo}
      *
      * @param tuple3 用户名 变量名 变量变更请求
      */
     public static GlobalVariableUpdateVo from(Tuple3<String, String, GlobalVariableModifyRequest> tuple3) {
         return new GlobalVariableUpdateVo(tuple3.getT1(), tuple3.getT2(), tuple3.getT3());
+    }
+
+    /**
+     * 将 {@link Byte} 转换到为 {@link TestPlatformRoleLevel}
+     *
+     * @param roleLevel 角色级别
+     */
+    public static TestPlatformRoleLevel from(Byte roleLevel) {
+        for (TestPlatformRoleLevel testPlatformRoleLevel : TestPlatformRoleLevel.values()) {
+            if (testPlatformRoleLevel.getLevel() == roleLevel.intValue()) {
+                return testPlatformRoleLevel;
+            }
+        }
+        throw new ServerTestPlatformException("database role level invalid");
     }
 
 }

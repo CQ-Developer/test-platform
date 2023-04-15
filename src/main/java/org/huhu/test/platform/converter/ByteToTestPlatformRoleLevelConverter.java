@@ -1,6 +1,7 @@
 package org.huhu.test.platform.converter;
 
 import org.huhu.test.platform.constant.TestPlatformRoleLevel;
+import org.huhu.test.platform.util.ConvertUtils;
 import org.springframework.core.convert.converter.Converter;
 
 /**
@@ -14,7 +15,7 @@ public class ByteToTestPlatformRoleLevelConverter implements Converter<Byte, Tes
 
     @Override
     public TestPlatformRoleLevel convert(Byte source) {
-        return TestPlatformRoleLevel.fromLevel(source);
+        return ConvertUtils.from(source);
     }
 
 }

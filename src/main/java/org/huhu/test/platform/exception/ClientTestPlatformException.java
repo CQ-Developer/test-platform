@@ -18,6 +18,10 @@ public class ClientTestPlatformException extends TestPlatformException {
         super(throwable);
     }
 
+    public ClientTestPlatformException(String message) {
+        super(message);
+    }
+
     @Override
     public TestPlatformErrorCode getTestPlatformError() {
         return CLIENT_ERROR;
