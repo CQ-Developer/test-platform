@@ -10,8 +10,14 @@ import org.springframework.r2dbc.core.DatabaseClient;
 
 import java.util.List;
 
+/**
+ * 测试平台数据库操作类型转换配置
+ *
+ * @author 18551681083@163.com
+ * @since 0.0.1
+ */
 @Configuration
-public class R2dbcConfiguration {
+public class TestPlatformR2dbcConfiguration {
 
     @Bean
     public R2dbcCustomConversions r2dbcCustomConversions(DatabaseClient databaseClient) {
