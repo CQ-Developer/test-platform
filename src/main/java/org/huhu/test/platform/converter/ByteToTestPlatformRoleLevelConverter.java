@@ -17,7 +17,7 @@ public class ByteToTestPlatformRoleLevelConverter implements Converter<Byte, Tes
 
     @Override
     public TestPlatformRoleLevel convert(Byte source) {
-        return ConvertUtils.from(source);
+        return ConvertUtils.toTestPlatformRoleLevel(source);
     }
 
 }

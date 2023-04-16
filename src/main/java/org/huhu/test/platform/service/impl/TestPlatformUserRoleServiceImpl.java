@@ -35,7 +35,7 @@ public class TestPlatformUserRoleServiceImpl implements TestPlatformUserRoleServ
     public Mono<Void> createTestPlatformUserRole(UserRoleCreateRequest request) {
         // todo 确定当前用户没有该角色
         return userRoleRepository
-                .save(ConvertUtils.from(request))
+                .save(ConvertUtils.toTestPlatformUserRole(request))
                 .doOnNext(item -> logger.info("save user role {}", item.getRoleLevel()))
                 .then();
     }

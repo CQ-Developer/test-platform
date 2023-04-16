@@ -46,6 +46,7 @@ public class TestPlatformReactiveUserDetailsServiceImpl implements ReactiveUserD
 
     @Override
     public Mono<UserDetails> updatePassword(UserDetails user, String newPassword) {
+        // todo 实现密码更新
         return null;
     }
 

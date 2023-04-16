@@ -35,7 +35,7 @@ public class TestPlatformErrorController {
             ServerWebInputException.class, MethodNotAllowedException.class})
     public Mono<ErrorResponse> handleClientError(Exception exception) {
         logger.error("client request error.", exception);
-        return Mono.just(ConvertUtils.from(CLIENT_ERROR));
+        return Mono.just(ConvertUtils.toErrorResponse(CLIENT_ERROR));
     }
 
     /**
@@ -46,7 +46,7 @@ public class TestPlatformErrorController {
     @ExceptionHandler(TestPlatformException.class)
     public Mono<ErrorResponse> handleTestPlatformError(TestPlatformException exception) {
         logger.info("test platform error.", exception);
-        return Mono.just(ConvertUtils.from(exception));
+        return Mono.just(ConvertUtils.toErrorResponse(exception));
     }
 
     /**
@@ -57,7 +57,7 @@ public class TestPlatformErrorController {
     @ExceptionHandler(Exception.class)
     public Mono<ErrorResponse> handleUnknownError(Exception exception) {
         logger.error("server unknown error.", exception);
-        return Mono.just(ConvertUtils.from(SERVER_ERROR));
+        return Mono.just(ConvertUtils.toErrorResponse(SERVER_ERROR));
     }
 
 }

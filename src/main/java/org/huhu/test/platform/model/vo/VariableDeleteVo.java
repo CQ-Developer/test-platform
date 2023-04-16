@@ -1,6 +1,6 @@
 package org.huhu.test.platform.model.vo;
 
-import org.huhu.test.platform.controller.TestPlatformGlobalVariableController;
+import org.huhu.test.platform.controller.TestPlatformVariableController;
 import reactor.core.publisher.Mono;
 
 /**
@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
  * @param variableName 变量名
  *
  * @author 18551681083@163.com
- * @see TestPlatformGlobalVariableController#deleteGlobalVariable(Mono, String)
+ * @see TestPlatformVariableController#deleteGlobalVariable(Mono, String)
  * @since 0.0.1
  */
-public record GlobalVariableDeleteVo(String username, String variableName) {}
+public record VariableDeleteVo(String username, String variableName) {}

@@ -3,23 +3,24 @@ package org.huhu.test.platform.model.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.huhu.test.platform.controller.TestPlatformVariableController;
 import reactor.core.publisher.Mono;
 
 import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.VARIABLE_NAME;
 
 /**
- * 测试平台全局变量变更请求
+ * 测试平台变量变更请求
  *
- * @param variableName 全局变量名
- * @param variableValue 全局变量值
- * @param variableDescription 全局变量描述
+ * @param variableName 变量名
+ * @param variableValue 变量值
+ * @param variableDescription 变量描述
  *
  * @author 18551681083@163.com
- * @see org.huhu.test.platform.controller.TestPlatformGlobalVariableController#createGlobalVariable(Mono, Mono)
- * @see org.huhu.test.platform.controller.TestPlatformGlobalVariableController#updateGlobalVariable(Mono, String, Mono)
+ * @see TestPlatformVariableController#createGlobalVariable(Mono, Mono)
+ * @see TestPlatformVariableController#updateGlobalVariable(Mono, String, Mono)
  * @since 0.0.1
  */
-public record GlobalVariableModifyRequest(
+public record VariableModifyRequest(
         @NotBlank
         @Pattern(regexp = VARIABLE_NAME)
         String variableName,

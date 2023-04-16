@@ -32,7 +32,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf;
 
 /**
- * 测试平台全局变量单元测试
+ * 测试平台变量单元测试
  *
  * @author 18551681083@163.com
  * @see TestPlatformUserController

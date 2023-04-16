@@ -58,7 +58,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                 .findByUsername(username)
                 .map(TestPlatformUserRole::getRoleLevel)
                 .collectList();
-        return Mono.zip(findUser, findUserRoles, ConvertUtils::from);
+        return Mono.zip(findUser, findUserRoles, ConvertUtils::toUserDetailQueryResponse);
     }
 
     @Override
@@ -66,19 +66,19 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
         return userRoleRepository
                 .findAll()
                 .groupBy(TestPlatformUserRole::getUsername)
-                .flatMap(ConvertUtils::monoFrom);
+                .flatMap(ConvertUtils::toUserQueryResponse);
     }
 
     @Override
     @Transactional
     public Mono<Void> createTestPlatformUser(UserCreateRequest request) {
-        var testPlatformUser = ConvertUtils.from(request);
+        var testPlatformUser = ConvertUtils.toTestPlatformUser(request);
         testPlatformUser.setPassword(passwordEncoder.encode(request.password()));
         var saveUser = userRepository
                 .save(testPlatformUser)
                 .doOnNext(i -> logger.info("create user {}", i.getUsername()));
         var saveRole = userRoleRepository
-                .saveAll(ConvertUtils.fluxFrom(request))
+                .saveAll(ConvertUtils.toTestPlatformUserRole(request))
                 .doOnNext(i -> logger.info("create user {} with role {}", i.getUsername(), i.getRoleLevel()));
         return userRepository
                 .findByUsername(request.username())
@@ -97,7 +97,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
         var deleteUserRole = userRoleRepository
                 .deleteByUsername(username)
                 .doOnNext(i -> logger.info("delete {} role", i));
-        // todo 删除用户的全局变量
+        // todo 删除用户的变量
         return deleteUser.then(deleteUserRole).then();
     }
 

@@ -1,11 +1,11 @@
 package org.huhu.test.platform.controller;
 
-import org.huhu.test.platform.model.request.GlobalVariableModifyRequest;
-import org.huhu.test.platform.model.response.GlobalVariableQueryResponse;
-import org.huhu.test.platform.model.vo.GlobalVariableCreateVo;
-import org.huhu.test.platform.model.vo.GlobalVariableDeleteVo;
-import org.huhu.test.platform.model.vo.GlobalVariableUpdateVo;
-import org.huhu.test.platform.service.TestPlatformGlobalVariableService;
+import org.huhu.test.platform.model.request.VariableModifyRequest;
+import org.huhu.test.platform.model.response.VariableQueryResponse;
+import org.huhu.test.platform.model.vo.VariableCreateVo;
+import org.huhu.test.platform.model.vo.VariableDeleteVo;
+import org.huhu.test.platform.model.vo.VariableUpdateVo;
+import org.huhu.test.platform.service.TestPlatformVariableService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -23,26 +23,26 @@ import static org.mockito.Mockito.doReturn;
 import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf;
 
 /**
- * 测试平台全局变量单元测试
+ * 测试平台变量单元测试
  *
  * @author 18551681083@163.com
- * @see TestPlatformGlobalVariableController
+ * @see TestPlatformVariableController
  * @since 0.0.1
  */
 @WithMockUser
-@WebFluxTest(TestPlatformGlobalVariableController.class)
-class TestPlatformGlobalVariableControllerTest {
+@WebFluxTest(TestPlatformVariableController.class)
+class TestPlatformVariableControllerTest {
 
     @Autowired
     WebTestClient webTestClient;
 
     @MockBean
-    TestPlatformGlobalVariableService globalVariableService;
+    TestPlatformVariableService globalVariableService;
 
     @Test
     void queryGlobalVariable() {
-        var url = new GlobalVariableQueryResponse("url", "http://some.host", "base url");
-        var header = new GlobalVariableQueryResponse("header", "some header", "base header");
+        var url = new VariableQueryResponse("url", "http://some.host", "base url");
+        var header = new VariableQueryResponse("header", "some header", "base header");
         doReturn(Flux.just(url, header))
                 .when(globalVariableService)
                 .queryTestPlatformGlobalVariables(anyString());
@@ -51,15 +51,15 @@ class TestPlatformGlobalVariableControllerTest {
                 .uri("/variable/global")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(GlobalVariableQueryResponse.class).hasSize(2);
+                .expectBodyList(VariableQueryResponse.class).hasSize(2);
     }
 
     @Test
     void createGlobalVariable() {
         doReturn(Mono.empty())
                 .when(globalVariableService)
-                .createTestPlatformGlobalVariable(any(GlobalVariableCreateVo.class));
-        var request = new GlobalVariableModifyRequest("name", "value", "description");
+                .createTestPlatformGlobalVariable(any(VariableCreateVo.class));
+        var request = new VariableModifyRequest("name", "value", "description");
         webTestClient
                 .mutateWith(csrf())
                 .put()
@@ -73,7 +73,7 @@ class TestPlatformGlobalVariableControllerTest {
     @ParameterizedTest
     @CsvSource({"'', value", "n-me, value", "name, ''"})
     void createGlobalVariableInvalidParameter(String name, String value) {
-        var request = new GlobalVariableModifyRequest(name, value, null);
+        var request = new VariableModifyRequest(name, value, null);
         webTestClient
                 .mutateWith(csrf())
                 .put()
@@ -89,8 +89,8 @@ class TestPlatformGlobalVariableControllerTest {
     void updateGlobalVariable() {
         doReturn(Mono.empty())
                 .when(globalVariableService)
-                .updateTestPlatformGlobalVariable(any(GlobalVariableUpdateVo.class));
-        var request = new GlobalVariableModifyRequest("name", "value", "description");
+                .updateTestPlatformGlobalVariable(any(VariableUpdateVo.class));
+        var request = new VariableModifyRequest("name", "value", "description");
         webTestClient
                 .mutateWith(csrf())
                 .post()
@@ -106,8 +106,8 @@ class TestPlatformGlobalVariableControllerTest {
     void updateGlobalVariableInvalidParameter(String path, String name, String value) {
         doReturn(Mono.empty())
                 .when(globalVariableService)
-                .updateTestPlatformGlobalVariable(any(GlobalVariableUpdateVo.class));
-        var request = new GlobalVariableModifyRequest(name, value, null);
+                .updateTestPlatformGlobalVariable(any(VariableUpdateVo.class));
+        var request = new VariableModifyRequest(name, value, null);
         webTestClient
                 .mutateWith(csrf())
                 .post()
@@ -123,7 +123,7 @@ class TestPlatformGlobalVariableControllerTest {
     void deleteGlobalVariable() {
         doReturn(Mono.empty())
                 .when(globalVariableService)
-                .deleteTestPlatformGlobalVariable(any(GlobalVariableDeleteVo.class));
+                .deleteTestPlatformGlobalVariable(any(VariableDeleteVo.class));
         webTestClient
                 .mutateWith(csrf())
                 .delete()
@@ -137,7 +137,7 @@ class TestPlatformGlobalVariableControllerTest {
     void deleteGlobalVariableInvalidParameter() {
         doReturn(Mono.empty())
                 .when(globalVariableService)
-                .deleteTestPlatformGlobalVariable(any(GlobalVariableDeleteVo.class));
+                .deleteTestPlatformGlobalVariable(any(VariableDeleteVo.class));
         webTestClient
                 .mutateWith(csrf())
                 .delete()

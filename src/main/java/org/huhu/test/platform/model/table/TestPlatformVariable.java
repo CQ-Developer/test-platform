@@ -1,11 +1,12 @@
 package org.huhu.test.platform.model.table;
 
+import org.huhu.test.platform.constant.TestPlatformVariableScope;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("t_test_global_variable")
-public class TestPlatformGlobalVariable {
+@Table("t_test_variable")
+public class TestPlatformVariable {
 
     @Id
     @Column("variable_id")
@@ -16,6 +17,9 @@ public class TestPlatformGlobalVariable {
 
     @Column("variable_value")
     private String variableValue;
+
+    @Column("variable_scope")
+    private TestPlatformVariableScope variableScope;
 
     @Column("variable_description")
     private String variableDescription;
@@ -44,6 +48,14 @@ public class TestPlatformGlobalVariable {
 
     public void setVariableValue(String variableValue) {
         this.variableValue = variableValue;
+    }
+
+    public TestPlatformVariableScope getVariableScope() {
+        return variableScope;
+    }
+
+    public void setVariableScope(TestPlatformVariableScope variableScope) {
+        this.variableScope = variableScope;
     }
 
     public String getVariableDescription() {
