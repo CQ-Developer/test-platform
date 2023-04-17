@@ -16,6 +16,14 @@ public interface TestPlatformUserRoleRepository extends R2dbcRepository<TestPlat
     Flux<TestPlatformUserRole> findByUsername(String username);
 
     /**
+     * 查询用户角色
+     *
+     * @param username 用户名
+     * @param roleLevel 角色级别
+     */
+    Mono<TestPlatformUserRole> findByUsernameAndRoleLevel(String username, TestPlatformRoleLevel roleLevel);
+
+    /**
      * 删除用户所有角色
      *
      * @param username 用户名

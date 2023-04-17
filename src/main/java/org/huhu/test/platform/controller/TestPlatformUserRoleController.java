@@ -3,6 +3,7 @@ package org.huhu.test.platform.controller;
 import jakarta.validation.constraints.Pattern;
 import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import org.huhu.test.platform.model.request.UserRoleCreateRequest;
+import org.huhu.test.platform.model.response.UserRoleQueryResponse;
 import org.huhu.test.platform.model.vo.UserRoleDeleteVo;
 import org.huhu.test.platform.service.TestPlatformUserRoleService;
 import org.springframework.security.core.Authentication;
@@ -32,10 +33,15 @@ public class TestPlatformUserRoleController {
     }
 
     @GetMapping
-    public Flux<TestPlatformRoleLevel> queryUserRole(Mono<Authentication> authentication) {
+    public Flux<UserRoleQueryResponse> queryUserRole(Mono<Authentication> authentication) {
         return authentication
                 .map(Authentication::getName)
                 .flatMapMany(userRoleService::queryTestPlatformUserRole);
+    }
+
+    @GetMapping("/{username}")
+    public Flux<UserRoleQueryResponse> queryUserRole(@PathVariable("username") @Pattern(regexp = USERNAME) String username) {
+        return userRoleService.queryTestPlatformUserRole(username);
     }
 
     @PutMapping
@@ -43,9 +49,9 @@ public class TestPlatformUserRoleController {
         return request.flatMap(userRoleService::createTestPlatformUserRole);
     }
 
-    @DeleteMapping("/{roleLevel}")
-    public Mono<Void> deleteUserRole(@PathVariable("roleLevel") TestPlatformRoleLevel roleLevel,
-            @RequestParam("username") @Pattern(regexp = USERNAME) String username) {
+    @DeleteMapping("/{username}")
+    public Mono<Void> deleteUserRole(@PathVariable("username") @Pattern(regexp = USERNAME) String username,
+            @RequestParam("roleLevel") TestPlatformRoleLevel roleLevel) {
         return userRoleService.deleteTestPlatformUseRole(new UserRoleDeleteVo(username, roleLevel));
     }
 

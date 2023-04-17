@@ -1,7 +1,7 @@
 package org.huhu.test.platform.service.impl;
 
-import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import org.huhu.test.platform.model.request.UserRoleCreateRequest;
+import org.huhu.test.platform.model.response.UserRoleQueryResponse;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
 import org.huhu.test.platform.model.vo.UserRoleDeleteVo;
 import org.huhu.test.platform.repository.TestPlatformUserRoleRepository;
@@ -25,17 +25,18 @@ public class TestPlatformUserRoleServiceImpl implements TestPlatformUserRoleServ
     }
 
     @Override
-    public Flux<TestPlatformRoleLevel> queryTestPlatformUserRole(String username) {
+    public Flux<UserRoleQueryResponse> queryTestPlatformUserRole(String username) {
         return userRoleRepository
                 .findByUsername(username)
-                .map(TestPlatformUserRole::roleLevel);
+                .map(TestPlatformUserRole::roleLevel)
+                .map(ConvertUtils::toUserRoleQueryResponse);
     }
 
     @Override
     public Mono<Void> createTestPlatformUserRole(UserRoleCreateRequest request) {
-        // todo 确定当前用户没有该角色
         return userRoleRepository
-                .save(ConvertUtils.toTestPlatformUserRole(request))
+                .findByUsernameAndRoleLevel(request.username(), request.roleLevel())
+                .switchIfEmpty(userRoleRepository.save(ConvertUtils.toTestPlatformUserRole(request)))
                 .doOnNext(item -> logger.info("save user role {}", item.roleLevel()))
                 .then();
     }

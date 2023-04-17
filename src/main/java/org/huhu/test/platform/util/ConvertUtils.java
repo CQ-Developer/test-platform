@@ -11,6 +11,7 @@ import org.huhu.test.platform.model.request.VariableModifyRequest;
 import org.huhu.test.platform.model.response.ErrorResponse;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
+import org.huhu.test.platform.model.response.UserRoleQueryResponse;
 import org.huhu.test.platform.model.response.VariableQueryResponse;
 import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
@@ -186,4 +187,7 @@ public class ConvertUtils {
         throw new ServerTestPlatformException("database variable scope invalid");
     }
 
+    public static UserRoleQueryResponse toUserRoleQueryResponse(TestPlatformRoleLevel roleLevel) {
+        return new UserRoleQueryResponse(roleLevel.name(), roleLevel);
+    }
 }

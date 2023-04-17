@@ -1,8 +1,11 @@
 package org.huhu.test.platform.configuration;
 
+import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +13,8 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ADMIN;
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
@@ -31,8 +36,8 @@ public class TestPlatformSecurityConfiguration {
                 .httpBasic()
                 .and()
                 .authorizeExchange()
-                .pathMatchers(GET, "/management/role").authenticated()
-                .pathMatchers("/management/**").hasRole(ADMIN.name())
+                .pathMatchers(GET, "/user/role").authenticated()
+                .pathMatchers("/user/**").hasRole(ADMIN.name())
                 .anyExchange().authenticated()
                 .and()
                 // todo csrf开发阶段关闭
@@ -55,6 +60,17 @@ public class TestPlatformSecurityConfiguration {
         var secureRandom = SecureRandom.getInstanceStrong();
         secureRandom.setSeed(System.currentTimeMillis());
         return new BCryptPasswordEncoder($2A, 8, secureRandom);
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        String role = Arrays.stream(TestPlatformRoleLevel.values())
+                               .map(TestPlatformRoleLevel::name)
+                               .map("ROLE_"::concat)
+                               .collect(Collectors.joining(" > "));
+        var roleHierarchy = new RoleHierarchyImpl();
+        // todo 实现权限级别开发
+        return roleHierarchy;
     }
 
 }
