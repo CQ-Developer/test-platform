@@ -12,4 +12,6 @@ import org.huhu.test.platform.constant.TestPlatformRoleLevel;
  * @see org.huhu.test.platform.controller.TestPlatformUserRoleController#deleteUserRole(TestPlatformRoleLevel, String)
  * @since 0.0.1
  */
-public record UserRoleDeleteVo(String username, TestPlatformRoleLevel roleLevel) {}
+public record UserRoleDeleteVo(
+        String username,
+        TestPlatformRoleLevel roleLevel) {}

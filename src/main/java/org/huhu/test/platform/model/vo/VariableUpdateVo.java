@@ -1,5 +1,6 @@
 package org.huhu.test.platform.model.vo;
 
+import org.huhu.test.platform.constant.TestPlatformVariableScope;
 import org.huhu.test.platform.controller.TestPlatformVariableController;
 import org.huhu.test.platform.model.request.VariableModifyRequest;
 import reactor.core.publisher.Mono;
@@ -9,10 +10,15 @@ import reactor.core.publisher.Mono;
  *
  * @param username 用户名
  * @param variableName 变量名
+ * @param variableScope 变量作用域
  * @param request 变量变更请求
  *
  * @author 18551681083@163.com
- * @see TestPlatformVariableController#updateGlobalVariable(Mono, String, Mono)
+ * @see TestPlatformVariableController#updateVariable(Mono, String, TestPlatformVariableScope, Mono)
  * @since 0.0.1
  */
-public record VariableUpdateVo(String username, String variableName, VariableModifyRequest request) {}
+public record VariableUpdateVo(
+        String username,
+        String variableName,
+        TestPlatformVariableScope variableScope,
+        VariableModifyRequest request) {}

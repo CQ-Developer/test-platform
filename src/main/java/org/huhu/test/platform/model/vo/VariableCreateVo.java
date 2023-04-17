@@ -11,8 +11,9 @@ import reactor.core.publisher.Mono;
  * @param request 变量变更请求
  *
  * @author 18551681083@163.com
- * @see TestPlatformVariableController#createGlobalVariable(Mono, Mono)
- * @see TestPlatformVariableController#updateGlobalVariable(Mono, String, Mono)
+ * @see TestPlatformVariableController#createVariable(Mono, Mono)
  * @since 0.0.1
  */
-public record VariableCreateVo(String username, VariableModifyRequest request) {}
+public record VariableCreateVo(
+        String username,
+        VariableModifyRequest request) {}

@@ -45,7 +45,7 @@ class TestPlatformVariableControllerTest {
         var header = new VariableQueryResponse("header", "some header", "base header");
         doReturn(Flux.just(url, header))
                 .when(globalVariableService)
-                .queryTestPlatformGlobalVariables(anyString());
+                .queryTestPlatformVariable(anyString());
         webTestClient
                 .get()
                 .uri("/variable/global")
@@ -58,7 +58,7 @@ class TestPlatformVariableControllerTest {
     void createGlobalVariable() {
         doReturn(Mono.empty())
                 .when(globalVariableService)
-                .createTestPlatformGlobalVariable(any(VariableCreateVo.class));
+                .createTestPlatformVariable(any(VariableCreateVo.class));
         var request = new VariableModifyRequest("name", "value", "description");
         webTestClient
                 .mutateWith(csrf())
@@ -89,7 +89,7 @@ class TestPlatformVariableControllerTest {
     void updateGlobalVariable() {
         doReturn(Mono.empty())
                 .when(globalVariableService)
-                .updateTestPlatformGlobalVariable(any(VariableUpdateVo.class));
+                .updateTestPlatformVariable(any(VariableUpdateVo.class));
         var request = new VariableModifyRequest("name", "value", "description");
         webTestClient
                 .mutateWith(csrf())
@@ -106,7 +106,7 @@ class TestPlatformVariableControllerTest {
     void updateGlobalVariableInvalidParameter(String path, String name, String value) {
         doReturn(Mono.empty())
                 .when(globalVariableService)
-                .updateTestPlatformGlobalVariable(any(VariableUpdateVo.class));
+                .updateTestPlatformVariable(any(VariableUpdateVo.class));
         var request = new VariableModifyRequest(name, value, null);
         webTestClient
                 .mutateWith(csrf())
@@ -123,7 +123,7 @@ class TestPlatformVariableControllerTest {
     void deleteGlobalVariable() {
         doReturn(Mono.empty())
                 .when(globalVariableService)
-                .deleteTestPlatformGlobalVariable(any(VariableDeleteVo.class));
+                .deleteTestPlatformVariable(any(VariableDeleteVo.class));
         webTestClient
                 .mutateWith(csrf())
                 .delete()
@@ -137,7 +137,7 @@ class TestPlatformVariableControllerTest {
     void deleteGlobalVariableInvalidParameter() {
         doReturn(Mono.empty())
                 .when(globalVariableService)
-                .deleteTestPlatformGlobalVariable(any(VariableDeleteVo.class));
+                .deleteTestPlatformVariable(any(VariableDeleteVo.class));
         webTestClient
                 .mutateWith(csrf())
                 .delete()

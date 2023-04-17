@@ -16,11 +16,13 @@ import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
 import org.huhu.test.platform.model.table.TestPlatformVariable;
 import org.huhu.test.platform.model.vo.VariableCreateVo;
+import org.huhu.test.platform.model.vo.VariableDeleteVo;
 import org.huhu.test.platform.model.vo.VariableUpdateVo;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.GroupedFlux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple3;
+import reactor.util.function.Tuple4;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -63,8 +65,8 @@ public class ConvertUtils {
      * @param globalVariable 变量表
      */
     public static VariableQueryResponse toVariableQueryResponse(TestPlatformVariable globalVariable) {
-        return new VariableQueryResponse(globalVariable.getVariableName(),
-                globalVariable.getVariableValue(), globalVariable.getVariableDescription());
+        return new VariableQueryResponse(globalVariable.getVariableName(), globalVariable.getVariableValue(),
+                globalVariable.getVariableScope(), globalVariable.getVariableDescription());
     }
 
     /**
@@ -101,6 +103,7 @@ public class ConvertUtils {
         VariableModifyRequest request = vo.request();
         globalVariable.setVariableName(request.variableName());
         globalVariable.setVariableValue(request.variableValue());
+        globalVariable.setVariableScope(request.variableScope());
         Optional.ofNullable(request.variableDescription())
                 .ifPresent(globalVariable::setVariableDescription);
         return globalVariable;
@@ -141,12 +144,21 @@ public class ConvertUtils {
     }
 
     /**
-     * 将 {@link Tuple3} 转换为 {@link VariableUpdateVo}
+     * 将 {@link Tuple4} 转换为 {@link VariableUpdateVo}
      *
-     * @param tuple3 用户名 变量名 变量变更请求
+     * @param tuple4 用户名 变量名 变量作用域 变量变更请求
      */
-    public static VariableUpdateVo toVariableUpdateVo(Tuple3<String, String, VariableModifyRequest> tuple3) {
-        return new VariableUpdateVo(tuple3.getT1(), tuple3.getT2(), tuple3.getT3());
+    public static VariableUpdateVo toVariableUpdateVo(Tuple4<String, String, TestPlatformVariableScope, VariableModifyRequest> tuple4) {
+        return new VariableUpdateVo(tuple4.getT1(), tuple4.getT2(), tuple4.getT3(), tuple4.getT4());
+    }
+
+    /**
+     * 将 {@link Tuple3} 转换为 {@link VariableDeleteVo}
+     *
+     * @param tuple3 用户名 变量名 变量作用域
+     */
+    public static VariableDeleteVo toVariableDeleteVo(Tuple3<String, String, TestPlatformVariableScope> tuple3) {
+        return new VariableDeleteVo(tuple3.getT1(), tuple3.getT2(), tuple3.getT3());
     }
 
     /**

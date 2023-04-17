@@ -9,6 +9,6 @@ values ('root', 3),
        ('chen', 2);
 
 -- 创建测试数据
-insert into t_test_global_variable (username, variable_name, variable_value)
-values ('root', 'test1', 'value1'),
-       ('root', 'test2', 'value2');
+insert into t_test_variable (username, variable_name, variable_value, variable_scope)
+values ('root', 'test1', 'value1', 0),
+       ('root', 'test2', 'value2', 0);

@@ -1,5 +1,6 @@
 package org.huhu.test.platform.model.response;
 
+import org.huhu.test.platform.constant.TestPlatformVariableScope;
 import org.huhu.test.platform.controller.TestPlatformVariableController;
 import reactor.core.publisher.Mono;
 
@@ -8,6 +9,7 @@ import reactor.core.publisher.Mono;
  *
  * @param variableName 变量名
  * @param variableValue 变量值
+ * @param variableScope 变量作用域
  * @param variableDescription 变量描述
  *
  * @author 18551681083@163.com
@@ -17,4 +19,5 @@ import reactor.core.publisher.Mono;
 public record VariableQueryResponse(
         String variableName,
         String variableValue,
+        TestPlatformVariableScope variableScope,
         String variableDescription) {}

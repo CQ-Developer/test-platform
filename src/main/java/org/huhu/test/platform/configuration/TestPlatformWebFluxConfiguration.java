@@ -2,6 +2,7 @@ package org.huhu.test.platform.configuration;
 
 import cn.hutool.core.util.StrUtil;
 import org.huhu.test.platform.constant.TestPlatformRoleLevel;
+import org.huhu.test.platform.constant.TestPlatformVariableScope;
 import org.huhu.test.platform.exception.ClientTestPlatformException;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -18,14 +19,22 @@ public class TestPlatformWebFluxConfiguration implements WebFluxConfigurer {
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(String.class, TestPlatformRoleLevel.class, this::deserialize);
+        registry.addConverter(String.class, TestPlatformRoleLevel.class, this::roleLevelDeserialize);
+        registry.addConverter(String.class, TestPlatformVariableScope.class, this::variableScopeDeserialize);
     }
 
-    private TestPlatformRoleLevel deserialize(String roleLevel) {
+    private TestPlatformRoleLevel roleLevelDeserialize(String roleLevel) {
         if (StrUtil.isNumeric(roleLevel)) {
             return TestPlatformRoleLevel.deserialize(Integer.parseInt(roleLevel));
         }
         throw new ClientTestPlatformException("client role level invalid");
+    }
+
+    private TestPlatformVariableScope variableScopeDeserialize(String variableScope) {
+        if (StrUtil.isNumeric(variableScope)) {
+            return TestPlatformVariableScope.deserialize(Integer.parseInt(variableScope));
+        }
+        throw new ClientTestPlatformException("client variable scope invalid");
     }
 
 }

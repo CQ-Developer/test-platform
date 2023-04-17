@@ -21,13 +21,13 @@ create table if not exists t_test_user_role (
 );
 
 drop table if exists t_test_variable;
-create table if not exists t_test_global_variable (
+create table if not exists t_test_variable (
   variable_id bigint not null auto_increment,
   variable_name varchar(32) not null,
   variable_value varchar(256) not null,
-  variable_scope tinyint not null default,
+  variable_scope tinyint not null,
   variable_description varchar(512),
   username varchar(16) not null,
   primary key (variable_id),
-  unique key (username, variable_name)
+  unique key (username, variable_name, variable_scope)
 );
