@@ -1,5 +1,6 @@
 package org.huhu.test.platform.util;
 
+import cn.hutool.core.util.ObjectUtil;
 import org.huhu.test.platform.constant.TestPlatformErrorCode;
 import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import org.huhu.test.platform.constant.TestPlatformVariableScope;
@@ -76,8 +77,8 @@ public class ConvertUtils {
      * @param roleLevels 用户角色
      */
     public static UserDetailQueryResponse toUserDetailQueryResponse(TestPlatformUser user, List<TestPlatformRoleLevel> roleLevels) {
-        return new UserDetailQueryResponse(user.getUsername(), roleLevels,
-                user.getEnabled(), user.getLocked(), user.getRegisterTime(), user.getExpiredTime());
+        return new UserDetailQueryResponse(user.username(), roleLevels,
+                user.enabled(), user.locked(), user.registerTime(), user.expiredTime());
     }
 
     /**
@@ -111,12 +112,9 @@ public class ConvertUtils {
      *
      * @param request 用户创建请求
      */
-    public static TestPlatformUser toTestPlatformUser(UserCreateRequest request) {
-        var user = new TestPlatformUser();
-        user.setUsername(request.username());
-        user.setPassword(request.password());
-        user.setExpiredTime(LocalDateTime.now().plusYears(1L));
-        return user;
+    public static TestPlatformUser toTestPlatformUser(UserCreateRequest request, String encodedPassword) {
+        var expiredTime = ObjectUtil.isNull(request.expiredTime()) ? LocalDateTime.now().plusYears(1L) : request.expiredTime();
+        return new TestPlatformUser(null, request.username(), encodedPassword, null, null, null, expiredTime);
     }
 
     /**

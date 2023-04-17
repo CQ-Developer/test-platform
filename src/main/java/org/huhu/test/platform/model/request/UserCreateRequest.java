@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.PASSWORD;
@@ -34,4 +35,6 @@ public record UserCreateRequest(
 
         @NotNull
         @Size(min = 1, max = 3)
-        List<TestPlatformRoleLevel> roleLevel) {}
+        List<TestPlatformRoleLevel> roleLevel,
+
+        LocalDateTime expiredTime) {}

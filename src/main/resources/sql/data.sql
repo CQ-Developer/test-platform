@@ -6,6 +6,7 @@ values ('root', '$2a$08$LFJI.wwH0y0yEf9ADfTbXue8z3UftLw0JHaZ21VuJYUZ7gNJmgDtq', 
 -- 创建默认角色
 insert into t_test_user_role (username, role_level)
 values ('root', 3),
+       ('chen', 1),
        ('chen', 2);
 
 -- 创建测试数据

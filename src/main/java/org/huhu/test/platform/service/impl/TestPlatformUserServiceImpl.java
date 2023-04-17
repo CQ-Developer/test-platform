@@ -24,7 +24,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class TestPlatformUserServiceImpl implements TestPlatformUserService {
@@ -72,19 +71,20 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     @Override
     @Transactional
     public Mono<Void> createTestPlatformUser(UserCreateRequest request) {
-        var testPlatformUser = ConvertUtils.toTestPlatformUser(request);
-        testPlatformUser.setPassword(passwordEncoder.encode(request.password()));
+        var testPlatformUser = ConvertUtils
+                .toTestPlatformUser(request, passwordEncoder.encode(request.password()));
         var saveUser = userRepository
                 .save(testPlatformUser)
-                .doOnNext(i -> logger.info("create user {}", i.getUsername()));
+                .doOnNext(i -> logger.info("create user {}", i.username()));
         var saveRole = userRoleRepository
                 .saveAll(ConvertUtils.toTestPlatformUserRole(request))
                 .doOnNext(i -> logger.info("create user {} with role {}", i.username(), i.roleLevel()));
         return userRepository
                 .findByUsername(request.username())
-                .flatMap(i -> Mono.error(new ClientTestPlatformException()))
                 .switchIfEmpty(saveUser)
+                .doOnNext(i -> logger.info("save user {}", i.username()))
                 .thenMany(saveRole)
+                .doOnNext(i -> logger.info("save user role {}.", i.roleLevel().name()))
                 .then();
     }
 
@@ -103,14 +103,20 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
 
     @Override
     public Mono<Void> renewTestPlatformUser(UserRenewRequest request) {
-        var expiredTime = Optional
-                .ofNullable(request.expiredTime())
-                .orElse(LocalDateTime.now().plusYears(1L));
-        return entityTemplate
-                .update(TestPlatformUser.class)
-                .inTable(userTableName)
-                .matching(Query.query(Criteria.where("username").is(request.username())))
-                .apply(Update.update("expired_time", expiredTime))
+        return userRepository
+                .findByUsername(request.username())
+                .map(TestPlatformUser::expiredTime)
+                .doOnNext(i -> logger.info("user current expired time {}", i))
+                .filter(LocalDateTime.now()::isBefore)
+                .flatMap(i -> Mono.justOrEmpty(request.expiredTime())
+                                  .filter(i::isBefore)
+                                  .switchIfEmpty(Mono.just(i)))
+                .switchIfEmpty(Mono.justOrEmpty(request.expiredTime())
+                                   .filter(LocalDateTime.now()::isBefore)
+                                   .switchIfEmpty(Mono.just(LocalDateTime.now().plusMonths(1L)))
+                                   .doOnNext(i -> logger.info("will renew user with {}", i)))
+                .zipWith(Mono.just(request.username()))
+                .flatMap(i -> userRepository.setExpiredTimeFor(i.getT1(), i.getT2()))
                 .doOnNext(i -> logger.info("renew {} user", i))
                 .then();
     }

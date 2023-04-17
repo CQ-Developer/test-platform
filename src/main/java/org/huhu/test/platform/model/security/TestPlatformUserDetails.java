@@ -36,32 +36,32 @@ public class TestPlatformUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return testPlatformUser.getPassword();
+        return testPlatformUser.password();
     }
 
     @Override
     public String getUsername() {
-        return testPlatformUser.getUsername();
+        return testPlatformUser.username();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return testPlatformUser.getExpiredTime().isAfter(LocalDateTime.now());
+        return testPlatformUser.expiredTime().isAfter(LocalDateTime.now());
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return !testPlatformUser.getLocked();
+        return !testPlatformUser.locked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return testPlatformUser.getExpiredTime().isAfter(LocalDateTime.now());
+        return testPlatformUser.expiredTime().isAfter(LocalDateTime.now());
     }
 
     @Override
     public boolean isEnabled() {
-        return testPlatformUser.getEnabled();
+        return testPlatformUser.enabled();
     }
 
 }
