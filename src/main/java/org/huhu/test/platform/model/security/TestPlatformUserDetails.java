@@ -26,7 +26,7 @@ public class TestPlatformUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return testPlatformUserRoles
                 .stream()
-                .map(TestPlatformUserRole::getRoleLevel)
+                .map(TestPlatformUserRole::roleLevel)
                 .map(TestPlatformRoleLevel::name)
                 .distinct()
                 .map("ROLE_"::concat)

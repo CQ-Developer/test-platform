@@ -87,7 +87,7 @@ public class ConvertUtils {
     public static Mono<UserQueryResponse> toUserQueryResponse(
             GroupedFlux<String, TestPlatformUserRole> groupedFlux) {
         var username = Mono.just(groupedFlux.key());
-        var roleNames = groupedFlux.map(TestPlatformUserRole::getRoleLevel).collectList();
+        var roleNames = groupedFlux.map(TestPlatformUserRole::roleLevel).collectList();
         return Mono.zip(username, roleNames, UserQueryResponse::new);
     }
 
@@ -97,14 +97,12 @@ public class ConvertUtils {
      * @param vo 变量创建值对象
      */
     public static TestPlatformVariable toTestPlatformVariable(VariableCreateVo vo) {
-        return new TestPlatformVariable(
-                null,
+        return new TestPlatformVariable(null,
                 vo.request().variableName(),
                 vo.request().variableValue(),
                 vo.request().variableScope(),
                 vo.request().variableDescription(),
-                vo.username()
-        );
+                vo.username());
     }
 
     /**
@@ -126,7 +124,7 @@ public class ConvertUtils {
      * @param request 用户角色创建请求
      */
     public static TestPlatformUserRole toTestPlatformUserRole(UserRoleCreateRequest request) {
-        return new TestPlatformUserRole(request.roleLevel(), request.username());
+        return new TestPlatformUserRole(null, request.roleLevel(), request.username());
     }
 
     /**
@@ -138,7 +136,8 @@ public class ConvertUtils {
         var roles = request.roleLevel();
         var roleLevel = Flux.fromIterable(roles);
         var username = Flux.just(request.username()).repeat(roles.size() - 1);
-        return Flux.zip(roleLevel, username, TestPlatformUserRole::new);
+        return Flux.zip(username, roleLevel, UserRoleCreateRequest::new)
+                   .map(ConvertUtils::toTestPlatformUserRole);
     }
 
     /**

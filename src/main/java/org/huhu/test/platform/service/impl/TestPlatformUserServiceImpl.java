@@ -56,7 +56,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                 .switchIfEmpty(Mono.error(new ClientTestPlatformException()));
         var findUserRoles = userRoleRepository
                 .findByUsername(username)
-                .map(TestPlatformUserRole::getRoleLevel)
+                .map(TestPlatformUserRole::roleLevel)
                 .collectList();
         return Mono.zip(findUser, findUserRoles, ConvertUtils::toUserDetailQueryResponse);
     }
@@ -65,7 +65,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     public Flux<UserQueryResponse> queryTestPlatformUser() {
         return userRoleRepository
                 .findAll()
-                .groupBy(TestPlatformUserRole::getUsername)
+                .groupBy(TestPlatformUserRole::username)
                 .flatMap(ConvertUtils::toUserQueryResponse);
     }
 
@@ -79,7 +79,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                 .doOnNext(i -> logger.info("create user {}", i.getUsername()));
         var saveRole = userRoleRepository
                 .saveAll(ConvertUtils.toTestPlatformUserRole(request))
-                .doOnNext(i -> logger.info("create user {} with role {}", i.getUsername(), i.getRoleLevel()));
+                .doOnNext(i -> logger.info("create user {} with role {}", i.username(), i.roleLevel()));
         return userRepository
                 .findByUsername(request.username())
                 .flatMap(i -> Mono.error(new ClientTestPlatformException()))

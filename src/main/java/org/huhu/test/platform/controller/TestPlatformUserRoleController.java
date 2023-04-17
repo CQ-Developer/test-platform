@@ -22,7 +22,7 @@ import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
 
 @Validated
 @RestController
-@RequestMapping("/management/role")
+@RequestMapping("/user/role")
 public class TestPlatformUserRoleController {
 
     private final TestPlatformUserRoleService userRoleService;

@@ -28,7 +28,7 @@ public class TestPlatformUserRoleServiceImpl implements TestPlatformUserRoleServ
     public Flux<TestPlatformRoleLevel> queryTestPlatformUserRole(String username) {
         return userRoleRepository
                 .findByUsername(username)
-                .map(TestPlatformUserRole::getRoleLevel);
+                .map(TestPlatformUserRole::roleLevel);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class TestPlatformUserRoleServiceImpl implements TestPlatformUserRoleServ
         // todo 确定当前用户没有该角色
         return userRoleRepository
                 .save(ConvertUtils.toTestPlatformUserRole(request))
-                .doOnNext(item -> logger.info("save user role {}", item.getRoleLevel()))
+                .doOnNext(item -> logger.info("save user role {}", item.roleLevel()))
                 .then();
     }
 

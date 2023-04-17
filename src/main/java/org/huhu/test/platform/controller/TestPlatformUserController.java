@@ -30,7 +30,7 @@ import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
  */
 @Validated
 @RestController
-@RequestMapping("/management/user")
+@RequestMapping("/user")
 public class TestPlatformUserController {
 
     private final TestPlatformUserService userService;
