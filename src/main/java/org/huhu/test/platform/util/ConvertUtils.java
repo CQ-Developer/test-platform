@@ -26,7 +26,6 @@ import reactor.util.function.Tuple4;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 类型转换工具类
@@ -65,8 +64,8 @@ public class ConvertUtils {
      * @param globalVariable 变量表
      */
     public static VariableQueryResponse toVariableQueryResponse(TestPlatformVariable globalVariable) {
-        return new VariableQueryResponse(globalVariable.getVariableName(), globalVariable.getVariableValue(),
-                globalVariable.getVariableScope(), globalVariable.getVariableDescription());
+        return new VariableQueryResponse(globalVariable.variableName(), globalVariable.variableValue(),
+                globalVariable.variableScope(), globalVariable.variableDescription());
     }
 
     /**
@@ -98,15 +97,14 @@ public class ConvertUtils {
      * @param vo 变量创建值对象
      */
     public static TestPlatformVariable toTestPlatformVariable(VariableCreateVo vo) {
-        var globalVariable = new TestPlatformVariable();
-        globalVariable.setUsername(vo.username());
-        VariableModifyRequest request = vo.request();
-        globalVariable.setVariableName(request.variableName());
-        globalVariable.setVariableValue(request.variableValue());
-        globalVariable.setVariableScope(request.variableScope());
-        Optional.ofNullable(request.variableDescription())
-                .ifPresent(globalVariable::setVariableDescription);
-        return globalVariable;
+        return new TestPlatformVariable(
+                null,
+                vo.request().variableName(),
+                vo.request().variableValue(),
+                vo.request().variableScope(),
+                vo.request().variableDescription(),
+                vo.username()
+        );
     }
 
     /**

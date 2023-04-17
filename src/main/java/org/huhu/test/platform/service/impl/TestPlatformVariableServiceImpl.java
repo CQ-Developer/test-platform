@@ -57,7 +57,7 @@ public class TestPlatformVariableServiceImpl implements TestPlatformVariableServ
         return variableRepository
                 .findByUsernameAndVariableNameAndVariableScope(vo.username(), vo.request().variableName(), vo.request().variableScope())
                 .switchIfEmpty(variableRepository.save(ConvertUtils.toTestPlatformVariable(vo)))
-                .doOnNext(i -> logger.info("save variable {}.", i.getVariableName()))
+                .doOnNext(i -> logger.info("save variable {}.", i.variableId()))
                 .then();
     }
 
