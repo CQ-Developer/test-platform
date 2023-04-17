@@ -46,7 +46,7 @@ class TestPlatformUserRoleControllerTest {
                 .queryTestPlatformUserRole(anyString());
         webTestClient
                 .get()
-                .uri("/role")
+                .uri("/user/role")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(TestPlatformRoleLevel.class).hasSize(2);
@@ -61,7 +61,7 @@ class TestPlatformUserRoleControllerTest {
         webTestClient
                 .mutateWith(csrf())
                 .put()
-                .uri("/role")
+                .uri("/user/role")
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk()
@@ -77,7 +77,7 @@ class TestPlatformUserRoleControllerTest {
         webTestClient
                 .mutateWith(csrf())
                 .put()
-                .uri("/role")
+                .uri("/user/role")
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk()
@@ -90,7 +90,7 @@ class TestPlatformUserRoleControllerTest {
         webTestClient
                 .mutateWith(csrf())
                 .delete()
-                .uri("/role/{roleLevel}?username={username}", "USER", "Jack")
+                .uri("/user/role/{roleLevel}?username={username}", "USER", "Jack")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().isEmpty();
@@ -102,7 +102,7 @@ class TestPlatformUserRoleControllerTest {
         webTestClient
                 .mutateWith(csrf())
                 .delete()
-                .uri("/role/{roleLevel}?username={username}", roleLevel, username)
+                .uri("/user/role/{roleLevel}?username={username}", roleLevel, username)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
