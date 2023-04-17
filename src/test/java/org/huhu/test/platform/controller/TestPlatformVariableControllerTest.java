@@ -17,6 +17,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import static org.huhu.test.platform.constant.TestPlatformVariableScope.GLOBAL;
+import static org.huhu.test.platform.constant.TestPlatformVariableScope.SUITE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -41,14 +43,14 @@ class TestPlatformVariableControllerTest {
 
     @Test
     void queryGlobalVariable() {
-        var url = new VariableQueryResponse("url", "http://some.host", "base url");
-        var header = new VariableQueryResponse("header", "some header", "base header");
+        var url = new VariableQueryResponse("url", "http://some.host", GLOBAL, "base url");
+        var header = new VariableQueryResponse("header", "some header", SUITE, "base header");
         doReturn(Flux.just(url, header))
                 .when(globalVariableService)
                 .queryTestPlatformVariable(anyString());
         webTestClient
                 .get()
-                .uri("/variable/global")
+                .uri("/variable")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(VariableQueryResponse.class).hasSize(2);
@@ -59,11 +61,11 @@ class TestPlatformVariableControllerTest {
         doReturn(Mono.empty())
                 .when(globalVariableService)
                 .createTestPlatformVariable(any(VariableCreateVo.class));
-        var request = new VariableModifyRequest("name", "value", "description");
+        var request = new VariableModifyRequest("name", "value", GLOBAL, "description");
         webTestClient
                 .mutateWith(csrf())
                 .put()
-                .uri("/variable/global")
+                .uri("/variable")
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk()
@@ -73,11 +75,11 @@ class TestPlatformVariableControllerTest {
     @ParameterizedTest
     @CsvSource({"'', value", "n-me, value", "name, ''"})
     void createGlobalVariableInvalidParameter(String name, String value) {
-        var request = new VariableModifyRequest(name, value, null);
+        var request = new VariableModifyRequest(name, value, GLOBAL, null);
         webTestClient
                 .mutateWith(csrf())
                 .put()
-                .uri("/variable/global")
+                .uri("/variable")
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk()
@@ -90,11 +92,11 @@ class TestPlatformVariableControllerTest {
         doReturn(Mono.empty())
                 .when(globalVariableService)
                 .updateTestPlatformVariable(any(VariableUpdateVo.class));
-        var request = new VariableModifyRequest("name", "value", "description");
+        var request = new VariableModifyRequest("name", "value", GLOBAL, "description");
         webTestClient
                 .mutateWith(csrf())
                 .post()
-                .uri("/variable/global/{variableName}", "name")
+                .uri("/variable/{variableName}?variableScope={variableScope}", "name", 1)
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk()
@@ -107,11 +109,11 @@ class TestPlatformVariableControllerTest {
         doReturn(Mono.empty())
                 .when(globalVariableService)
                 .updateTestPlatformVariable(any(VariableUpdateVo.class));
-        var request = new VariableModifyRequest(name, value, null);
+        var request = new VariableModifyRequest(name, value, GLOBAL, null);
         webTestClient
                 .mutateWith(csrf())
                 .post()
-                .uri("/variable/global/{variableName}", path)
+                .uri("/variable/{variableName}", path)
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk()
@@ -127,7 +129,7 @@ class TestPlatformVariableControllerTest {
         webTestClient
                 .mutateWith(csrf())
                 .delete()
-                .uri("/variable/global/{variableName}", "name")
+                .uri("/variable/{variableName}?variableScope={variableScope}", "name", 1)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().isEmpty();
@@ -141,7 +143,7 @@ class TestPlatformVariableControllerTest {
         webTestClient
                 .mutateWith(csrf())
                 .delete()
-                .uri("/variable/global/{variableName}", "a-")
+                .uri("/variable/{variableName}", "a-")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()

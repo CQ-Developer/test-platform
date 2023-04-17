@@ -1,6 +1,8 @@
 package org.huhu.test.platform.service.impl;
 
+import org.huhu.test.platform.constant.TestPlatformVariableScope;
 import org.huhu.test.platform.model.response.VariableQueryResponse;
+import org.huhu.test.platform.model.table.TestPlatformVariable;
 import org.huhu.test.platform.model.vo.VariableCreateVo;
 import org.huhu.test.platform.model.vo.VariableDeleteVo;
 import org.huhu.test.platform.model.vo.VariableQueryVo;
@@ -13,6 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import static java.util.Comparator.comparing;
+import static java.util.Comparator.comparingInt;
 
 @Service
 public class TestPlatformVariableServiceImpl implements TestPlatformVariableService {
@@ -27,16 +32,24 @@ public class TestPlatformVariableServiceImpl implements TestPlatformVariableServ
 
     @Override
     public Flux<VariableQueryResponse> queryTestPlatformVariable(String username) {
-        return variableRepository
-                .findByUsername(username)
-                .map(ConvertUtils::toVariableQueryResponse);
+        return queryTestPlatformVariable(variableRepository.findByUsername(username));
     }
 
     @Override
     public Flux<VariableQueryResponse> queryTestPlatformVariable(VariableQueryVo vo) {
-        return variableRepository
-                .findByUsernameAndVariableName(vo.username(), vo.variableName())
-                .map(ConvertUtils::toVariableQueryResponse);
+        return queryTestPlatformVariable(variableRepository.findByUsernameAndVariableName(vo.username(), vo.variableName()));
+    }
+
+    /**
+     * 查询变量
+     *
+     * @param findVariable 查询结果
+     */
+    private Flux<VariableQueryResponse> queryTestPlatformVariable(Flux<TestPlatformVariable> findVariable) {
+        return findVariable
+                .map(ConvertUtils::toVariableQueryResponse)
+                .sort(comparing(VariableQueryResponse::variableName)
+                        .thenComparing(VariableQueryResponse::variableScope, comparingInt(TestPlatformVariableScope::getScope)));
     }
 
     @Override
