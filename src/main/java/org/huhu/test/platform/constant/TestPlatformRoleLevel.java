@@ -33,12 +33,26 @@ public enum TestPlatformRoleLevel {
     final int level;
 
     /**
+     * 用户前缀
+     */
+    public static final String ROLE_PRE = "ROLE_";
+
+    /**
      * 构造器
      *
      * @param level 权限级别
      */
     TestPlatformRoleLevel(int level) {
         this.level = level;
+    }
+
+    /**
+     * 获取角色名称
+     *
+     * @see org.huhu.test.platform.configuration.TestPlatformSecurityConfiguration
+     */
+    public String getRoleName() {
+        return ROLE_PRE + this.name();
     }
 
     /**

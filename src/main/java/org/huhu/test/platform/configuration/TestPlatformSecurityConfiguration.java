@@ -4,20 +4,27 @@ import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import reactor.core.publisher.Flux;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Stream;
 
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ADMIN;
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ROLE_PRE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.BCryptVersion.$2A;
 
@@ -30,7 +37,32 @@ import static org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.B
 @Configuration(proxyBeanMethods = false)
 public class TestPlatformSecurityConfiguration {
 
+    /**
+     * 这种配置方式只是说明 {@link RoleHierarchy} 在Reactive环境中使用方式,
+     * 可以使用普通的方式进行配置
+     */
     @Bean
+    @Order(0)
+    public SecurityWebFilterChain actuatorSecurityWebFilterChain(
+            ServerHttpSecurity serverHttpSecurity, RoleHierarchy roleHierarchy) {
+        return serverHttpSecurity
+                .securityMatcher(EndpointRequest.toAnyEndpoint())
+                .httpBasic()
+                .and()
+                .authorizeExchange()
+                .anyExchange().access((authentication, context) -> authentication
+                        .map(Authentication::getAuthorities)
+                        .map(roleHierarchy::getReachableGrantedAuthorities)
+                        .flatMapMany(Flux::fromIterable)
+                        .map(GrantedAuthority::getAuthority)
+                        .any(DEV.getRoleName()::equals)
+                        .map(AuthorizationDecision::new))
+                .and()
+                .build();
+    }
+
+    @Bean
+    @Order(1)
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity serverHttpSecurity) {
         return serverHttpSecurity
                 .httpBasic()
@@ -46,16 +78,6 @@ public class TestPlatformSecurityConfiguration {
     }
 
     @Bean
-    public SecurityWebFilterChain actuatorSecurityWebFilterChain(ServerHttpSecurity serverHttpSecurity) {
-        return serverHttpSecurity
-                .securityMatcher(EndpointRequest.toAnyEndpoint())
-                .authorizeExchange()
-                .anyExchange().hasAnyRole(DEV.name(), ADMIN.name())
-                .and()
-                .build();
-    }
-
-    @Bean
     public PasswordEncoder passwordEncoder() throws NoSuchAlgorithmException {
         var secureRandom = SecureRandom.getInstanceStrong();
         secureRandom.setSeed(System.currentTimeMillis());
@@ -64,12 +86,19 @@ public class TestPlatformSecurityConfiguration {
 
     @Bean
     public RoleHierarchy roleHierarchy() {
-        String role = Arrays.stream(TestPlatformRoleLevel.values())
-                               .map(TestPlatformRoleLevel::name)
-                               .map("ROLE_"::concat)
-                               .collect(Collectors.joining(" > "));
         var roleHierarchy = new RoleHierarchyImpl();
-        // todo 实现权限级别开发
+        var roleLevels = Stream
+                .of(TestPlatformRoleLevel.values())
+                .sorted(Comparator.comparing(TestPlatformRoleLevel::getLevel, Integer::compare).reversed())
+                .toArray(TestPlatformRoleLevel[]::new);
+        var entry = new ArrayList<String>();
+        for (int i = 0; i < roleLevels.length - 1; i++) {
+            var high = ROLE_PRE + roleLevels[i].name();
+            var low = ROLE_PRE + roleLevels[i + 1].name();
+            entry.add(String.join(" > ", high, low));
+        }
+        var roleEntry = String.join(System.lineSeparator(), entry.toArray(String[]::new));
+        roleHierarchy.setHierarchy(roleEntry);
         return roleHierarchy;
     }
 

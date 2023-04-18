@@ -27,9 +27,8 @@ public class TestPlatformUserDetails implements UserDetails {
         return testPlatformUserRoles
                 .stream()
                 .map(TestPlatformUserRole::roleLevel)
-                .map(TestPlatformRoleLevel::name)
+                .map(TestPlatformRoleLevel::getRoleName)
                 .distinct()
-                .map("ROLE_"::concat)
                 .map(SimpleGrantedAuthority::new)
                 .toList();
     }
