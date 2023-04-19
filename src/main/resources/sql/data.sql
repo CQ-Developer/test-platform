@@ -6,10 +6,14 @@ values ('root', '$2a$08$LFJI.wwH0y0yEf9ADfTbXue8z3UftLw0JHaZ21VuJYUZ7gNJmgDtq', 
 -- 创建默认角色
 insert into t_test_user_role (username, role_level)
 values ('root', 3),
-       ('chen', 1),
        ('chen', 2);
 
+-- 创建默认环境
+insert into t_test_user_profile (profile_name, username)
+values ('default', 'root')
+       ('default', 'root');
+
 -- 创建测试数据
-insert into t_test_variable (username, variable_name, variable_value, variable_scope)
-values ('root', 'test1', 'value1', 0),
-       ('root', 'test2', 'value2', 0);
+insert into t_test_variable (username, variable_name, variable_value, variable_scope, variable_profile)
+values ('root', 'url', 'https://some.path', 0, 'default'),
+       ('chen', 'application-id', 'test-platform', 0, 'default');

@@ -20,14 +20,25 @@ create table if not exists t_test_user_role (
   unique key (username, role_level)
 );
 
+drop table if exists t_test_user_profile;
+create table if not exists t_test_user_profile (
+  profile_id bigint not null auto_increment,
+  profile_name varchar(32) not null,
+  username varchar(16) not null,
+  primary key (profile_id),
+  unique key (username, profile_name)
+);
+
 drop table if exists t_test_variable;
 create table if not exists t_test_variable (
   variable_id bigint not null auto_increment,
   variable_name varchar(32) not null,
   variable_value varchar(256) not null,
   variable_scope tinyint not null,
+  variable_profile varchar(16) not null default 'default',
   variable_description varchar(512),
   username varchar(16) not null,
   primary key (variable_id),
   unique key (username, variable_name, variable_scope)
 );
+
