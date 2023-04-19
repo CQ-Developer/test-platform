@@ -13,10 +13,6 @@ import org.huhu.test.platform.service.TestPlatformUserService;
 import org.huhu.test.platform.util.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
-import org.springframework.data.relational.core.query.Criteria;
-import org.springframework.data.relational.core.query.Query;
-import org.springframework.data.relational.core.query.Update;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,16 +30,13 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final R2dbcEntityTemplate entityTemplate;
-
     private final TestPlatformUserRepository userRepository;
 
     private final TestPlatformUserRoleRepository userRoleRepository;
 
-    TestPlatformUserServiceImpl(PasswordEncoder passwordEncoder, R2dbcEntityTemplate entityTemplate,
+    TestPlatformUserServiceImpl(PasswordEncoder passwordEncoder,
             TestPlatformUserRepository userRepository, TestPlatformUserRoleRepository userRoleRepository) {
         this.passwordEncoder = passwordEncoder;
-        this.entityTemplate = entityTemplate;
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
     }
@@ -84,7 +77,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                 .switchIfEmpty(saveUser)
                 .doOnNext(i -> logger.info("save user {}", i.username()))
                 .thenMany(saveRole)
-                .doOnNext(i -> logger.info("save user role {}.", i.roleLevel().name()))
+                .doOnNext(i -> logger.info("save user role {}", i.roleLevel().name()))
                 .then();
     }
 
@@ -125,58 +118,34 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
 
     @Override
     public Mono<Void> enableTestPlatformUser(String username) {
-        return enableOrDisableUser(username, true)
+        return userRepository
+                .enableFor(username)
                 .doOnNext(i -> logger.info("enable {} user", i))
                 .then();
     }
 
     @Override
     public Mono<Void> disableTestPlatformUser(String username) {
-        return enableOrDisableUser(username, false)
+        return userRepository
+                .disableFor(username)
                 .doOnNext(i -> logger.info("disable {} user", i))
                 .then();
     }
 
     @Override
     public Mono<Void> lockTestPlatformUser(String username) {
-        return lockOrUnlockUser(username, true)
+        return userRepository
+                .lockFor(username)
                 .doOnNext(i -> logger.info("lock {} user", i))
                 .then();
     }
 
     @Override
     public Mono<Void> unlockTestPlatformUser(String username) {
-        return lockOrUnlockUser(username, false)
+        return userRepository
+                .unlockFor(username)
                 .doOnNext(i -> logger.info("unlock {} user", i))
                 .then();
-    }
-
-    /**
-     * 启用或禁用用户
-     *
-     * @param username 用户名
-     * @param isEnable 是否启用
-     */
-    private Mono<Long> enableOrDisableUser(String username, boolean isEnable) {
-        return entityTemplate
-                .update(TestPlatformUser.class)
-                .inTable(userTableName)
-                .matching(Query.query(Criteria.where("username").is(username)))
-                .apply(Update.update("enabled", isEnable));
-    }
-
-    /**
-     * 锁定或解锁用户
-     *
-     * @param username 用户名
-     * @param isLocked 是否启用
-     */
-    private Mono<Long> lockOrUnlockUser(String username, boolean isLocked) {
-        return entityTemplate
-                .update(TestPlatformUser.class)
-                .inTable(userTableName)
-                .matching(Query.query(Criteria.where("username").is(username)))
-                .apply(Update.update("locked", isLocked));
     }
 
 }
