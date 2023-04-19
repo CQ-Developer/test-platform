@@ -6,6 +6,7 @@ import reactor.core.publisher.Mono;
  * 测试平台变量查询值对象
  *
  * @param username 用户名
+ * @param profileName 环境名
  * @param variableName 变量名
  *
  * @author 18551681083@163.com
@@ -14,4 +15,5 @@ import reactor.core.publisher.Mono;
  */
 public record VariableQueryVo(
         String username,
+        String profileName,
         String variableName) {}

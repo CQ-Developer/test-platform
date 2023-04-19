@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import static org.huhu.test.platform.constant.TestPlatformDefaultName.DEFAULT_PROFILE_NAME;
 import static org.huhu.test.platform.constant.TestPlatformRedisKey.USER_PROFILE_ACTIVE;
 
 @Service
@@ -35,7 +36,7 @@ public class TestPlatformUserProfileServiceImpl implements TestPlatformUserProfi
         var findActiveProfile = reactiveRedisTemplate
                 .opsForValue()
                 .get(USER_PROFILE_ACTIVE.getKey(username))
-                .switchIfEmpty(Mono.just("default"))
+                .switchIfEmpty(Mono.just(DEFAULT_PROFILE_NAME))
                 .cast(String.class);
         var findAllProfiles = userProfileRepository
                 .findByUsername(username)

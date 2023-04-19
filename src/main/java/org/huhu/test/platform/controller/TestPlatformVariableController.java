@@ -4,9 +4,11 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.huhu.test.platform.constant.TestPlatformVariableScope;
 import org.huhu.test.platform.model.request.VariableModifyRequest;
+import org.huhu.test.platform.model.response.UserProfileQueryResponse;
 import org.huhu.test.platform.model.response.VariableQueryResponse;
 import org.huhu.test.platform.model.vo.VariableCreateVo;
 import org.huhu.test.platform.model.vo.VariableQueryVo;
+import org.huhu.test.platform.service.TestPlatformUserProfileService;
 import org.huhu.test.platform.service.TestPlatformVariableService;
 import org.huhu.test.platform.util.ConvertUtils;
 import org.springframework.security.core.Authentication;
@@ -38,22 +40,38 @@ public class TestPlatformVariableController {
 
     private final TestPlatformVariableService variableService;
 
+    private final TestPlatformUserProfileService userProfileService;
+
     TestPlatformVariableController(
-            TestPlatformVariableService variableService) {
+            TestPlatformVariableService variableService
+            , TestPlatformUserProfileService userProfileService) {
         this.variableService = variableService;
+        this.userProfileService = userProfileService;
     }
 
     @GetMapping
     public Flux<VariableQueryResponse> queryVariable(Mono<Authentication> authentication) {
-        var username = authentication.map(Authentication::getName);
-        return username.flatMapMany(variableService::queryTestPlatformVariable);
+        var username = authentication
+                .map(Authentication::getName);
+        var profileName = authentication
+                .map(Authentication::getName)
+                .flatMap(userProfileService::queryTestPlatformUserProfile)
+                .map(UserProfileQueryResponse::active);
+        return Mono.zip(username, profileName)
+                   .map(i -> new VariableQueryVo(i.getT1(), i.getT2(), null))
+                   .flatMapMany(variableService::queryTestPlatformVariable);
     }
 
     @GetMapping("/{variableName}")
     public Flux<VariableQueryResponse> queryVariable(Mono<Authentication> authentication,
             @PathVariable(name = "variableName", required = false) @Pattern(regexp = VARIABLE_NAME) String variableName) {
         var username = authentication.map(Authentication::getName);
-        return Mono.zip(username, Mono.just(variableName), VariableQueryVo::new)
+        var profileName = authentication
+                .map(Authentication::getName)
+                .flatMap(userProfileService::queryTestPlatformUserProfile)
+                .map(UserProfileQueryResponse::active);
+        return Mono.zip(username, profileName, Mono.just(variableName))
+                   .map(i -> new VariableQueryVo(i.getT1(), i.getT2(), i.getT3()))
                    .flatMapMany(variableService::queryTestPlatformVariable);
     }
 

@@ -18,16 +18,18 @@ public interface TestPlatformVariableRepository extends R2dbcRepository<TestPlat
      * 查询变量
      *
      * @param username 用户名
+     * @param profileName 环境名
      */
-    Flux<TestPlatformVariable> findByUsername(String username);
+    Flux<TestPlatformVariable> findByUsernameAndProfileName(String username, String profileName);
 
     /**
      * 查询变量
      *
      * @param username 用户名
      * @param variableName 变量名
+     * @param profileName 环境名
      */
-    Flux<TestPlatformVariable> findByUsernameAndVariableName(String username, String variableName);
+    Flux<TestPlatformVariable> findByUsernameAndVariableNameAndProfileName(String username, String variableName, String profileName);
 
     /**
      * 查询变量

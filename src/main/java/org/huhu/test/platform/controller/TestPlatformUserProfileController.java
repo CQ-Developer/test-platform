@@ -20,6 +20,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USER_PROFILE;
+import static org.huhu.test.platform.constant.TestPlatformDefaultName.DEFAULT_PROFILE_NAME;
 
 /**
  * 测试平台用户环境 {@link RestController}
@@ -57,7 +58,7 @@ public class TestPlatformUserProfileController {
     @DeleteMapping("/{profileName}")
     public Mono<Void> deleteUserProfile(Mono<Authentication> authentication,
             @Pattern(regexp = USER_PROFILE) @PathVariable("profileName") String profileName) {
-        if (StrUtil.equals("default", profileName)) {
+        if (StrUtil.equals(DEFAULT_PROFILE_NAME, profileName)) {
             throw new ClientTestPlatformException("profile default delete error");
         }
         return authentication

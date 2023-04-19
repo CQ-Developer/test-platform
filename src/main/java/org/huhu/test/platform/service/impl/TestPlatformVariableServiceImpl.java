@@ -1,5 +1,6 @@
 package org.huhu.test.platform.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import org.huhu.test.platform.constant.TestPlatformVariableScope;
 import org.huhu.test.platform.model.response.VariableQueryResponse;
 import org.huhu.test.platform.model.table.TestPlatformVariable;
@@ -12,7 +13,6 @@ import org.huhu.test.platform.service.TestPlatformVariableService;
 import org.huhu.test.platform.util.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -27,22 +27,19 @@ public class TestPlatformVariableServiceImpl implements TestPlatformVariableServ
 
     private final TestPlatformVariableRepository variableRepository;
 
-    private final ReactiveRedisTemplate<Object, Object> reactiveRedisTemplate;
-
-    TestPlatformVariableServiceImpl(TestPlatformVariableRepository variableRepository,
-            ReactiveRedisTemplate<Object, Object> reactiveRedisTemplate) {
+    TestPlatformVariableServiceImpl(TestPlatformVariableRepository variableRepository) {
         this.variableRepository = variableRepository;
-        this.reactiveRedisTemplate = reactiveRedisTemplate;
-    }
-
-    @Override
-    public Flux<VariableQueryResponse> queryTestPlatformVariable(String username) {
-        return queryTestPlatformVariable(variableRepository.findByUsername(username));
     }
 
     @Override
     public Flux<VariableQueryResponse> queryTestPlatformVariable(VariableQueryVo vo) {
-        return queryTestPlatformVariable(variableRepository.findByUsernameAndVariableName(vo.username(), vo.variableName()));
+        final Flux<TestPlatformVariable> findVariable;
+        if (StrUtil.isBlank(vo.variableName())) {
+            findVariable = variableRepository.findByUsernameAndProfileName(vo.username(), vo.profileName());
+        } else {
+            findVariable = variableRepository.findByUsernameAndVariableNameAndProfileName(vo.username(), vo.variableName(), vo.profileName());
+        }
+        return queryTestPlatformVariable(findVariable);
     }
 
     /**

@@ -22,6 +22,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
+import static org.huhu.test.platform.constant.TestPlatformDefaultName.ROOT_USERNAME;
 
 /**
  * 测试平台用户 {@link RestController} 类
@@ -57,7 +58,7 @@ public class TestPlatformUserController {
 
     @DeleteMapping("/{username}")
     public Mono<Void> deleteUser(@PathVariable("username") @Pattern(regexp = USERNAME) String username) {
-        if (StrUtil.equals("root", username)) {
+        if (StrUtil.equals(ROOT_USERNAME, username)) {
             return Mono.error(new ClientTestPlatformException("user root delete error"));
         }
         return userService.deleteTestPlatformUser(username);

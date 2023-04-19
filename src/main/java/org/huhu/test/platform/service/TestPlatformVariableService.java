@@ -17,13 +17,6 @@ import reactor.core.publisher.Mono;
 public interface TestPlatformVariableService {
 
     /**
-     * 查询测试平台所有变量
-     *
-     * @param username 用户名
-     */
-    Flux<VariableQueryResponse> queryTestPlatformVariable(String username);
-
-    /**
      * 查询测试平台变量
      *
      * @param vo 请求体
