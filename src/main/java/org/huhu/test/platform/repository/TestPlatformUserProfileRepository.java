@@ -15,10 +15,26 @@ public interface TestPlatformUserProfileRepository extends R2dbcRepository<TestP
     Flux<TestPlatformUserProfile> findByUsername(String username);
 
     /**
+     * 查询用户环境
+     *
+     * @param username 用户名
+     * @param profileName 环境名
+     */
+    Mono<TestPlatformUserProfile> findByUsernameAndProfileName(String username, String profileName);
+
+    /**
      * 删除用户环境
      *
      * @param username 用户名
      */
     Mono<Integer> deleteByUsername(String username);
+
+    /**
+     * 删除用户环境
+     *
+     * @param username 用户名
+     * @param profileName 环境名
+     */
+    Mono<Integer> deleteByUsernameAndProfileName(String username, String profileName);
 
 }

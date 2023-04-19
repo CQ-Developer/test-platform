@@ -12,6 +12,7 @@ import org.huhu.test.platform.service.TestPlatformVariableService;
 import org.huhu.test.platform.util.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -26,8 +27,12 @@ public class TestPlatformVariableServiceImpl implements TestPlatformVariableServ
 
     private final TestPlatformVariableRepository variableRepository;
 
-    TestPlatformVariableServiceImpl(TestPlatformVariableRepository variableRepository) {
+    private final ReactiveRedisTemplate<Object, Object> reactiveRedisTemplate;
+
+    TestPlatformVariableServiceImpl(TestPlatformVariableRepository variableRepository,
+            ReactiveRedisTemplate<Object, Object> reactiveRedisTemplate) {
         this.variableRepository = variableRepository;
+        this.reactiveRedisTemplate = reactiveRedisTemplate;
     }
 
     @Override

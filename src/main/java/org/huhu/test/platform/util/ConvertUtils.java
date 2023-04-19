@@ -18,6 +18,7 @@ import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.huhu.test.platform.model.table.TestPlatformUserProfile;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
 import org.huhu.test.platform.model.table.TestPlatformVariable;
+import org.huhu.test.platform.model.vo.UserProfileModifyVo;
 import org.huhu.test.platform.model.vo.VariableCreateVo;
 import org.huhu.test.platform.model.vo.VariableDeleteVo;
 import org.huhu.test.platform.model.vo.VariableUpdateVo;
@@ -204,6 +205,15 @@ public class ConvertUtils {
      */
     public static TestPlatformUserProfile toTestPlatformUserProfile(String username) {
         return new TestPlatformUserProfile(null, null, username);
+    }
+
+    /**
+     * 将 {@link UserProfileModifyVo} 转换为 {@link TestPlatformUserProfile}
+     *
+     * @param vo 值对象
+     */
+    public static TestPlatformUserProfile toTestPlatformUserProfile(UserProfileModifyVo vo) {
+        return new TestPlatformUserProfile(null, vo.profileName(), vo.username());
     }
 
 }

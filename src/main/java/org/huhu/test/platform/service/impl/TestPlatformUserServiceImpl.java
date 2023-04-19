@@ -1,7 +1,6 @@
 package org.huhu.test.platform.service.impl;
 
 import org.huhu.test.platform.exception.ClientTestPlatformException;
-import org.huhu.test.platform.exception.ServerTestPlatformException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.request.UserRenewRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
@@ -88,7 +87,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                 .doOnNext(i -> logger.info("save profile {}", i.profileName()));
         return userRepository
                 .findByUsername(request.username())
-                .flatMap(i -> Mono.error(new ServerTestPlatformException("save user fail: user exists")))
+                .flatMap(i -> Mono.error(new ClientTestPlatformException("save user fail: user exists")))
                 .switchIfEmpty(saveUser)
                 .thenMany(saveRole)
                 .then(saveUserProfile)

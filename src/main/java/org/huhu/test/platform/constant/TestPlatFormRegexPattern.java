@@ -19,6 +19,11 @@ public interface TestPlatFormRegexPattern {
     String PASSWORD = "^[\\w@#:-]{6,32}$";
 
     /**
+     * 用户环境正则表达式
+     */
+    String USER_PROFILE = "^\\w{1,32}$";
+
+    /**
      * 变量名正则表达式
      */
     String VARIABLE_NAME = "^\\w{1,32}$";

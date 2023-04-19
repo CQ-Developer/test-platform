@@ -1,6 +1,7 @@
 package org.huhu.test.platform.service;
 
 import org.huhu.test.platform.model.response.UserProfileQueryResponse;
+import org.huhu.test.platform.model.vo.UserProfileModifyVo;
 import reactor.core.publisher.Mono;
 
 /**
@@ -17,5 +18,19 @@ public interface TestPlatformUserProfileService {
      * @param username 用户名
      */
     Mono<UserProfileQueryResponse> queryTestPlatformUserProfile(String username);
+
+    /**
+     * 创建测试平台用户环境
+     *
+     * @param vo 请求
+     */
+    Mono<Void> createTestPlatformUserProfile(UserProfileModifyVo vo);
+
+    /**
+     * 删除测试平台环境
+     *
+     * @param vo 请求
+     */
+    Mono<Void> deleteTestPlatformUserProfile(UserProfileModifyVo vo);
 
 }
