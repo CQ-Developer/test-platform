@@ -1,7 +1,6 @@
 package org.huhu.test.platform.model.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.huhu.test.platform.constant.TestPlatformRoleLevel;
@@ -33,8 +32,7 @@ public record UserCreateRequest(
         @Pattern(regexp = PASSWORD)
         String password,
 
-        @NotNull
-        @Size(min = 1, max = 3)
+        @Size(max = 3)
         List<TestPlatformRoleLevel> roleLevel,
 
         LocalDateTime expiredTime) {}

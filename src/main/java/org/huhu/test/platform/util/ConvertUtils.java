@@ -1,5 +1,6 @@
 package org.huhu.test.platform.util;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import org.huhu.test.platform.constant.TestPlatformErrorCode;
 import org.huhu.test.platform.constant.TestPlatformRoleLevel;
@@ -30,6 +31,8 @@ import reactor.util.function.Tuple4;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.USER;
 
 /**
  * 类型转换工具类
@@ -137,6 +140,9 @@ public class ConvertUtils {
      */
     public static Flux<TestPlatformUserRole> toTestPlatformUserRole(UserCreateRequest request) {
         var roles = request.roleLevel();
+        if (CollectionUtil.isEmpty(roles)) {
+            roles = List.of(USER);
+        }
         var roleLevel = Flux.fromIterable(roles);
         var username = Flux.just(request.username()).repeat(roles.size() - 1);
         return Flux.zip(username, roleLevel, UserRoleCreateRequest::new)
