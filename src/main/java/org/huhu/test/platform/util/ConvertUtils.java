@@ -15,6 +15,7 @@ import org.huhu.test.platform.model.response.UserQueryResponse;
 import org.huhu.test.platform.model.response.UserRoleQueryResponse;
 import org.huhu.test.platform.model.response.VariableQueryResponse;
 import org.huhu.test.platform.model.table.TestPlatformUser;
+import org.huhu.test.platform.model.table.TestPlatformUserProfile;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
 import org.huhu.test.platform.model.table.TestPlatformVariable;
 import org.huhu.test.platform.model.vo.VariableCreateVo;
@@ -103,6 +104,8 @@ public class ConvertUtils {
                 vo.request().variableName(),
                 vo.request().variableValue(),
                 vo.request().variableScope(),
+                // todo 查询当前用户的环境然后填充
+                null,
                 vo.request().variableDescription(),
                 vo.username());
     }
@@ -185,7 +188,22 @@ public class ConvertUtils {
         throw new ServerTestPlatformException("database variable scope invalid");
     }
 
+    /**
+     * 将 {@link TestPlatformRoleLevel} 转换为 {@link UserRoleQueryResponse}
+     *
+     * @param roleLevel 角色级别
+     */
     public static UserRoleQueryResponse toUserRoleQueryResponse(TestPlatformRoleLevel roleLevel) {
         return new UserRoleQueryResponse(roleLevel.name(), roleLevel);
     }
+
+    /**
+     * 将 {@link String} 转换为 {@link TestPlatformUserProfile}
+     *
+     * @param username 用户名
+     */
+    public static TestPlatformUserProfile toTestPlatformUserProfile(String username) {
+        return new TestPlatformUserProfile(null, null, username);
+    }
+
 }

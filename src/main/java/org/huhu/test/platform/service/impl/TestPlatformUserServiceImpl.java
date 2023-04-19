@@ -1,14 +1,17 @@
 package org.huhu.test.platform.service.impl;
 
 import org.huhu.test.platform.exception.ClientTestPlatformException;
+import org.huhu.test.platform.exception.ServerTestPlatformException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.request.UserRenewRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
 import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
+import org.huhu.test.platform.repository.TestPlatformUserProfileRepository;
 import org.huhu.test.platform.repository.TestPlatformUserRepository;
 import org.huhu.test.platform.repository.TestPlatformUserRoleRepository;
+import org.huhu.test.platform.repository.TestPlatformVariableRepository;
 import org.huhu.test.platform.service.TestPlatformUserService;
 import org.huhu.test.platform.util.ConvertUtils;
 import org.slf4j.Logger;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.time.LocalDateTime;
 
@@ -26,19 +30,26 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
 
     private final Logger logger = LoggerFactory.getLogger(TestPlatformUserServiceImpl.class);
 
-    private final String userTableName = "t_test_user";
-
     private final PasswordEncoder passwordEncoder;
 
     private final TestPlatformUserRepository userRepository;
 
     private final TestPlatformUserRoleRepository userRoleRepository;
 
+    private final TestPlatformUserProfileRepository userProfileRepository;
+
+    private final TestPlatformVariableRepository variableRepository;
+
     TestPlatformUserServiceImpl(PasswordEncoder passwordEncoder,
-            TestPlatformUserRepository userRepository, TestPlatformUserRoleRepository userRoleRepository) {
+            TestPlatformUserRepository userRepository,
+            TestPlatformUserRoleRepository userRoleRepository,
+            TestPlatformUserProfileRepository userProfileRepository,
+            TestPlatformVariableRepository variableRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
+        this.userProfileRepository = userProfileRepository;
+        this.variableRepository = variableRepository;
     }
 
     @Override
@@ -62,36 +73,52 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Mono<Void> createTestPlatformUser(UserCreateRequest request) {
         var testPlatformUser = ConvertUtils
                 .toTestPlatformUser(request, passwordEncoder.encode(request.password()));
         var saveUser = userRepository
                 .save(testPlatformUser)
-                .doOnNext(i -> logger.info("create user {}", i.username()));
+                .doOnNext(i -> logger.info("save user {}", i.username()));
         var saveRole = userRoleRepository
                 .saveAll(ConvertUtils.toTestPlatformUserRole(request))
-                .doOnNext(i -> logger.info("create user {} with role {}", i.username(), i.roleLevel()));
+                .doOnNext(i -> logger.info("save role {}", i.roleLevel().name()));
+        var saveUserProfile = userProfileRepository
+                .save(ConvertUtils.toTestPlatformUserProfile(request.username()))
+                .doOnNext(i -> logger.info("save profile {}", i.profileName()));
         return userRepository
                 .findByUsername(request.username())
+                .flatMap(i -> Mono.error(new ServerTestPlatformException("save user fail: user exists")))
                 .switchIfEmpty(saveUser)
-                .doOnNext(i -> logger.info("save user {}", i.username()))
                 .thenMany(saveRole)
-                .doOnNext(i -> logger.info("save user role {}", i.roleLevel().name()))
+                .then(saveUserProfile)
                 .then();
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Mono<Void> deleteTestPlatformUser(String username) {
         var deleteUser = userRepository
                 .deleteByUsername(username)
-                .doOnNext(i -> logger.info("delete {} user", i));
+                .doOnNext(i -> logger.info("delete {} user", i))
+                .then();
         var deleteUserRole = userRoleRepository
                 .deleteByUsername(username)
-                .doOnNext(i -> logger.info("delete {} role", i));
-        // todo 删除用户的变量
-        return deleteUser.then(deleteUserRole).then();
+                .doOnNext(i -> logger.info("delete {} user role", i))
+                .then();
+        var deleteUserProfile = userProfileRepository
+                .deleteByUsername(username)
+                .doOnNext(i -> logger.info("delete {} user profile", i))
+                .then();
+        var deleteVariable = variableRepository
+                .deleteByUsername(username)
+                .doOnNext(i -> logger.info("delete {} variable", i))
+                .then();
+        return deleteUser
+                .publishOn(Schedulers.boundedElastic())
+                .then(deleteUserRole)
+                .then(deleteUserProfile)
+                .then(deleteVariable);
     }
 
     @Override

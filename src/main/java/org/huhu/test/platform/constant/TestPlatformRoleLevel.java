@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import org.huhu.test.platform.exception.ClientTestPlatformException;
 
 /**
- * 测试平台角色枚举类
+ * 测试平台角色级别枚举类
  *
  * @author 18551681083@163.com
  * @since 0.0.1

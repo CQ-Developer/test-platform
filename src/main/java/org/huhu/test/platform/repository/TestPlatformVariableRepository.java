@@ -42,6 +42,13 @@ public interface TestPlatformVariableRepository extends R2dbcRepository<TestPlat
      * 删除变量
      *
      * @param username 用户名
+     */
+    Mono<Integer> deleteByUsername(String username);
+
+    /**
+     * 删除变量
+     *
+     * @param username 用户名
      * @param variableName 变量名
      * @param variableScope 变量作用域
      */
