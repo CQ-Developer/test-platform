@@ -24,6 +24,13 @@ public interface TestPlatformUserRoleRepository extends R2dbcRepository<TestPlat
     Mono<TestPlatformUserRole> findByUsernameAndRoleLevel(String username, TestPlatformRoleLevel roleLevel);
 
     /**
+     * 统计用户角色
+     *
+     * @param username 用户名
+     */
+    Mono<Integer> countByUsername(String username);
+
+    /**
      * 删除用户所有角色
      *
      * @param username 用户名

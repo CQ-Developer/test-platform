@@ -1,5 +1,6 @@
 package org.huhu.test.platform.controller;
 
+import cn.hutool.core.util.StrUtil;
 import jakarta.validation.constraints.Pattern;
 import org.huhu.test.platform.exception.ClientTestPlatformException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
@@ -56,8 +57,8 @@ public class TestPlatformUserController {
 
     @DeleteMapping("/{username}")
     public Mono<Void> deleteUser(@PathVariable("username") @Pattern(regexp = USERNAME) String username) {
-        if ("root".equals(username)) {
-            return Mono.error(new ClientTestPlatformException());
+        if (StrUtil.equals("root", username)) {
+            return Mono.error(new ClientTestPlatformException("user root delete error"));
         }
         return userService.deleteTestPlatformUser(username);
     }

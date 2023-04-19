@@ -1,6 +1,8 @@
 package org.huhu.test.platform.controller;
 
+import cn.hutool.core.util.StrUtil;
 import jakarta.validation.constraints.Pattern;
+import org.huhu.test.platform.exception.ClientTestPlatformException;
 import org.huhu.test.platform.model.request.UserProfileCreateRequest;
 import org.huhu.test.platform.model.response.UserProfileQueryResponse;
 import org.huhu.test.platform.model.vo.UserProfileModifyVo;
@@ -55,6 +57,9 @@ public class TestPlatformUserProfileController {
     @DeleteMapping("/{profileName}")
     public Mono<Void> deleteUserProfile(Mono<Authentication> authentication,
             @Pattern(regexp = USER_PROFILE) @PathVariable("profileName") String profileName) {
+        if (StrUtil.equals("default", profileName)) {
+            throw new ClientTestPlatformException("profile default delete error");
+        }
         return authentication
                 .map(Authentication::getName)
                 .zipWith(Mono.just(profileName), UserProfileModifyVo::new)

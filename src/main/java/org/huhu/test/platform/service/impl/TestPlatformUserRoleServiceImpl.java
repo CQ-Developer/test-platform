@@ -1,5 +1,6 @@
 package org.huhu.test.platform.service.impl;
 
+import org.huhu.test.platform.exception.ClientTestPlatformException;
 import org.huhu.test.platform.model.request.UserRoleCreateRequest;
 import org.huhu.test.platform.model.response.UserRoleQueryResponse;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
@@ -43,9 +44,14 @@ public class TestPlatformUserRoleServiceImpl implements TestPlatformUserRoleServ
 
     @Override
     public Mono<Void> deleteTestPlatformUseRole(UserRoleDeleteVo vo) {
-        return userRoleRepository
+        var saveRole = userRoleRepository
                 .deleteByUsernameAndRoleLevel(vo.username(), vo.roleLevel())
-                .doOnNext(count -> logger.info("delete {} role.", count))
+                .doOnNext(count -> logger.info("delete {} role.", count));
+        return userRoleRepository
+                .countByUsername(vo.username())
+                .filter(i -> i <= 1)
+                .flatMap(i -> Mono.error(new ClientTestPlatformException("user must hold at list 1 role")))
+                .switchIfEmpty(saveRole)
                 .then();
     }
 
