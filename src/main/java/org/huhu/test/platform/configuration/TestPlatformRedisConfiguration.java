@@ -17,6 +17,7 @@ public class TestPlatformRedisConfiguration {
     @Bean
     public ReactiveRedisTemplate<Object, Object> reactiveRedisTemplate(
             ReactiveRedisConnectionFactory reactiveRedisConnectionFactory) {
+        // todo 可能需要修改序列化
         RedisSerializationContext<Object, Object> serializationContext = RedisSerializationContext
                 .newSerializationContext()
                 .string(RedisSerializer.string())

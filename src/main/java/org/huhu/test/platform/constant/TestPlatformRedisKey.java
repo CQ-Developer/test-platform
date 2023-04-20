@@ -1,5 +1,7 @@
 package org.huhu.test.platform.constant;
 
+import static java.util.Locale.US;
+
 /**
  * 测试平台Redis键枚举类
  *
@@ -31,7 +33,7 @@ public enum TestPlatformRedisKey {
      * @param args 模板参数
      */
     public String getKey(Object... args) {
-        return String.format(keyTemplate, args);
+        return String.format(US, keyTemplate, args);
     }
 
 }

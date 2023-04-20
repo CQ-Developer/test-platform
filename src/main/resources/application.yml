@@ -12,6 +12,11 @@ spring:
       mode: always
       schema-locations: classpath:sql/schema.sql
       data-locations: classpath:sql/data.sql
+  data:
+    redis:
+      host: 172.0.0.1
+      port: 6379
+      client-name: test-platform
 logging:
   level:
     org.springframework.r2dbc: DEBUG

@@ -27,16 +27,16 @@ public class TestPlatformVariableServiceImpl implements TestPlatformVariableServ
     }
 
     @Override
-    public Flux<VariableQueryResponse> queryTestPlatformVariable(String username, String profileName) {
+    public Flux<VariableQueryResponse> queryTestPlatformVariable(String username, String variableProfile) {
         return variableRepository
-                .findByUsernameAndProfileName(username, profileName)
+                .findByUsernameAndVariableProfile(username, variableProfile)
                 .map(ConvertUtils::toVariableQueryResponse);
     }
 
     @Override
     public Flux<VariableQueryResponse> queryTestPlatformVariable(VariableQueryVo vo) {
         return variableRepository
-                .findByUsernameAndProfileNameAndVariableName(vo.username(), vo.profileName(), vo.variableName())
+                .findByUsernameAndVariableProfileAndVariableName(vo.username(), vo.profileName(), vo.variableName())
                 .map(ConvertUtils::toVariableQueryResponse);
     }
 

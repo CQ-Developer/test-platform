@@ -20,7 +20,7 @@ public record TestPlatformVariable(
         @Column("variable_scope")
         TestPlatformVariableScope variableScope,
 
-        @Column("variable _profile")
+        @Column("variable_profile")
         String variableProfile,
 
         @Column("variable_description")
