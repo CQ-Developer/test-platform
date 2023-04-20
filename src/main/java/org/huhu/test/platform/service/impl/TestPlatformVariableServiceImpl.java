@@ -1,5 +1,6 @@
 package org.huhu.test.platform.service.impl;
 
+import org.huhu.test.platform.exception.ClientTestPlatformException;
 import org.huhu.test.platform.model.response.VariableQueryResponse;
 import org.huhu.test.platform.model.vo.VariableCreateVo;
 import org.huhu.test.platform.model.vo.VariableDeleteVo;
@@ -35,35 +36,36 @@ public class TestPlatformVariableServiceImpl implements TestPlatformVariableServ
     @Override
     public Flux<VariableQueryResponse> queryTestPlatformVariable(VariableQueryVo vo) {
         return variableRepository
-                .findByUsernameAndVariableNameAndProfileName(vo.username(), vo.variableName(), vo.profileName())
+                .findByUsernameAndProfileNameAndVariableName(vo.username(), vo.profileName(), vo.variableName())
                 .map(ConvertUtils::toVariableQueryResponse);
     }
 
     @Override
     public Mono<Void> createTestPlatformVariable(VariableCreateVo vo) {
         return variableRepository
-                .findByUsernameAndVariableNameAndVariableScope(vo.username(), vo.request().variableName(), vo.request().variableScope())
-                .switchIfEmpty(variableRepository.save(ConvertUtils.toTestPlatformVariable(vo)))
-                .doOnNext(i -> logger.info("save variable {}.", i.variableId()))
+                .findByUsernameAndVariableProfileAndVariableNameAndVariableScope(vo.username(), vo.profileName(), vo.request().variableName(), vo.request().variableScope())
+                .flatMap(i -> Mono.error(new ClientTestPlatformException("variable create error: exists")))
+                .switchIfEmpty(Mono
+                        .just(ConvertUtils.toTestPlatformVariable(vo))
+                        .flatMap(variableRepository::save)
+                        .doOnNext(i -> logger.info("create variable {}", i.variableName())))
                 .then();
     }
 
     @Override
     public Mono<Void> updateTestPlatformVariable(VariableUpdateVo vo) {
-        var deleteVariable = Mono
-                .zip(Mono.just(vo.username()), Mono.just(vo.variableName()), Mono.just(vo.variableScope()))
-                .map(ConvertUtils::toVariableDeleteVo)
-                .flatMap(this::deleteTestPlatformVariable);
-        var createVariable = Mono
-                .zip(Mono.just(vo.username()), Mono.just(vo.request()), VariableCreateVo::new)
-                .flatMap(this::createTestPlatformVariable);
-        return deleteVariable.then(createVariable);
+        return variableRepository
+                .setVariableValueAndVariableDescriptionFor(vo.request().variableValue(), vo.request().variableDescription(),
+                        vo.username(), vo.variableProfile(), vo.request().variableName(), vo.request().variableScope())
+                .doOnNext(i -> logger.info("update {} variable", i))
+                .then();
     }
 
     @Override
     public Mono<Void> deleteTestPlatformVariable(VariableDeleteVo vo) {
         return variableRepository
-                .deleteByUsernameAndVariableNameAndVariableScope(vo.username(), vo.variableName(), vo.variableScope())
+                .deleteByUsernameAndVariableProfileAndAndVariableNameAndVariableScope(
+                        vo.username(), vo.variableProfile(), vo.variableName(), vo.variableScope())
                 .doOnNext(i -> logger.info("delete {} variable.", i))
                 .then();
     }

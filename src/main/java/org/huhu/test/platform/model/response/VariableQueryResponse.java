@@ -1,7 +1,6 @@
 package org.huhu.test.platform.model.response;
 
 import org.huhu.test.platform.constant.TestPlatformVariableScope;
-import org.huhu.test.platform.controller.TestPlatformVariableController;
 import reactor.core.publisher.Mono;
 
 /**
@@ -13,7 +12,8 @@ import reactor.core.publisher.Mono;
  * @param variableDescription 变量描述
  *
  * @author 18551681083@163.com
- * @see TestPlatformVariableController#queryGlobalVariable(Mono)
+ * @see org.huhu.test.platform.controller.TestPlatformVariableController#queryVariable(Mono)
+ * @see org.huhu.test.platform.controller.TestPlatformVariableController#queryVariable(Mono, String)
  * @since 0.0.1
  */
 public record VariableQueryResponse(

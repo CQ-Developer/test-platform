@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Size;
 import org.huhu.test.platform.constant.TestPlatformVariableScope;
 import org.huhu.test.platform.model.request.VariableModifyRequest;
 import org.huhu.test.platform.model.response.VariableQueryResponse;
-import org.huhu.test.platform.model.vo.VariableCreateVo;
 import org.huhu.test.platform.service.TestPlatformUserProfileService;
 import org.huhu.test.platform.service.TestPlatformVariableService;
 import org.huhu.test.platform.util.ConvertUtils;
@@ -74,18 +73,25 @@ public class TestPlatformVariableController {
     @PutMapping
     public Mono<Void> createVariable(Mono<Authentication> authentication,
             @Validated @RequestBody Mono<VariableModifyRequest> request) {
-        var username = authentication.map(Authentication::getName);
-        return Mono.zip(username, request, VariableCreateVo::new)
+        var username = authentication
+                .map(Authentication::getName);
+        var profile = authentication
+                .map(Authentication::getName)
+                .flatMap(userProfileService::queryTestPlatformUserActiveProfile);
+        return Mono.zip(username, profile, request)
+                   .map(ConvertUtils::toVariableCreateVo)
                    .flatMap(variableService::createTestPlatformVariable);
     }
 
     @PostMapping("/{variableName}")
     public Mono<Void> updateVariable(Mono<Authentication> authentication,
-            @PathVariable("variableName") @Pattern(regexp = VARIABLE_NAME) String variableName,
-            @RequestParam("variableScope") TestPlatformVariableScope variableScope,
             @Validated @RequestBody Mono<VariableModifyRequest> request) {
-        var username = authentication.map(Authentication::getName);
-        return Mono.zip(username, Mono.just(variableName), Mono.just(variableScope), request)
+        var username = authentication
+                .map(Authentication::getName);
+        var profile = authentication
+                .map(Authentication::getName)
+                .flatMap(userProfileService::queryTestPlatformUserActiveProfile);
+        return Mono.zip(username, profile, request)
                    .map(ConvertUtils::toVariableUpdateVo)
                    .flatMap(variableService::updateTestPlatformVariable);
     }
@@ -94,8 +100,12 @@ public class TestPlatformVariableController {
     public Mono<Void> deleteVariable(Mono<Authentication> authentication,
             @PathVariable("variableName") @Size(max = 32) @Pattern(regexp = VARIABLE_NAME) String variableName,
             @RequestParam("variableScope") TestPlatformVariableScope variableScope) {
-        var username = authentication.map(Authentication::getName);
-        return Mono.zip(username, Mono.just(variableName), Mono.just(variableScope))
+        var username = authentication
+                .map(Authentication::getName);
+        var profile = authentication
+                .map(Authentication::getName)
+                .flatMap(userProfileService::queryTestPlatformUserActiveProfile);
+        return Mono.zip(username, profile, Mono.just(variableName), Mono.just(variableScope))
                    .map(ConvertUtils::toVariableDeleteVo)
                    .flatMap(variableService::deleteTestPlatformVariable);
     }

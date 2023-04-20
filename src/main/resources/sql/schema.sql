@@ -39,6 +39,6 @@ create table if not exists t_test_variable (
   variable_description varchar(512),
   username varchar(16) not null,
   primary key (variable_id),
-  unique key (username, variable_name, variable_scope)
+  unique key (username, variable_profile, variable_name, variable_scope)
 );
 

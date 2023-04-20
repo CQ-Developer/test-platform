@@ -109,8 +109,7 @@ public class ConvertUtils {
                 vo.request().variableName(),
                 vo.request().variableValue(),
                 vo.request().variableScope(),
-                // todo 查询当前用户的环境然后填充
-                null,
+                vo.profileName(),
                 vo.request().variableDescription(),
                 vo.username());
     }
@@ -151,21 +150,21 @@ public class ConvertUtils {
     }
 
     /**
-     * 将 {@link Tuple4} 转换为 {@link VariableUpdateVo}
+     * 将 {@link Tuple3} 转换为 {@link VariableUpdateVo}
      *
-     * @param tuple4 用户名 变量名 变量作用域 变量变更请求
+     * @param tuple3 用户名 变量名 变量作用域 变量变更请求
      */
-    public static VariableUpdateVo toVariableUpdateVo(Tuple4<String, String, TestPlatformVariableScope, VariableModifyRequest> tuple4) {
-        return new VariableUpdateVo(tuple4.getT1(), tuple4.getT2(), tuple4.getT3(), tuple4.getT4());
+    public static VariableUpdateVo toVariableUpdateVo(Tuple3<String, String, VariableModifyRequest> tuple3) {
+        return new VariableUpdateVo(tuple3.getT1(), tuple3.getT2(), tuple3.getT3());
     }
 
     /**
      * 将 {@link Tuple3} 转换为 {@link VariableDeleteVo}
      *
-     * @param tuple3 用户名 变量名 变量作用域
+     * @param tuple4 用户名 变量名 变量作用域
      */
-    public static VariableDeleteVo toVariableDeleteVo(Tuple3<String, String, TestPlatformVariableScope> tuple3) {
-        return new VariableDeleteVo(tuple3.getT1(), tuple3.getT2(), tuple3.getT3());
+    public static VariableDeleteVo toVariableDeleteVo(Tuple4<String, String, String, TestPlatformVariableScope> tuple4) {
+        return new VariableDeleteVo(tuple4.getT1(), tuple4.getT2(), tuple4.getT3(), tuple4.getT4());
     }
 
     /**
@@ -230,6 +229,15 @@ public class ConvertUtils {
      */
     public static VariableQueryVo toVariableQueryVo(Tuple3<String, String, String> tuple3) {
         return new VariableQueryVo(tuple3.getT1(), tuple3.getT2(), tuple3.getT3());
+    }
+
+    /**
+     * 将 {@link Tuple3} 转换为 {@link VariableCreateVo}
+     *
+     * @param tuple3 用户名 环境名 变量变更请求
+     */
+    public static VariableCreateVo toVariableCreateVo(Tuple3<String, String, VariableModifyRequest> tuple3) {
+        return new VariableCreateVo(tuple3.getT1(), tuple3.getT2(), tuple3.getT3());
     }
 
 }

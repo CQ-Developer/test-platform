@@ -8,6 +8,7 @@ import reactor.core.publisher.Mono;
  * 测试平台变量创建值对象
  *
  * @param username 用户名
+ * @param profileName 环境名
  * @param request 变量变更请求
  *
  * @author 18551681083@163.com
@@ -16,4 +17,5 @@ import reactor.core.publisher.Mono;
  */
 public record VariableCreateVo(
         String username,
+        String profileName,
         VariableModifyRequest request) {}
