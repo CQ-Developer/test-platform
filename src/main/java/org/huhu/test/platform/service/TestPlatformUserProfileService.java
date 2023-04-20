@@ -20,6 +20,13 @@ public interface TestPlatformUserProfileService {
     Mono<UserProfileQueryResponse> queryTestPlatformUserProfile(String username);
 
     /**
+     * 查询测试平台用户激活环境
+     *
+     * @param username 用户名
+     */
+    Mono<String> queryTestPlatformUserActiveProfile(String username);
+
+    /**
      * 创建测试平台用户环境
      *
      * @param vo 请求

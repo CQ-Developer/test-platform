@@ -33,16 +33,21 @@ public class TestPlatformUserProfileServiceImpl implements TestPlatformUserProfi
 
     @Override
     public Mono<UserProfileQueryResponse> queryTestPlatformUserProfile(String username) {
-        var findActiveProfile = reactiveRedisTemplate
-                .opsForValue()
-                .get(USER_PROFILE_ACTIVE.getKey(username))
-                .switchIfEmpty(Mono.just(DEFAULT_PROFILE_NAME))
-                .cast(String.class);
+        var findActiveProfile = queryTestPlatformUserActiveProfile(username);
         var findAllProfiles = userProfileRepository
                 .findByUsername(username)
                 .map(TestPlatformUserProfile::profileName)
                 .collectList();
         return Mono.zip(findActiveProfile, findAllProfiles, UserProfileQueryResponse::new);
+    }
+
+    @Override
+    public Mono<String> queryTestPlatformUserActiveProfile(String username) {
+        return reactiveRedisTemplate
+                .opsForValue()
+                .get(USER_PROFILE_ACTIVE.getKey(username))
+                .switchIfEmpty(Mono.just(DEFAULT_PROFILE_NAME))
+                .cast(String.class);
     }
 
     @Override
