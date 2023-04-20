@@ -13,6 +13,8 @@ import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+
 import static org.huhu.test.platform.constant.TestPlatformDefaultName.DEFAULT_PROFILE_NAME;
 import static org.huhu.test.platform.constant.TestPlatformRedisKey.USER_PROFILE_ACTIVE;
 
@@ -32,6 +34,17 @@ public class TestPlatformUserProfileServiceImpl implements TestPlatformUserProfi
     }
 
     @Override
+    public Mono<Void> activeTestPlatformUserProfile(UserProfileModifyVo vo) {
+        return userProfileRepository
+                .findByUsernameAndProfileName(vo.username(), vo.profileName())
+                .switchIfEmpty(Mono.error(new ClientTestPlatformException("active profile error: profile not exists")))
+                .flatMap(profile -> reactiveRedisTemplate
+                        .opsForValue()
+                        .set(USER_PROFILE_ACTIVE.getKey(vo.username()), profile, Duration.ofHours(24L)))
+                .then();
+    }
+
+    @Override
     public Mono<UserProfileQueryResponse> queryTestPlatformUserProfile(String username) {
         var findActiveProfile = queryTestPlatformUserActiveProfile(username);
         var findAllProfiles = userProfileRepository
@@ -46,7 +59,10 @@ public class TestPlatformUserProfileServiceImpl implements TestPlatformUserProfi
         return reactiveRedisTemplate
                 .opsForValue()
                 .get(USER_PROFILE_ACTIVE.getKey(username))
-                .switchIfEmpty(Mono.just(DEFAULT_PROFILE_NAME))
+                .switchIfEmpty(reactiveRedisTemplate
+                        .opsForValue()
+                        .set(USER_PROFILE_ACTIVE.getKey(username), DEFAULT_PROFILE_NAME, Duration.ofHours(24L))
+                        .thenReturn(DEFAULT_PROFILE_NAME))
                 .cast(String.class);
     }
 

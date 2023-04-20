@@ -3,7 +3,7 @@ package org.huhu.test.platform.controller;
 import cn.hutool.core.util.StrUtil;
 import jakarta.validation.constraints.Pattern;
 import org.huhu.test.platform.exception.ClientTestPlatformException;
-import org.huhu.test.platform.model.request.UserProfileCreateRequest;
+import org.huhu.test.platform.model.request.UserProfileModifyRequest;
 import org.huhu.test.platform.model.response.UserProfileQueryResponse;
 import org.huhu.test.platform.model.vo.UserProfileModifyVo;
 import org.huhu.test.platform.service.TestPlatformUserProfileService;
@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,12 +48,22 @@ public class TestPlatformUserProfileController {
 
     @PutMapping
     public Mono<Void> createUserProfile(Mono<Authentication> authentication,
-            @Validated @RequestBody Mono<UserProfileCreateRequest> request) {
-        var profileName = request.map(UserProfileCreateRequest::profileName);
+            @Validated @RequestBody Mono<UserProfileModifyRequest> request) {
+        var profile = request.map(UserProfileModifyRequest::profileName);
         return authentication
                 .map(Authentication::getName)
-                .zipWith(profileName, UserProfileModifyVo::new)
+                .zipWith(profile, UserProfileModifyVo::new)
                 .flatMap(userProfileService::createTestPlatformUserProfile);
+    }
+
+    @PostMapping
+    public Mono<Void> activeUserProfile(Mono<Authentication> authentication,
+            @Validated @RequestBody Mono<UserProfileModifyRequest> request) {
+        var profile = request.map(UserProfileModifyRequest::profileName);
+        return authentication
+                .map(Authentication::getName)
+                .zipWith(profile, UserProfileModifyVo::new)
+                .flatMap(userProfileService::activeTestPlatformUserProfile);
     }
 
     @DeleteMapping("/{profileName}")

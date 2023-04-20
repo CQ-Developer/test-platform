@@ -15,7 +15,7 @@ import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USER_PROF
  * @see org.huhu.test.platform.controller.TestPlatformUserProfileController#createUserProfile(Mono, Mono)
  * @since 0.0.1
  */
-public record UserProfileCreateRequest(
+public record UserProfileModifyRequest(
         @NotBlank
         @Pattern(regexp = USER_PROFILE)
         String profileName) {}

@@ -13,6 +13,13 @@ import reactor.core.publisher.Mono;
 public interface TestPlatformUserProfileService {
 
     /**
+     * 激活测试平台用户环境
+     *
+     * @param vo 请求
+     */
+    Mono<Void> activeTestPlatformUserProfile(UserProfileModifyVo vo);
+
+    /**
      * 查询测试平台用户环境
      *
      * @param username 用户名
