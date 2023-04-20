@@ -22,6 +22,7 @@ import org.huhu.test.platform.model.table.TestPlatformVariable;
 import org.huhu.test.platform.model.vo.UserProfileModifyVo;
 import org.huhu.test.platform.model.vo.VariableCreateVo;
 import org.huhu.test.platform.model.vo.VariableDeleteVo;
+import org.huhu.test.platform.model.vo.VariableQueryVo;
 import org.huhu.test.platform.model.vo.VariableUpdateVo;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.GroupedFlux;
@@ -220,6 +221,15 @@ public class ConvertUtils {
      */
     public static TestPlatformUserProfile toTestPlatformUserProfile(UserProfileModifyVo vo) {
         return new TestPlatformUserProfile(null, vo.profileName(), vo.username());
+    }
+
+    /**
+     * 将 {@link Tuple3} 转换为 {@link VariableQueryVo}
+     *
+     * @param tuple3 用户名 环境名 变量名
+     */
+    public static VariableQueryVo toVariableQueryVo(Tuple3<String, String, String> tuple3) {
+        return new VariableQueryVo(tuple3.getT1(), tuple3.getT2(), tuple3.getT3());
     }
 
 }

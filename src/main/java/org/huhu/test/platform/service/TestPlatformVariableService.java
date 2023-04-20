@@ -19,6 +19,14 @@ public interface TestPlatformVariableService {
     /**
      * 查询测试平台变量
      *
+     * @param username 用户名
+     * @param profileName 变量名
+     */
+    Flux<VariableQueryResponse> queryTestPlatformVariable(String username, String profileName);
+
+    /**
+     * 查询测试平台变量
+     *
      * @param vo 请求体
      */
     Flux<VariableQueryResponse> queryTestPlatformVariable(VariableQueryVo vo);

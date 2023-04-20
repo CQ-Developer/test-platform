@@ -4,10 +4,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.huhu.test.platform.constant.TestPlatformVariableScope;
 import org.huhu.test.platform.model.request.VariableModifyRequest;
-import org.huhu.test.platform.model.response.UserProfileQueryResponse;
 import org.huhu.test.platform.model.response.VariableQueryResponse;
 import org.huhu.test.platform.model.vo.VariableCreateVo;
-import org.huhu.test.platform.model.vo.VariableQueryVo;
 import org.huhu.test.platform.service.TestPlatformUserProfileService;
 import org.huhu.test.platform.service.TestPlatformVariableService;
 import org.huhu.test.platform.util.ConvertUtils;
@@ -53,25 +51,23 @@ public class TestPlatformVariableController {
     public Flux<VariableQueryResponse> queryVariable(Mono<Authentication> authentication) {
         var username = authentication
                 .map(Authentication::getName);
-        var profileName = authentication
+        var profile = authentication
                 .map(Authentication::getName)
-                .flatMap(userProfileService::queryTestPlatformUserProfile)
-                .map(UserProfileQueryResponse::active);
-        return Mono.zip(username, profileName)
-                   .map(i -> new VariableQueryVo(i.getT1(), i.getT2(), null))
-                   .flatMapMany(variableService::queryTestPlatformVariable);
+                .flatMap(userProfileService::queryTestPlatformUserActiveProfile);
+        return Mono.zip(username, profile)
+                   .flatMapMany(i -> variableService.queryTestPlatformVariable(i.getT1(), i.getT2()));
     }
 
     @GetMapping("/{variableName}")
     public Flux<VariableQueryResponse> queryVariable(Mono<Authentication> authentication,
             @PathVariable(name = "variableName", required = false) @Pattern(regexp = VARIABLE_NAME) String variableName) {
-        var username = authentication.map(Authentication::getName);
-        var profileName = authentication
+        var username = authentication
+                .map(Authentication::getName);
+        var profile = authentication
                 .map(Authentication::getName)
-                .flatMap(userProfileService::queryTestPlatformUserProfile)
-                .map(UserProfileQueryResponse::active);
-        return Mono.zip(username, profileName, Mono.just(variableName))
-                   .map(i -> new VariableQueryVo(i.getT1(), i.getT2(), i.getT3()))
+                .flatMap(userProfileService::queryTestPlatformUserActiveProfile);
+        return Mono.zip(username, profile, Mono.just(variableName))
+                   .map(ConvertUtils::toVariableQueryVo)
                    .flatMapMany(variableService::queryTestPlatformVariable);
     }
 

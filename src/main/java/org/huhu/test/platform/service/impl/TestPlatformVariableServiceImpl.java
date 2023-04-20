@@ -1,9 +1,6 @@
 package org.huhu.test.platform.service.impl;
 
-import cn.hutool.core.util.StrUtil;
-import org.huhu.test.platform.constant.TestPlatformVariableScope;
 import org.huhu.test.platform.model.response.VariableQueryResponse;
-import org.huhu.test.platform.model.table.TestPlatformVariable;
 import org.huhu.test.platform.model.vo.VariableCreateVo;
 import org.huhu.test.platform.model.vo.VariableDeleteVo;
 import org.huhu.test.platform.model.vo.VariableQueryVo;
@@ -17,9 +14,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.comparingInt;
-
 @Service
 public class TestPlatformVariableServiceImpl implements TestPlatformVariableService {
 
@@ -32,26 +26,17 @@ public class TestPlatformVariableServiceImpl implements TestPlatformVariableServ
     }
 
     @Override
-    public Flux<VariableQueryResponse> queryTestPlatformVariable(VariableQueryVo vo) {
-        final Flux<TestPlatformVariable> findVariable;
-        if (StrUtil.isBlank(vo.variableName())) {
-            findVariable = variableRepository.findByUsernameAndProfileName(vo.username(), vo.profileName());
-        } else {
-            findVariable = variableRepository.findByUsernameAndVariableNameAndProfileName(vo.username(), vo.variableName(), vo.profileName());
-        }
-        return queryTestPlatformVariable(findVariable);
+    public Flux<VariableQueryResponse> queryTestPlatformVariable(String username, String profileName) {
+        return variableRepository
+                .findByUsernameAndProfileName(username, profileName)
+                .map(ConvertUtils::toVariableQueryResponse);
     }
 
-    /**
-     * 查询变量
-     *
-     * @param findVariable 查询结果
-     */
-    private Flux<VariableQueryResponse> queryTestPlatformVariable(Flux<TestPlatformVariable> findVariable) {
-        return findVariable
-                .map(ConvertUtils::toVariableQueryResponse)
-                .sort(comparing(VariableQueryResponse::variableName)
-                        .thenComparing(VariableQueryResponse::variableScope, comparingInt(TestPlatformVariableScope::getScope)));
+    @Override
+    public Flux<VariableQueryResponse> queryTestPlatformVariable(VariableQueryVo vo) {
+        return variableRepository
+                .findByUsernameAndVariableNameAndProfileName(vo.username(), vo.variableName(), vo.profileName())
+                .map(ConvertUtils::toVariableQueryResponse);
     }
 
     @Override
