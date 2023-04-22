@@ -40,8 +40,8 @@ public class TestPlatformVariableController {
     private final TestPlatformUserProfileService userProfileService;
 
     TestPlatformVariableController(
-            TestPlatformVariableService variableService
-            , TestPlatformUserProfileService userProfileService) {
+            TestPlatformVariableService variableService,
+            TestPlatformUserProfileService userProfileService) {
         this.variableService = variableService;
         this.userProfileService = userProfileService;
     }
