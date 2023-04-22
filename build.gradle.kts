@@ -1,7 +1,7 @@
 plugins {
     java
     jacoco
-    id("org.springframework.boot") version "3.0.5"
+    id("org.springframework.boot") version "3.0.6"
     id("io.spring.dependency-management") version "1.1.0"
 }
 
@@ -23,12 +23,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
-    implementation("cn.hutool:hutool-all:5.8.17")
+    implementation("cn.hutool:hutool-all:5.8.18")
     implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("io.projectreactor:reactor-test")
-    runtimeOnly("com.github.jasync-sql:jasync-r2dbc-mysql:2.1.23")
+    runtimeOnly("com.github.jasync-sql:jasync-r2dbc-mysql:2.1.24")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 

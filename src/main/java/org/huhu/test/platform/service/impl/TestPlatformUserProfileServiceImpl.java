@@ -37,10 +37,10 @@ public class TestPlatformUserProfileServiceImpl implements TestPlatformUserProfi
     public Mono<Void> activeTestPlatformUserProfile(UserProfileModifyVo vo) {
         return userProfileRepository
                 .findByUsernameAndProfileName(vo.username(), vo.profileName())
-                .switchIfEmpty(Mono.error(new ClientTestPlatformException("active profile error: profile not exists")))
+                .switchIfEmpty(Mono.error(new ClientTestPlatformException("active profile error not exists")))
                 .flatMap(profile -> reactiveRedisTemplate
                         .opsForValue()
-                        .set(USER_PROFILE_ACTIVE.getKey(vo.username()), profile, Duration.ofHours(24L)))
+                        .set(USER_PROFILE_ACTIVE.getKey(vo.username()), profile.profileName(), Duration.ofHours(24L)))
                 .then();
     }
 
@@ -81,8 +81,13 @@ public class TestPlatformUserProfileServiceImpl implements TestPlatformUserProfi
 
     @Override
     public Mono<Void> deleteTestPlatformUserProfile(UserProfileModifyVo vo) {
-        return userProfileRepository
-                .deleteByUsernameAndProfileName(vo.username(), vo.profileName())
+        return reactiveRedisTemplate
+                .opsForValue()
+                .get(USER_PROFILE_ACTIVE.getKey(vo.username()))
+                .filter(vo.profileName()::equals)
+                .flatMap(i -> Mono.error(new ClientTestPlatformException("delete profile error in active")))
+                .switchIfEmpty(userProfileRepository
+                        .deleteByUsernameAndProfileName(vo.username(), vo.profileName()))
                 .doOnNext(i -> logger.info("delete {} profile", i))
                 .then();
     }

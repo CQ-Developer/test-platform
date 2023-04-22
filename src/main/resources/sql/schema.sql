@@ -23,7 +23,7 @@ create table if not exists t_test_user_role (
 drop table if exists t_test_user_profile;
 create table if not exists t_test_user_profile (
   profile_id bigint not null auto_increment,
-  profile_name varchar(32) not null,
+  profile_name varchar(32) not null default 'default',
   username varchar(16) not null,
   primary key (profile_id),
   unique key (username, profile_name)
