@@ -1,7 +1,7 @@
 package org.huhu.test.platform.controller;
 
-import org.hamcrest.core.IsEqual;
 import org.huhu.test.platform.model.request.UserCreateRequest;
+import org.huhu.test.platform.model.request.UserModifyRequest;
 import org.huhu.test.platform.model.response.ErrorResponse;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
@@ -9,6 +9,7 @@ import org.huhu.test.platform.service.TestPlatformUserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -60,7 +61,7 @@ class TestPlatformUserControllerTest {
     }
 
     @Test
-    void testQueryUser() {
+    void queryUserDetail() {
         var now = LocalDateTime.of(2000, 1, 1, 1, 1);
         var jack = new UserDetailQueryResponse("jack", List.of(USER), true, false, now, now.plusDays(1L));
         var response = Mono.just(jack);
@@ -82,7 +83,7 @@ class TestPlatformUserControllerTest {
     }
 
     @Test
-    void testQueryUserError() {
+    void queryUserDetailError() {
         webClient.get()
                  .uri("/user/{username}", "u1")
                  .exchange()
@@ -122,32 +123,82 @@ class TestPlatformUserControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(ErrorResponse.class)
-                 .value(ErrorResponse::code, IsEqual.equalTo(1000))
-                 .value(ErrorResponse::message, IsEqual.equalTo("client error"));
+                 .value(ErrorResponse::code, equalTo(1000))
+                 .value(ErrorResponse::message, equalTo("client error"));
     }
 
     @Test
     void deleteUser() {
+        doReturn(Mono.empty())
+                .when(userService)
+                .deleteTestPlatformUser(anyString());
+        webClient.mutateWith(csrf())
+                 .delete()
+                 .uri("/user/{username}", "tester")
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBody()
+                 .isEmpty();
     }
 
     @Test
-    void renewUser() {
+    void deleteUserError() {
+        webClient.mutateWith(csrf())
+                 .delete()
+                 .uri("/user/{username}", "u1")
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBody(ErrorResponse.class)
+                 .value(ErrorResponse::code, equalTo(1000))
+                 .value(ErrorResponse::message, equalTo("client error"));
     }
 
-    @Test
-    void enableUser() {
+    @ParameterizedTest
+    @ValueSource(strings = {"renew", "enable", "disable", "lock", "unlock"})
+    void modifyUser(String path) {
+        doReturn(Mono.empty())
+                .when(userService)
+                .enableTestPlatformUser(anyString());
+        doReturn(Mono.empty())
+                .when(userService)
+                .disableTestPlatformUser(anyString());
+        doReturn(Mono.empty())
+                .when(userService)
+                .lockTestPlatformUser(anyString());
+        doReturn(Mono.empty())
+                .when(userService)
+                .unlockTestPlatformUser(anyString());
+        doReturn(Mono.empty())
+                .when(userService)
+                .renewTestPlatformUser(any(UserModifyRequest.class));
+        var request = new UserModifyRequest("tester", LocalDateTime.now());
+        webClient.mutateWith(csrf())
+                 .post()
+                 .uri("/user/{path}", path)
+                 .bodyValue(request)
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBody()
+                 .isEmpty();
     }
 
-    @Test
-    void disableUser() {
-    }
-
-    @Test
-    void lockUser() {
-    }
-
-    @Test
-    void unlockUser() {
+    @ParameterizedTest
+    @CsvSource({"renew, u1", "enable, u1", "disable, u1", "lock, u1", "unlock, u1", "test, tester"})
+    void modifyUserError(String path, String username) {
+        var request = new UserModifyRequest(username, null);
+        webClient.mutateWith(csrf())
+                 .post()
+                 .uri("/user/{path}", path)
+                 .bodyValue(request)
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBody(ErrorResponse.class)
+                 .value(ErrorResponse::code, equalTo(1000))
+                 .value(ErrorResponse::message, equalTo("client error"));
     }
 
 }
