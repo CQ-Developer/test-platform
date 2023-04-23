@@ -43,21 +43,25 @@ class TestPlatformUserControllerTest {
     TestPlatformUserService userService;
 
     @Test
-    void queryUser() {
-        var u1 = new UserQueryResponse("u1", List.of(USER, DEV));
-        var u2 = new UserQueryResponse("u2", List.of(ADMIN));
-        var response = Flux.just(u1, u2);
+    void queryAuthenticatedUser() {
+        var now = LocalDateTime.of(2000, 1, 1, 1, 1);
+        var jack = new UserDetailQueryResponse("jack", List.of(USER), true, false, now, now.plusDays(1L));
+        var response = Mono.just(jack);
         doReturn(response)
                 .when(userService)
-                .queryTestPlatformUser();
+                .queryTestPlatformUserDetail(anyString());
         webClient.get()
                  .uri("/user")
                  .exchange()
                  .expectStatus()
                  .isOk()
-                 .expectBodyList(UserQueryResponse.class)
-                 .hasSize(2)
-                 .value(hasItems(u1, u2));
+                 .expectBody(UserDetailQueryResponse.class)
+                 .value(UserDetailQueryResponse::username, equalTo("jack"))
+                 .value(UserDetailQueryResponse::roleLevels, hasItem(USER))
+                 .value(UserDetailQueryResponse::enabled, equalTo(true))
+                 .value(UserDetailQueryResponse::locked, equalTo(false))
+                 .value(UserDetailQueryResponse::registerTime, equalTo(now))
+                 .value(UserDetailQueryResponse::expiredTime, equalTo(now.plusDays(1L)));
     }
 
     @Test
@@ -92,6 +96,24 @@ class TestPlatformUserControllerTest {
                  .expectBody(ErrorResponse.class)
                  .value(ErrorResponse::code, equalTo(1000))
                  .value(ErrorResponse::message, equalTo("client error"));
+    }
+
+    @Test
+    void queryUsers() {
+        var u1 = new UserQueryResponse("u1", List.of(USER, DEV));
+        var u2 = new UserQueryResponse("u2", List.of(ADMIN));
+        var response = Flux.just(u1, u2);
+        doReturn(response)
+                .when(userService)
+                .queryTestPlatformUser();
+        webClient.get()
+                 .uri("/user/all")
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBodyList(UserQueryResponse.class)
+                 .hasSize(2)
+                 .value(hasItems(u1, u2));
     }
 
     @Test

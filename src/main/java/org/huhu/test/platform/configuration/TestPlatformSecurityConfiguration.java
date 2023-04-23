@@ -68,6 +68,7 @@ public class TestPlatformSecurityConfiguration {
                 .httpBasic()
                 .and()
                 .authorizeExchange()
+                .pathMatchers(GET, "/user").authenticated()
                 .pathMatchers(GET, "/user/role").authenticated()
                 .pathMatchers("/user/**").hasRole(ADMIN.name())
                 .anyExchange().authenticated()

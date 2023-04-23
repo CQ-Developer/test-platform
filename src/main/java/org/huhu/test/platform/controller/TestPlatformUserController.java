@@ -9,6 +9,7 @@ import org.huhu.test.platform.model.request.UserModifyRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
 import org.huhu.test.platform.service.TestPlatformUserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,13 +43,20 @@ public class TestPlatformUserController {
     }
 
     @GetMapping
-    public Flux<UserQueryResponse> queryUser() {
-        return userService.queryTestPlatformUser();
+    public Mono<UserDetailQueryResponse> queryAuthenticatedUser(Mono<Authentication> authentication) {
+        return authentication
+                .map(Authentication::getName)
+                .flatMap(userService::queryTestPlatformUserDetail);
     }
 
     @GetMapping("/{username}")
     public Mono<UserDetailQueryResponse> queryUserDetail(@PathVariable("username") @Pattern(regexp = USERNAME) String username) {
         return userService.queryTestPlatformUserDetail(username);
+    }
+
+    @GetMapping("/all")
+    public Flux<UserQueryResponse> queryUsers() {
+        return userService.queryTestPlatformUser();
     }
 
     @PutMapping
