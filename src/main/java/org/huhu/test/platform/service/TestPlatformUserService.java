@@ -25,7 +25,7 @@ public interface TestPlatformUserService {
      *
      * @param username 用户名
      */
-    Mono<UserDetailQueryResponse> queryTestPlatformUser(String username);
+    Mono<UserDetailQueryResponse> queryTestPlatformUserDetail(String username);
 
     /**
      * 创建测试平台用户

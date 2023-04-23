@@ -52,7 +52,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     }
 
     @Override
-    public Mono<UserDetailQueryResponse> queryTestPlatformUser(String username) {
+    public Mono<UserDetailQueryResponse> queryTestPlatformUserDetail(String username) {
         var findUser = userRepository
                 .findByUsername(username)
                 .switchIfEmpty(Mono.error(new ClientTestPlatformException()));

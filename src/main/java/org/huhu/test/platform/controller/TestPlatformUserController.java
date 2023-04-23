@@ -48,7 +48,7 @@ public class TestPlatformUserController {
 
     @GetMapping("/{username}")
     public Mono<UserDetailQueryResponse> queryUserDetail(@PathVariable("username") @Pattern(regexp = USERNAME) String username) {
-        return userService.queryTestPlatformUser(username);
+        return userService.queryTestPlatformUserDetail(username);
     }
 
     @PutMapping
