@@ -142,11 +142,12 @@ class TestPlatformUserControllerTest {
                  .isEmpty();
     }
 
-    @Test
-    void deleteUserError() {
+    @ParameterizedTest
+    @ValueSource(strings = {"root", "u1"})
+    void deleteUserError(String username) {
         webClient.mutateWith(csrf())
                  .delete()
-                 .uri("/user/{username}", "u1")
+                 .uri("/user/{username}", username)
                  .exchange()
                  .expectStatus()
                  .isOk()
