@@ -67,7 +67,7 @@ class TestPlatformUserControllerTest {
         var response = Mono.just(jack);
         doReturn(response)
                 .when(userService)
-                .queryTestPlatformUser(anyString());
+                .queryTestPlatformUserDetail(anyString());
         webClient.get()
                  .uri("/user/{username}", "jack")
                  .exchange()

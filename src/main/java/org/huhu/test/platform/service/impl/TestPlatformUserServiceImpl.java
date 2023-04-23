@@ -52,6 +52,14 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     }
 
     @Override
+    public Flux<UserQueryResponse> queryTestPlatformUser() {
+        return userRoleRepository
+                .findAll()
+                .groupBy(TestPlatformUserRole::username)
+                .flatMap(ConvertUtils::toUserQueryResponse);
+    }
+
+    @Override
     public Mono<UserDetailQueryResponse> queryTestPlatformUserDetail(String username) {
         var findUser = userRepository
                 .findByUsername(username)
@@ -60,15 +68,8 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                 .findByUsername(username)
                 .map(TestPlatformUserRole::roleLevel)
                 .collectList();
-        return Mono.zip(findUser, findUserRoles, ConvertUtils::toUserDetailQueryResponse);
-    }
-
-    @Override
-    public Flux<UserQueryResponse> queryTestPlatformUser() {
-        return userRoleRepository
-                .findAll()
-                .groupBy(TestPlatformUserRole::username)
-                .flatMap(ConvertUtils::toUserQueryResponse);
+        return Mono.zip(findUser, findUserRoles)
+                   .map(ConvertUtils::toUserDetailQueryResponse);
     }
 
     @Override

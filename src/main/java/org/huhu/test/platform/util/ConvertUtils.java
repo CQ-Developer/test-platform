@@ -84,8 +84,16 @@ public class ConvertUtils {
      * @param roleLevels 用户角色
      */
     public static UserDetailQueryResponse toUserDetailQueryResponse(TestPlatformUser user, List<TestPlatformRoleLevel> roleLevels) {
-        return new UserDetailQueryResponse(user.username(), roleLevels,
-                user.enabled(), user.locked(), user.registerTime(), user.expiredTime());
+        return new UserDetailQueryResponse(user.username(), roleLevels, user.enabled(), user.locked(), user.registerTime(), user.expiredTime());
+    }
+
+    /**
+     * 将 {@link Tuple2} 转换为 {@link UserDetailQueryResponse}
+     *
+     * @param tuple2 {@link TestPlatformUser} {@link TestPlatformRoleLevel}
+     */
+    public static UserDetailQueryResponse toUserDetailQueryResponse(Tuple2<TestPlatformUser, List<TestPlatformRoleLevel>> tuple2) {
+        return toUserDetailQueryResponse(tuple2.getT1(), tuple2.getT2());
     }
 
     /**

@@ -16,7 +16,7 @@ import java.util.List;
  * @param expiredTime 到期时间
  *
  * @author 18551681083@163.com
- * @see org.huhu.test.platform.controller.TestPlatformUserController#queryUser(String)
+ * @see org.huhu.test.platform.controller.TestPlatformUserController#queryUserDetail(String)
  * @since 0.0.1
  */
 public record UserDetailQueryResponse(
