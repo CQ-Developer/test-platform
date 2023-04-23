@@ -1,7 +1,7 @@
 package org.huhu.test.platform.service;
 
 import org.huhu.test.platform.model.request.UserCreateRequest;
-import org.huhu.test.platform.model.request.UserRenewRequest;
+import org.huhu.test.platform.model.request.UserModifyRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
 import reactor.core.publisher.Flux;
@@ -46,7 +46,7 @@ public interface TestPlatformUserService {
      *
      * @param request 请求体
      */
-    Mono<Void> renewTestPlatformUser(UserRenewRequest request);
+    Mono<Void> renewTestPlatformUser(UserModifyRequest request);
 
     /**
      * 启用测试平台用户

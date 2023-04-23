@@ -2,7 +2,7 @@ package org.huhu.test.platform.service.impl;
 
 import org.huhu.test.platform.exception.ClientTestPlatformException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
-import org.huhu.test.platform.model.request.UserRenewRequest;
+import org.huhu.test.platform.model.request.UserModifyRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
 import org.huhu.test.platform.model.table.TestPlatformUser;
@@ -130,7 +130,7 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     }
 
     @Override
-    public Mono<Void> renewTestPlatformUser(UserRenewRequest request) {
+    public Mono<Void> renewTestPlatformUser(UserModifyRequest request) {
         return userRepository
                 .findByUsername(request.username())
                 .map(TestPlatformUser::expiredTime)

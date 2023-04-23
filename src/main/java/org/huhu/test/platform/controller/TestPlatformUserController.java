@@ -2,10 +2,10 @@ package org.huhu.test.platform.controller;
 
 import cn.hutool.core.util.StrUtil;
 import jakarta.validation.constraints.Pattern;
+import org.huhu.test.platform.constant.TestPlatformUserModifyPath;
 import org.huhu.test.platform.exception.ClientTestPlatformException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.request.UserModifyRequest;
-import org.huhu.test.platform.model.request.UserRenewRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
 import org.huhu.test.platform.service.TestPlatformUserService;
@@ -64,29 +64,16 @@ public class TestPlatformUserController {
         return userService.deleteTestPlatformUser(username);
     }
 
-    @PostMapping("/renew")
-    public Mono<Void> renewUser(@Validated @RequestBody Mono<UserRenewRequest> request) {
-        return request.flatMap(userService::renewTestPlatformUser);
-    }
-
-    @PostMapping("/enable")
-    public Mono<Void> enableUser(@Validated @RequestBody Mono<UserModifyRequest> request) {
-        return request.map(UserModifyRequest::username).flatMap(userService::enableTestPlatformUser);
-    }
-
-    @PostMapping("/disable")
-    public Mono<Void> disableUser(@Validated @RequestBody Mono<UserModifyRequest> request) {
-        return request.map(UserModifyRequest::username).flatMap(userService::disableTestPlatformUser);
-    }
-
-    @PostMapping("/lock")
-    public Mono<Void> lockUser(@Validated @RequestBody Mono<UserModifyRequest> request) {
-        return request.map(UserModifyRequest::username).flatMap(userService::lockTestPlatformUser);
-    }
-
-    @PostMapping("/unlock")
-    public Mono<Void> unlockUser(@Validated @RequestBody Mono<UserModifyRequest> request) {
-        return request.map(UserModifyRequest::username).flatMap(userService::unlockTestPlatformUser);
+    @PostMapping("/{modify}")
+    public Mono<Void> modifyUser(@PathVariable("modify") TestPlatformUserModifyPath modifyPath,
+            @Validated @RequestBody Mono<UserModifyRequest> request) {
+        return switch (modifyPath) {
+            case RENEW -> request.flatMap(userService::renewTestPlatformUser);
+            case ENABLE -> request.map(UserModifyRequest::username).flatMap(userService::enableTestPlatformUser);
+            case DISABLE -> request.map(UserModifyRequest::username).flatMap(userService::disableTestPlatformUser);
+            case LOCK -> request.map(UserModifyRequest::username).flatMap(userService::lockTestPlatformUser);
+            case UNLOCK -> request.map(UserModifyRequest::username).flatMap(userService::unlockTestPlatformUser);
+        };
     }
 
 }

@@ -31,8 +31,11 @@ public class TestPlatformErrorController {
      *
      * @param exception 异常
      */
-    @ExceptionHandler({ConstraintViolationException.class,
-            ServerWebInputException.class, MethodNotAllowedException.class})
+    @ExceptionHandler({
+            ConstraintViolationException.class,
+            ServerWebInputException.class,
+            MethodNotAllowedException.class,
+            IllegalArgumentException.class})
     public Mono<ErrorResponse> handleClientError(Exception exception) {
         logger.error("client request error.", exception);
         return Mono.just(ConvertUtils.toErrorResponse(CLIENT_ERROR));

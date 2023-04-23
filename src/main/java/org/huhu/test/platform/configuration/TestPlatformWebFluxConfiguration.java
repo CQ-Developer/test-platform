@@ -2,11 +2,14 @@ package org.huhu.test.platform.configuration;
 
 import cn.hutool.core.util.StrUtil;
 import org.huhu.test.platform.constant.TestPlatformRoleLevel;
+import org.huhu.test.platform.constant.TestPlatformUserModifyPath;
 import org.huhu.test.platform.constant.TestPlatformVariableScope;
 import org.huhu.test.platform.exception.ClientTestPlatformException;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
+
+import static java.util.Locale.US;
 
 /**
  * 测试平台请求参数类型转换配置
@@ -21,6 +24,14 @@ public class TestPlatformWebFluxConfiguration implements WebFluxConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(String.class, TestPlatformRoleLevel.class, this::roleLevelDeserialize);
         registry.addConverter(String.class, TestPlatformVariableScope.class, this::variableScopeDeserialize);
+        registry.addConverter(String.class, TestPlatformUserModifyPath.class, this::userModifyDeserialize);
+    }
+
+    private TestPlatformUserModifyPath userModifyDeserialize(String path) {
+        if (StrUtil.isUpperCase(path)) {
+            throw new ClientTestPlatformException("client user modify path invalid");
+        }
+        return TestPlatformUserModifyPath.valueOf(path.toUpperCase(US));
     }
 
     private TestPlatformRoleLevel roleLevelDeserialize(String roleLevel) {
