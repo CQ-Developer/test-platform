@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USER_PROFILE;
@@ -40,10 +39,10 @@ public class TestPlatformUserProfileController {
     }
 
     @GetMapping
-    public Flux<UserProfileQueryResponse> queryUserProfile(Mono<Authentication> authentication) {
+    public Mono<UserProfileQueryResponse> queryUserProfile(Mono<Authentication> authentication) {
         return authentication
                 .map(Authentication::getName)
-                .flatMapMany(userProfileService::queryTestPlatformUserProfile);
+                .flatMap(userProfileService::queryTestPlatformUserProfile);
     }
 
     @PutMapping
