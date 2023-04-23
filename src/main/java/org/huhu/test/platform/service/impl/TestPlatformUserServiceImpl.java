@@ -78,7 +78,8 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                 .just(request)
                 .map(UserCreateRequest::password)
                 .map(passwordEncoder::encode)
-                .zipWith(Mono.just(request), ConvertUtils::toTestPlatformUser)
+                .zipWith(Mono.just(request))
+                .map(ConvertUtils::toTestPlatformUser)
                 .flatMap(userRepository::save)
                 .doOnNext(i -> logger.info("save user {}", i.username()));
         var saveRole = Mono

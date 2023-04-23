@@ -27,6 +27,7 @@ import org.huhu.test.platform.model.vo.VariableUpdateVo;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.GroupedFlux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 import reactor.util.function.Tuple3;
 import reactor.util.function.Tuple4;
 
@@ -122,6 +123,15 @@ public class ConvertUtils {
     public static TestPlatformUser toTestPlatformUser(String encodedPassword, UserCreateRequest request) {
         var expiredTime = ObjectUtil.isNull(request.expiredTime()) ? LocalDateTime.now().plusYears(1L) : request.expiredTime();
         return new TestPlatformUser(null, request.username(), encodedPassword, null, null, null, expiredTime);
+    }
+
+    /**
+     * 将 {@link Tuple2} 转换为 {@link TestPlatformUser}
+     *
+     * @param tuple2 密码 用户创建请求
+     */
+    public static TestPlatformUser toTestPlatformUser(Tuple2<String, UserCreateRequest> tuple2) {
+        return toTestPlatformUser(tuple2.getT1(), tuple2.getT2());
     }
 
     /**
