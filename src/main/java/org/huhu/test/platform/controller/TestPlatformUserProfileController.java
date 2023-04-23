@@ -28,6 +28,7 @@ import static org.huhu.test.platform.constant.TestPlatformDefaultName.DEFAULT_PR
  * @author 18551681083@163.com
  * @since 0.0.1
  */
+@Validated
 @RestController
 @RequestMapping("/user/profile")
 public class TestPlatformUserProfileController {
