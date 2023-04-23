@@ -1,7 +1,9 @@
 package org.huhu.test.platform.service;
 
+import org.huhu.test.platform.converter.test.NullValueArgumentConverter;
 import org.huhu.test.platform.exception.ClientTestPlatformException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
+import org.huhu.test.platform.model.request.UserModifyRequest;
 import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.huhu.test.platform.model.table.TestPlatformUserProfile;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
@@ -10,6 +12,9 @@ import org.huhu.test.platform.repository.TestPlatformUserRepository;
 import org.huhu.test.platform.repository.TestPlatformUserRoleRepository;
 import org.huhu.test.platform.repository.TestPlatformVariableRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ConvertWith;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -168,24 +173,52 @@ class TestPlatformUserServiceTest {
                 .verifyComplete();
     }
 
-    @Test
-    void renewTestPlatformUser() {
+    @ParameterizedTest
+    @ValueSource(strings = {"2000-01-01T01:01:01", "null"})
+    void renewTestPlatformUser(@ConvertWith(NullValueArgumentConverter.class) LocalDateTime expiredTime) {
+        System.out.println(expiredTime);
+        doReturn(Mono.just(1))
+                .when(userRepository)
+                .setExpiredTimeFor(any(LocalDateTime.class), anyString());
+        var request = new UserModifyRequest("tester", expiredTime);
+        create(userService.renewTestPlatformUser(request))
+                .verifyComplete();
     }
 
     @Test
     void enableTestPlatformUser() {
+        doReturn(Mono.just(1))
+                .when(userRepository)
+                .enableFor(anyString());
+        create(userService.enableTestPlatformUser("tester"))
+                .verifyComplete();
     }
 
     @Test
     void disableTestPlatformUser() {
+        doReturn(Mono.just(1))
+                .when(userRepository)
+                .disableFor(anyString());
+        create(userService.disableTestPlatformUser("tester"))
+                .verifyComplete();
     }
 
     @Test
     void lockTestPlatformUser() {
+        doReturn(Mono.just(1))
+                .when(userRepository)
+                .lockFor(anyString());
+        create(userService.lockTestPlatformUser(anyString()))
+                .verifyComplete();
     }
 
     @Test
     void unlockTestPlatformUser() {
+        doReturn(Mono.just(1))
+                .when(userRepository)
+                .unlockFor(anyString());
+        create(userService.unlockTestPlatformUser("tester"))
+                .verifyComplete();
     }
 
 }

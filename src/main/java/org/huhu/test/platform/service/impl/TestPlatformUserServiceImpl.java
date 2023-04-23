@@ -1,11 +1,11 @@
 package org.huhu.test.platform.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import org.huhu.test.platform.exception.ClientTestPlatformException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.request.UserModifyRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
-import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
 import org.huhu.test.platform.repository.TestPlatformUserProfileRepository;
 import org.huhu.test.platform.repository.TestPlatformUserRepository;
@@ -132,22 +132,10 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
 
     @Override
     public Mono<Void> renewTestPlatformUser(UserModifyRequest request) {
+        LocalDateTime expiredTime = request.expiredTime();
+        expiredTime = ObjectUtil.isNull(expiredTime) ? LocalDateTime.now().plusMonths(1L) : expiredTime;
         return userRepository
-                .findByUsername(request.username())
-                .map(TestPlatformUser::expiredTime)
-                .doOnNext(i -> logger.info("user current expired time {}", i))
-                .filter(LocalDateTime.now()::isBefore)
-                .flatMap(i -> Mono
-                        .justOrEmpty(request.expiredTime())
-                        .filter(i::isBefore)
-                        .switchIfEmpty(Mono.just(i)))
-                .switchIfEmpty(Mono
-                        .justOrEmpty(request.expiredTime())
-                        .filter(LocalDateTime.now()::isBefore)
-                        .switchIfEmpty(Mono.just(LocalDateTime.now().plusMonths(1L)))
-                        .doOnNext(i -> logger.info("will renew user with {}", i)))
-                .zipWith(Mono.just(request.username()))
-                .flatMap(i -> userRepository.setExpiredTimeFor(i.getT1(), i.getT2()))
+                .setExpiredTimeFor(expiredTime, request.username())
                 .doOnNext(i -> logger.info("renew {} user", i))
                 .then();
     }
