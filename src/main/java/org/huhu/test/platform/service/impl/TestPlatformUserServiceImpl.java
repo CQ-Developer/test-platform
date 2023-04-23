@@ -74,16 +74,24 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Mono<Void> createTestPlatformUser(UserCreateRequest request) {
-        var testPlatformUser = ConvertUtils
-                .toTestPlatformUser(request, passwordEncoder.encode(request.password()));
-        var saveUser = userRepository
-                .save(testPlatformUser)
+        var saveUser = Mono
+                .just(request)
+                .map(UserCreateRequest::password)
+                .map(passwordEncoder::encode)
+                .zipWith(Mono.just(request), ConvertUtils::toTestPlatformUser)
+                .flatMap(userRepository::save)
                 .doOnNext(i -> logger.info("save user {}", i.username()));
-        var saveRole = userRoleRepository
-                .saveAll(ConvertUtils.toTestPlatformUserRole(request))
+        var saveRole = Mono
+                .just(request)
+                .flatMapMany(ConvertUtils::toTestPlatformUserRole)
+                .collectList()
+                .flatMapMany(userRoleRepository::saveAll)
                 .doOnNext(i -> logger.info("save role {}", i.roleLevel().name()));
-        var saveUserProfile = userProfileRepository
-                .save(ConvertUtils.toTestPlatformUserProfile(request.username()))
+        var saveUserProfile = Mono
+                .just(request)
+                .map(UserCreateRequest::username)
+                .map(ConvertUtils::toTestPlatformUserProfile)
+                .flatMap(userProfileRepository::save)
                 .doOnNext(i -> logger.info("save profile {}", i.profileName()));
         return userRepository
                 .findByUsername(request.username())

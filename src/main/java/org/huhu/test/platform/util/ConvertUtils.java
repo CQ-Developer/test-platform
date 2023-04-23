@@ -119,7 +119,7 @@ public class ConvertUtils {
      *
      * @param request 用户创建请求
      */
-    public static TestPlatformUser toTestPlatformUser(UserCreateRequest request, String encodedPassword) {
+    public static TestPlatformUser toTestPlatformUser(String encodedPassword, UserCreateRequest request) {
         var expiredTime = ObjectUtil.isNull(request.expiredTime()) ? LocalDateTime.now().plusYears(1L) : request.expiredTime();
         return new TestPlatformUser(null, request.username(), encodedPassword, null, null, null, expiredTime);
     }
