@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import jakarta.validation.constraints.Pattern;
 import org.huhu.test.platform.exception.ClientTestPlatformException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
+import org.huhu.test.platform.model.request.UserModifyRequest;
 import org.huhu.test.platform.model.request.UserRenewRequest;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -47,7 +47,7 @@ public class TestPlatformUserController {
     }
 
     @GetMapping("/{username}")
-    public Mono<UserDetailQueryResponse> queryUser(@PathVariable("username") @Pattern(regexp = USERNAME) String username) {
+    public Mono<UserDetailQueryResponse> queryUserDetail(@PathVariable("username") @Pattern(regexp = USERNAME) String username) {
         return userService.queryTestPlatformUser(username);
     }
 
@@ -69,24 +69,24 @@ public class TestPlatformUserController {
         return request.flatMap(userService::renewTestPlatformUser);
     }
 
-    @GetMapping("/enable")
-    public Mono<Void> enableUser(@RequestParam("username") @Pattern(regexp = USERNAME) String username) {
-        return userService.enableTestPlatformUser(username);
+    @PostMapping("/enable")
+    public Mono<Void> enableUser(@Validated @RequestBody Mono<UserModifyRequest> request) {
+        return request.map(UserModifyRequest::username).flatMap(userService::enableTestPlatformUser);
     }
 
-    @GetMapping("/disable")
-    public Mono<Void> disableUser(@RequestParam("username") @Pattern(regexp = USERNAME) String username) {
-        return userService.disableTestPlatformUser(username);
+    @PostMapping("/disable")
+    public Mono<Void> disableUser(@Validated @RequestBody Mono<UserModifyRequest> request) {
+        return request.map(UserModifyRequest::username).flatMap(userService::disableTestPlatformUser);
     }
 
-    @GetMapping("/lock")
-    public Mono<Void> lockUser(@RequestParam("username") @Pattern(regexp = USERNAME) String username) {
-        return userService.lockTestPlatformUser(username);
+    @PostMapping("/lock")
+    public Mono<Void> lockUser(@Validated @RequestBody Mono<UserModifyRequest> request) {
+        return request.map(UserModifyRequest::username).flatMap(userService::lockTestPlatformUser);
     }
 
-    @GetMapping("/unlock")
-    public Mono<Void> unlockUser(@RequestParam("username") @Pattern(regexp = USERNAME) String username) {
-        return userService.unlockTestPlatformUser(username);
+    @PostMapping("/unlock")
+    public Mono<Void> unlockUser(@Validated @RequestBody Mono<UserModifyRequest> request) {
+        return request.map(UserModifyRequest::username).flatMap(userService::unlockTestPlatformUser);
     }
 
 }
