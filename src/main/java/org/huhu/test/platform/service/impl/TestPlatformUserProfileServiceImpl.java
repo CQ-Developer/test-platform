@@ -41,6 +41,7 @@ public class TestPlatformUserProfileServiceImpl implements TestPlatformUserProfi
                 .flatMap(profile -> reactiveRedisTemplate
                         .opsForValue()
                         .set(USER_PROFILE_ACTIVE.getKey(vo.username()), profile.profileName(), Duration.ofHours(24L)))
+                .doOnNext(i -> logger.info("active profile success: {}", i))
                 .then();
     }
 
@@ -85,11 +86,12 @@ public class TestPlatformUserProfileServiceImpl implements TestPlatformUserProfi
         return reactiveRedisTemplate
                 .opsForValue()
                 .get(USER_PROFILE_ACTIVE.getKey(vo.username()))
+                .doOnNext(i -> logger.info("from redis [{}], from vo [{}]", i, vo.profileName()))
                 .filter(vo.profileName()::equals)
                 .flatMap(i -> Mono.error(new ClientTestPlatformException("delete profile error in active")))
-                .switchIfEmpty(userProfileRepository
-                        .deleteByUsernameAndProfileName(vo.username(), vo.profileName()))
-                .doOnNext(i -> logger.info("delete {} profile", i))
+                .switchIfEmpty(Mono.defer(() -> userProfileRepository
+                        .deleteByUsernameAndProfileName(vo.username(), vo.profileName())
+                        .doOnNext(i -> logger.info("delete {} profile", i))))
                 .then();
     }
 
