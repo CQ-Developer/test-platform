@@ -68,14 +68,15 @@ public class TestPlatformUserProfileServiceImpl implements TestPlatformUserProfi
 
     @Override
     public Mono<Void> createTestPlatformUserProfile(UserProfileModifyVo vo) {
-        var saveProfile = userProfileRepository
-                .save(ConvertUtils.toTestPlatformUserProfile(vo))
-                .doOnNext(i -> logger.info("save profile {}", i.profileName()));
         return userProfileRepository
                 .findByUsernameAndProfileName(vo.username(), vo.profileName())
                 .doOnNext(i -> logger.info("profile {} exists", i.profileName()))
                 .flatMap(i -> Mono.error(new ClientTestPlatformException("user profile exists")))
-                .switchIfEmpty(saveProfile)
+                .switchIfEmpty(Mono
+                        .just(vo)
+                        .map(ConvertUtils::toTestPlatformUserProfile)
+                        .flatMap(userProfileRepository::save)
+                        .doOnNext(i -> logger.info("save profile {}", i.profileName())))
                 .then();
     }
 
