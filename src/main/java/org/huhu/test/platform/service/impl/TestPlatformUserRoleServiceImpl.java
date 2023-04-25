@@ -55,14 +55,13 @@ public class TestPlatformUserRoleServiceImpl implements TestPlatformUserRoleServ
 
     @Override
     public Mono<Void> deleteTestPlatformUseRole(UserRoleDeleteVo vo) {
-        var saveRole = userRoleRepository
-                .deleteByUsernameAndRoleLevel(vo.username(), vo.roleLevel())
-                .doOnNext(count -> logger.info("delete {} role.", count));
         return userRoleRepository
                 .countByUsername(vo.username())
                 .filter(i -> i <= 1)
                 .flatMap(i -> Mono.error(new ClientTestPlatformException("user must hold at list 1 role")))
-                .switchIfEmpty(saveRole)
+                .switchIfEmpty(userRoleRepository
+                        .deleteByUsernameAndRoleLevel(vo.username(), vo.roleLevel())
+                        .doOnNext(i -> logger.info("delete {} role", i)))
                 .then();
     }
 
