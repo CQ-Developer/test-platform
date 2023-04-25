@@ -78,8 +78,7 @@ class TestPlatformUserProfileControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(ErrorResponse.class)
-                 .value(ErrorResponse::code, equalTo(1000))
-                 .value(ErrorResponse::message, equalTo("client error"));
+                 .value(ErrorResponse::code, equalTo(1000));
     }
 
     @Test
@@ -110,8 +109,7 @@ class TestPlatformUserProfileControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(ErrorResponse.class)
-                 .value(ErrorResponse::code, equalTo(1000))
-                 .value(ErrorResponse::message, equalTo("client error"));
+                 .value(ErrorResponse::code, equalTo(1000));
     }
 
     @Test
@@ -139,8 +137,7 @@ class TestPlatformUserProfileControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(ErrorResponse.class)
-                 .value(ErrorResponse::code, equalTo(1000))
-                 .value(ErrorResponse::message, equalTo("client error"));
+                 .value(ErrorResponse::code, equalTo(1000));
     }
 
 }

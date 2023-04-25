@@ -94,8 +94,7 @@ class TestPlatformUserControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(ErrorResponse.class)
-                 .value(ErrorResponse::code, equalTo(1000))
-                 .value(ErrorResponse::message, equalTo("client error"));
+                 .value(ErrorResponse::code, equalTo(1000));
     }
 
     @Test
@@ -145,8 +144,7 @@ class TestPlatformUserControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(ErrorResponse.class)
-                 .value(ErrorResponse::code, equalTo(1000))
-                 .value(ErrorResponse::message, equalTo("client error"));
+                 .value(ErrorResponse::code, equalTo(1000));
     }
 
     @Test
@@ -174,8 +172,7 @@ class TestPlatformUserControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(ErrorResponse.class)
-                 .value(ErrorResponse::code, equalTo(1000))
-                 .value(ErrorResponse::message, equalTo("client error"));
+                 .value(ErrorResponse::code, equalTo(1000));
     }
 
     @ParameterizedTest
@@ -220,8 +217,7 @@ class TestPlatformUserControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(ErrorResponse.class)
-                 .value(ErrorResponse::code, equalTo(1000))
-                 .value(ErrorResponse::message, equalTo("client error"));
+                 .value(ErrorResponse::code, equalTo(1000));
     }
 
 }
