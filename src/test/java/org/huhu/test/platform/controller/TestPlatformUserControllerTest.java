@@ -23,7 +23,6 @@ import java.util.List;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsIterableContaining.hasItem;
-import static org.hamcrest.core.IsIterableContaining.hasItems;
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ADMIN;
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.USER;
@@ -113,7 +112,7 @@ class TestPlatformUserControllerTest {
                  .isOk()
                  .expectBodyList(UserQueryResponse.class)
                  .hasSize(2)
-                 .value(hasItems(u1, u2));
+                 .contains(u1, u2);
     }
 
     @Test
