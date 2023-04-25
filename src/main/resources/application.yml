@@ -9,7 +9,7 @@ spring:
     password: root123
   sql:
     init:
-#      mode: always
+      mode: EMBEDDED
       schema-locations: classpath:sql/schema.sql
       data-locations: classpath:sql/data.sql
   data:
