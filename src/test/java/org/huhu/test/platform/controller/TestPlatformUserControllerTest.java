@@ -43,7 +43,7 @@ class TestPlatformUserControllerTest {
     TestPlatformUserService userService;
 
     @Test
-    void queryAuthenticatedUser() {
+    void querySelfUser() {
         var now = LocalDateTime.of(2000, 1, 1, 1, 1);
         var jack = new UserDetailQueryResponse("jack", List.of(USER), true, false, now, now.plusDays(1L));
         var response = Mono.just(jack);

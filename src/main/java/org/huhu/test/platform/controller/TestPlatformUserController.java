@@ -43,7 +43,7 @@ public class TestPlatformUserController {
     }
 
     @GetMapping
-    public Mono<UserDetailQueryResponse> queryAuthenticatedUser(Mono<Authentication> authentication) {
+    public Mono<UserDetailQueryResponse> querySelfUser(Mono<Authentication> authentication) {
         return authentication
                 .map(Authentication::getName)
                 .flatMap(userService::queryTestPlatformUserDetail);
