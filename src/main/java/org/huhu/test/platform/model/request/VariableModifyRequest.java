@@ -20,7 +20,7 @@ import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.VARIABLE_
  *
  * @author 18551681083@163.com
  * @see TestPlatformVariableController#createVariable(Mono, Mono)
- * @see TestPlatformVariableController#updateVariable(Mono, String, TestPlatformVariableScope, Mono)
+ * @see TestPlatformVariableController#updateVariable(Mono, Mono)
  * @since 0.0.1
  */
 public record VariableModifyRequest(

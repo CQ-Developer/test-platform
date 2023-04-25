@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
  *
  * @author 18551681083@163.com
  * @see org.huhu.test.platform.controller.TestPlatformUserRoleController#queryUserRole(String)
- * @see org.huhu.test.platform.controller.TestPlatformUserRoleController#queryUserRole(Mono)
+ * @see org.huhu.test.platform.controller.TestPlatformUserRoleController#querySelfUserRole(Mono)
  * @since 0.0.1
  */
 public record UserRoleQueryResponse(
