@@ -33,6 +33,7 @@ import reactor.util.function.Tuple4;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.USER;
 
@@ -42,7 +43,7 @@ import static org.huhu.test.platform.constant.TestPlatformRoleLevel.USER;
  * @author 18551681083@163.com
  * @since 0.0.1
  */
-public class ConvertUtils {
+public final class ConvertUtils {
 
     /**
      * 私有构造函数
@@ -143,12 +144,12 @@ public class ConvertUtils {
     }
 
     /**
-     * 将 {@link UserRoleCreateRequest} 转换为 {@link UserRoleCreateRequest}
+     * 将 {@link Tuple2} 转换为 {@link TestPlatformUserRole}
      *
-     * @param request 用户角色创建请求
+     * @param tuple2 角色级别 用户名
      */
-    public static TestPlatformUserRole toTestPlatformUserRole(UserRoleCreateRequest request) {
-        return new TestPlatformUserRole(null, request.roleLevel(), request.username());
+    public static TestPlatformUserRole toTestPlatformUserRole(Tuple2<TestPlatformRoleLevel, String> tuple2) {
+        return new TestPlatformUserRole(null, tuple2.getT1(), tuple2.getT2());
     }
 
     /**
@@ -159,11 +160,10 @@ public class ConvertUtils {
     public static Flux<TestPlatformUserRole> toTestPlatformUserRole(UserCreateRequest request) {
         var roles = request.roleLevel();
         if (CollectionUtil.isEmpty(roles)) {
-            roles = List.of(USER);
+            roles = Set.of(USER);
         }
-        var roleLevel = Flux.fromIterable(roles);
-        var username = Flux.just(request.username()).repeat(roles.size() - 1);
-        return Flux.zip(username, roleLevel, UserRoleCreateRequest::new)
+        return Flux.fromIterable(roles)
+                   .zipWith(Flux.just(request.username()).repeat())
                    .map(ConvertUtils::toTestPlatformUserRole);
     }
 

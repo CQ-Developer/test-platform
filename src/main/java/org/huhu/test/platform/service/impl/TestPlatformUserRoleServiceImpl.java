@@ -7,6 +7,7 @@ import org.huhu.test.platform.model.table.TestPlatformUserRole;
 import org.huhu.test.platform.model.vo.UserRoleDeleteVo;
 import org.huhu.test.platform.repository.TestPlatformUserRoleRepository;
 import org.huhu.test.platform.service.TestPlatformUserRoleService;
+import org.huhu.test.platform.util.CollectionUtils;
 import org.huhu.test.platform.util.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +37,19 @@ public class TestPlatformUserRoleServiceImpl implements TestPlatformUserRoleServ
     @Override
     public Mono<Void> createTestPlatformUserRole(UserRoleCreateRequest request) {
         return userRoleRepository
-                .findByUsernameAndRoleLevel(request.username(), request.roleLevel())
-                .switchIfEmpty(userRoleRepository.save(ConvertUtils.toTestPlatformUserRole(request)))
-                .doOnNext(item -> logger.info("save user role {}", item.roleLevel()))
+                .findByUsername(request.username())
+                .map(TestPlatformUserRole::roleLevel)
+                .collectList()
+                .zipWith(Mono.just(request.roleLevel()))
+                .map(CollectionUtils::subtract)
+                .flatMapMany(Flux::fromIterable)
+                .zipWith(Mono.just(request)
+                             .map(UserRoleCreateRequest::username)
+                             .repeat())
+                .map(ConvertUtils::toTestPlatformUserRole)
+                .window(10)
+                .flatMap(userRoleRepository::saveAll)
+                .doOnNext(i -> logger.info("save user {} with role {}", i.username(), i.roleLevel().name()))
                 .then();
     }
 

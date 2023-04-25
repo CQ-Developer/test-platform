@@ -23,6 +23,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.huhu.test.platform.constant.TestPlatformDefaultName.DEFAULT_PROFILE_NAME;
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
@@ -128,7 +129,7 @@ class TestPlatformUserServiceTest {
         doReturn(Mono.empty())
                 .when(userRepository)
                 .findByUsername(anyString());
-        var request = new UserCreateRequest("tester", "123456", List.of(USER), null);
+        var request = new UserCreateRequest("tester", "123456", Set.of(USER), null);
         create(userService.createTestPlatformUser(request))
                 .verifyComplete();
     }
@@ -150,7 +151,7 @@ class TestPlatformUserServiceTest {
         doReturn(Mono.just(user))
                 .when(userRepository)
                 .findByUsername(anyString());
-        var request = new UserCreateRequest("tester", "123456", List.of(USER), null);
+        var request = new UserCreateRequest("tester", "123456", Set.of(USER), null);
         create(userService.createTestPlatformUser(request))
                 .verifyError(ClientTestPlatformException.class);
     }

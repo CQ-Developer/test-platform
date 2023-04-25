@@ -2,12 +2,11 @@ package org.huhu.test.platform.model.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.PASSWORD;
 import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
@@ -32,7 +31,6 @@ public record UserCreateRequest(
         @Pattern(regexp = PASSWORD)
         String password,
 
-        @Size(max = 3)
-        List<TestPlatformRoleLevel> roleLevel,
+        Set<TestPlatformRoleLevel> roleLevel,
 
         LocalDateTime expiredTime) {}

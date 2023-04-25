@@ -33,7 +33,7 @@ public class TestPlatformUserRoleController {
     }
 
     @GetMapping
-    public Flux<UserRoleQueryResponse> queryUserRole(Mono<Authentication> authentication) {
+    public Flux<UserRoleQueryResponse> querySelfUserRole(Mono<Authentication> authentication) {
         return authentication
                 .map(Authentication::getName)
                 .flatMapMany(userRoleService::queryTestPlatformUserRole);

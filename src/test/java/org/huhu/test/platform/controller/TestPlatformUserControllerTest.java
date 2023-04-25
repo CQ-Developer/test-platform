@@ -20,6 +20,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsIterableContaining.hasItem;
@@ -120,7 +121,7 @@ class TestPlatformUserControllerTest {
         doReturn(Mono.empty())
                 .when(userService)
                 .createTestPlatformUser(any(UserCreateRequest.class));
-        var request = new UserCreateRequest("tester", "123456", List.of(USER), LocalDateTime.now());
+        var request = new UserCreateRequest("tester", "123456", Set.of(USER), LocalDateTime.now());
         webClient.mutateWith(csrf())
                  .put()
                  .uri("/user")

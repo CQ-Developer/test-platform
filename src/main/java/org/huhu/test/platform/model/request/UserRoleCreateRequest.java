@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Pattern;
 import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import reactor.core.publisher.Mono;
 
+import java.util.Set;
+
 import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
 
 /**
@@ -24,4 +26,4 @@ public record UserRoleCreateRequest(
         String username,
 
         @NotNull
-        TestPlatformRoleLevel roleLevel) {}
+        Set<TestPlatformRoleLevel> roleLevel) {}
