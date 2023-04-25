@@ -33,14 +33,12 @@ dependencies {
 }
 
 tasks.withType<Test> {
+    maxParallelForks = 2
     useJUnitPlatform()
-}
-
-tasks.test {
     finalizedBy(tasks.jacocoTestReport)
 }
 
-tasks.jacocoTestReport {
+tasks.withType<JacocoReport> {
     dependsOn(tasks.test)
     reports {
         xml.required.set(true)
