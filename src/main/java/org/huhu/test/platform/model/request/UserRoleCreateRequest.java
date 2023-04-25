@@ -3,6 +3,7 @@ package org.huhu.test.platform.model.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import reactor.core.publisher.Mono;
 
@@ -26,4 +27,5 @@ public record UserRoleCreateRequest(
         String username,
 
         @NotNull
+        @Size(max = 10)
         Set<TestPlatformRoleLevel> roleLevel) {}
