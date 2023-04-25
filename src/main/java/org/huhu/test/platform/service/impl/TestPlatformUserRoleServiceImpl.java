@@ -59,9 +59,9 @@ public class TestPlatformUserRoleServiceImpl implements TestPlatformUserRoleServ
                 .countByUsername(vo.username())
                 .filter(i -> i <= 1)
                 .flatMap(i -> Mono.error(new ClientTestPlatformException("user must hold at list 1 role")))
-                .switchIfEmpty(userRoleRepository
+                .switchIfEmpty(Mono.defer(() -> userRoleRepository
                         .deleteByUsernameAndRoleLevel(vo.username(), vo.roleLevel())
-                        .doOnNext(i -> logger.info("delete {} role", i)))
+                        .doOnNext(i -> logger.info("delete {} role", i))))
                 .then();
     }
 
