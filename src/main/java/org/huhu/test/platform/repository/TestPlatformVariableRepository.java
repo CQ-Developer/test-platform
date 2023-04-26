@@ -45,6 +45,16 @@ public interface TestPlatformVariableRepository extends R2dbcRepository<TestPlat
     Flux<TestPlatformVariable> findByUsernameAndVariableProfileAndVariableNameAndVariableScope(
             String username, String variableProfile, String variableName, TestPlatformVariableScope variableScope);
 
+    /**
+     * 更新变量
+     *
+     * @param variableValue 变量值
+     * @param variableDescription 变量描述
+     * @param username 用户名
+     * @param variableProfile 环境名
+     * @param variableName 变量名
+     * @param variableScope 变量作用域
+     */
     @Query("""
             update t_test_variable
             set variable_value = :variableValue,
