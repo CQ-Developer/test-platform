@@ -10,15 +10,7 @@ import org.huhu.test.platform.service.TestPlatformVariableService;
 import org.huhu.test.platform.util.ConvertUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -47,14 +39,15 @@ public class TestPlatformVariableController {
     }
 
     @GetMapping
-    public Flux<VariableQueryResponse> queryVariable(Mono<Authentication> authentication) {
+    public Flux<VariableQueryResponse> queryVariables(Mono<Authentication> authentication) {
         var username = authentication
                 .map(Authentication::getName);
         var profile = authentication
                 .map(Authentication::getName)
                 .flatMap(userProfileService::queryTestPlatformUserActiveProfile);
         return Mono.zip(username, profile)
-                   .flatMapMany(i -> variableService.queryTestPlatformVariable(i.getT1(), i.getT2()));
+                   .map(ConvertUtils::toVariablesQueryVo)
+                   .flatMapMany(variableService::queryTestPlatformVariables);
     }
 
     @GetMapping("/{variableName}")

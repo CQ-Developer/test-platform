@@ -1,10 +1,7 @@
 package org.huhu.test.platform.service;
 
 import org.huhu.test.platform.model.response.VariableQueryResponse;
-import org.huhu.test.platform.model.vo.VariableCreateVo;
-import org.huhu.test.platform.model.vo.VariableDeleteVo;
-import org.huhu.test.platform.model.vo.VariableQueryVo;
-import org.huhu.test.platform.model.vo.VariableUpdateVo;
+import org.huhu.test.platform.model.vo.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -19,10 +16,9 @@ public interface TestPlatformVariableService {
     /**
      * 查询测试平台变量
      *
-     * @param username 用户名
-     * @param variableProfile 变量名
+     * @param vo 请求体
      */
-    Flux<VariableQueryResponse> queryTestPlatformVariable(String username, String variableProfile);
+    Flux<VariableQueryResponse> queryTestPlatformVariables(VariablesQueryVo vo);
 
     /**
      * 查询测试平台变量

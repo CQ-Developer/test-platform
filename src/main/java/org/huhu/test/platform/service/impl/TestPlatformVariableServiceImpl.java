@@ -2,10 +2,7 @@ package org.huhu.test.platform.service.impl;
 
 import org.huhu.test.platform.exception.ClientTestPlatformException;
 import org.huhu.test.platform.model.response.VariableQueryResponse;
-import org.huhu.test.platform.model.vo.VariableCreateVo;
-import org.huhu.test.platform.model.vo.VariableDeleteVo;
-import org.huhu.test.platform.model.vo.VariableQueryVo;
-import org.huhu.test.platform.model.vo.VariableUpdateVo;
+import org.huhu.test.platform.model.vo.*;
 import org.huhu.test.platform.repository.TestPlatformVariableRepository;
 import org.huhu.test.platform.service.TestPlatformVariableService;
 import org.huhu.test.platform.util.ConvertUtils;
@@ -27,9 +24,9 @@ public class TestPlatformVariableServiceImpl implements TestPlatformVariableServ
     }
 
     @Override
-    public Flux<VariableQueryResponse> queryTestPlatformVariable(String username, String variableProfile) {
+    public Flux<VariableQueryResponse> queryTestPlatformVariables(VariablesQueryVo vo) {
         return variableRepository
-                .findByUsernameAndVariableProfile(username, variableProfile)
+                .findByUsernameAndVariableProfile(vo.username(), vo.profileName())
                 .map(ConvertUtils::toVariableQueryResponse);
     }
 

@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
  * @param variableDescription 变量描述
  *
  * @author 18551681083@163.com
- * @see org.huhu.test.platform.controller.TestPlatformVariableController#queryVariable(Mono)
+ * @see org.huhu.test.platform.controller.TestPlatformVariableController#querySelfVariable(Mono)
  * @see org.huhu.test.platform.controller.TestPlatformVariableController#queryVariable(Mono, String)
  * @since 0.0.1
  */

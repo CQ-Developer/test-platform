@@ -10,20 +10,12 @@ import org.huhu.test.platform.exception.TestPlatformException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.request.UserRoleCreateRequest;
 import org.huhu.test.platform.model.request.VariableModifyRequest;
-import org.huhu.test.platform.model.response.ErrorResponse;
-import org.huhu.test.platform.model.response.UserDetailQueryResponse;
-import org.huhu.test.platform.model.response.UserQueryResponse;
-import org.huhu.test.platform.model.response.UserRoleQueryResponse;
-import org.huhu.test.platform.model.response.VariableQueryResponse;
+import org.huhu.test.platform.model.response.*;
 import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.huhu.test.platform.model.table.TestPlatformUserProfile;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
 import org.huhu.test.platform.model.table.TestPlatformVariable;
-import org.huhu.test.platform.model.vo.UserProfileModifyVo;
-import org.huhu.test.platform.model.vo.VariableCreateVo;
-import org.huhu.test.platform.model.vo.VariableDeleteVo;
-import org.huhu.test.platform.model.vo.VariableQueryVo;
-import org.huhu.test.platform.model.vo.VariableUpdateVo;
+import org.huhu.test.platform.model.vo.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.GroupedFlux;
 import reactor.core.publisher.Mono;
@@ -256,6 +248,15 @@ public final class ConvertUtils {
      */
     public static VariableCreateVo toVariableCreateVo(Tuple3<String, String, VariableModifyRequest> tuple3) {
         return new VariableCreateVo(tuple3.getT1(), tuple3.getT2(), tuple3.getT3());
+    }
+
+    /**
+     * 将 {@link Tuple2} 转换为 {@link VariablesQueryVo}
+     *
+     * @param tuple2 用户名 环境名
+     */
+    public static VariablesQueryVo toVariablesQueryVo(Tuple2<String, String> tuple2) {
+        return new VariablesQueryVo(tuple2.getT1(), tuple2.getT2());
     }
 
 }
