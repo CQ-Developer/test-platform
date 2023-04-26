@@ -60,10 +60,10 @@ public class TestPlatformUserProfileServiceImpl implements TestPlatformUserProfi
         return reactiveRedisTemplate
                 .opsForValue()
                 .get(USER_PROFILE_ACTIVE.getKey(username))
-                .switchIfEmpty(reactiveRedisTemplate
+                .switchIfEmpty(Mono.defer(() -> reactiveRedisTemplate
                         .opsForValue()
                         .set(USER_PROFILE_ACTIVE.getKey(username), DEFAULT_PROFILE_NAME, Duration.ofHours(24L))
-                        .thenReturn(DEFAULT_PROFILE_NAME))
+                        .thenReturn(DEFAULT_PROFILE_NAME)))
                 .cast(String.class);
     }
 
