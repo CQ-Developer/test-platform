@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
-import static java.util.Locale.US;
+import java.util.stream.Stream;
 
 /**
  * 测试平台请求参数类型转换配置
@@ -28,10 +28,10 @@ public class TestPlatformWebFluxConfiguration implements WebFluxConfigurer {
     }
 
     private TestPlatformUserModifyPath userModifyDeserialize(String path) {
-        if (StrUtil.isUpperCase(path)) {
-            throw new ClientTestPlatformException("client user modify path invalid");
-        }
-        return TestPlatformUserModifyPath.valueOf(path.toUpperCase(US));
+        return Stream.of(TestPlatformUserModifyPath.values())
+                     .filter(i -> StrUtil.equalsIgnoreCase(i.name(), path))
+                     .findAny()
+                     .orElseThrow(() -> new ClientTestPlatformException("client user modify path invalid"));
     }
 
     private TestPlatformRoleLevel roleLevelDeserialize(String roleLevel) {
