@@ -50,10 +50,10 @@ public class TestPlatformVariableController {
     public Flux<VariableQueryResponse> queryVariables(Mono<Authentication> authentication) {
         var username = authentication
                 .map(Authentication::getName);
-        var profile = authentication
+        var profileName = authentication
                 .map(Authentication::getName)
                 .flatMap(userProfileService::queryTestPlatformUserActiveProfile);
-        return Mono.zip(username, profile, ConvertUtils::toVariablesQueryVo)
+        return Mono.zip(username, profileName, ConvertUtils::toVariablesQueryVo)
                    .flatMapMany(variableService::queryTestPlatformVariables);
     }
 
@@ -62,10 +62,10 @@ public class TestPlatformVariableController {
             @PathVariable(name = "variableName", required = false) @Pattern(regexp = VARIABLE_NAME) String variableName) {
         var username = authentication
                 .map(Authentication::getName);
-        var profile = authentication
+        var profileName = authentication
                 .map(Authentication::getName)
                 .flatMap(userProfileService::queryTestPlatformUserActiveProfile);
-        return Mono.zip(username, profile, Mono.just(variableName))
+        return Mono.zip(username, profileName, Mono.just(variableName))
                    .map(ConvertUtils::toVariableQueryVo)
                    .flatMapMany(variableService::queryTestPlatformVariable);
     }
@@ -75,10 +75,10 @@ public class TestPlatformVariableController {
             @Validated @RequestBody Mono<VariableCreateRequest> request) {
         var username = authentication
                 .map(Authentication::getName);
-        var profile = authentication
+        var profileName = authentication
                 .map(Authentication::getName)
                 .flatMap(userProfileService::queryTestPlatformUserActiveProfile);
-        return Mono.zip(username, profile, request)
+        return Mono.zip(username, profileName, request)
                    .map(ConvertUtils::toVariableCreateVo)
                    .flatMap(variableService::createTestPlatformVariable);
     }
@@ -104,10 +104,10 @@ public class TestPlatformVariableController {
             @RequestParam("variableScope") TestPlatformVariableScope variableScope) {
         var username = authentication
                 .map(Authentication::getName);
-        var profile = authentication
+        var profileName = authentication
                 .map(Authentication::getName)
                 .flatMap(userProfileService::queryTestPlatformUserActiveProfile);
-        return Mono.zip(username, profile, Mono.just(variableName), Mono.just(variableScope))
+        return Mono.zip(username, profileName, Mono.just(variableName), Mono.just(variableScope))
                    .map(ConvertUtils::toVariableDeleteVo)
                    .flatMap(variableService::deleteTestPlatformVariable);
     }
