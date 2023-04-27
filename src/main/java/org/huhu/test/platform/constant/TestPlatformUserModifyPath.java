@@ -14,6 +14,11 @@ public enum TestPlatformUserModifyPath {
     RENEW,
 
     /**
+     * 刷新用户密码过期时间
+     */
+    VERIFY,
+
+    /**
      * 启用用户
      */
     ENABLE,

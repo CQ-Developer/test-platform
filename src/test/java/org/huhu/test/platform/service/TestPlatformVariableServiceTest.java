@@ -79,18 +79,6 @@ class TestPlatformVariableServiceTest {
                 .verifyComplete();
     }
 
-//    @Test
-//    void createTestPlatformVariableIgnore() {
-//        doReturn(Mono.just(true))
-//                .when(variableRepository)
-//                .existsByUsernameAndVariableProfileAndVariableNameAndVariableScope(
-//                        anyString(), anyString(), anyString(), any(TestPlatformVariableScope.class));
-//        var vo = new VariableCreateVo("tester", "default",
-//                new VariableCreateRequest("v1", "a", GLOBAL, "d1"));
-//        create(variableService.createTestPlatformVariable(vo))
-//                .verifyComplete();
-//    }
-
     @Test
     void updateTestPlatformVariable() {
         doReturn(Mono.just(1))

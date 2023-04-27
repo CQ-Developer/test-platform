@@ -1,5 +1,6 @@
 package org.huhu.test.platform.model.security;
 
+import cn.hutool.core.util.BooleanUtil;
 import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
@@ -50,12 +51,12 @@ public class TestPlatformUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !testPlatformUser.locked();
+        return BooleanUtil.negate(testPlatformUser.locked());
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return testPlatformUser.expiredTime().isAfter(LocalDateTime.now());
+        return testPlatformUser.passwordTime().isAfter(LocalDateTime.now());
     }
 
     @Override

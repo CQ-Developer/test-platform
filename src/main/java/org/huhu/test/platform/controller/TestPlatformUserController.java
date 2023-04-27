@@ -43,7 +43,7 @@ public class TestPlatformUserController {
     }
 
     @GetMapping
-    public Mono<UserDetailQueryResponse> querySelfUser(Mono<Authentication> authentication) {
+    public Mono<UserDetailQueryResponse> queryUser(Mono<Authentication> authentication) {
         return authentication
                 .map(Authentication::getName)
                 .flatMap(userService::queryTestPlatformUserDetail);
@@ -77,6 +77,7 @@ public class TestPlatformUserController {
             @Validated @RequestBody Mono<UserModifyRequest> request) {
         return switch (modifyPath) {
             case RENEW -> request.flatMap(userService::renewTestPlatformUser);
+            case VERIFY -> request.flatMap(userService::verifyTestPlatformUser);
             case ENABLE -> request.map(UserModifyRequest::username).flatMap(userService::enableTestPlatformUser);
             case DISABLE -> request.map(UserModifyRequest::username).flatMap(userService::disableTestPlatformUser);
             case LOCK -> request.map(UserModifyRequest::username).flatMap(userService::lockTestPlatformUser);

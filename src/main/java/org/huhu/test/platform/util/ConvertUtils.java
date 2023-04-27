@@ -134,7 +134,8 @@ public final class ConvertUtils {
      */
     public static TestPlatformUser toTestPlatformUser(String encodedPassword, UserCreateRequest request) {
         var expiredTime = ObjectUtil.isNull(request.expiredTime()) ? LocalDateTime.now().plusYears(1L) : request.expiredTime();
-        return new TestPlatformUser(null, request.username(), encodedPassword, null, null, null, expiredTime);
+        var passwordTime = LocalDateTime.now().plusMonths(6L);
+        return new TestPlatformUser(null, request.username(), encodedPassword, null, null, passwordTime, null, expiredTime);
     }
 
     /**

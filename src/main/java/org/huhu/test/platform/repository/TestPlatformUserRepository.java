@@ -35,6 +35,16 @@ public interface TestPlatformUserRepository extends R2dbcRepository<TestPlatform
     Mono<Integer> setExpiredTimeFor(LocalDateTime expiredTime, String username);
 
     /**
+     * 更新密码过期时间
+     *
+     * @param passwordTime 过期时间
+     * @param username 用户名
+     */
+    @Modifying
+    @Query("update t_test_user set password_time = :passwordTime where username = :username")
+    Mono<Integer> setPasswordTimeFor(LocalDateTime passwordTime, String username);
+
+    /**
      * 激活用户
      *
      * @param username 用户名

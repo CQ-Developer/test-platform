@@ -42,11 +42,18 @@ public interface TestPlatformUserService {
     Mono<Void> deleteTestPlatformUser(String username);
 
     /**
-     * 刷新测试平台用户
+     * 刷新测试平台用户过期时间
      *
      * @param request 请求体
      */
     Mono<Void> renewTestPlatformUser(UserModifyRequest request);
+
+    /**
+     * 刷新测试平台用户密码过期时间
+     *
+     * @param request 请求体
+     */
+    Mono<Void> verifyTestPlatformUser(UserModifyRequest request);
 
     /**
      * 启用测试平台用户

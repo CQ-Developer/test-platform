@@ -20,6 +20,9 @@ public record TestPlatformUser(
 
         Boolean locked,
 
+        @Column("password_time")
+        LocalDateTime passwordTime,
+
         @Column("register_time")
         LocalDateTime registerTime,
 

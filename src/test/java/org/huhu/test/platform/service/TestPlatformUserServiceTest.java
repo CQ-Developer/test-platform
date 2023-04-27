@@ -78,8 +78,7 @@ class TestPlatformUserServiceTest {
     @Test
     void testPlatformUserDetail() {
         var user = new TestPlatformUser(1L, "tester", "123456", true, false,
-                LocalDateTime.of(2000, 1, 1, 1, 1),
-                LocalDateTime.of(2001, 1, 1, 1, 1));
+                LocalDateTime.of(2000, 7, 1, 1, 1), LocalDateTime.of(2000, 1, 1, 1, 1), LocalDateTime.of(2001, 1, 1, 1, 1));
         doReturn(Mono.just(user))
                 .when(userRepository)
                 .findByUsername(anyString());
@@ -114,8 +113,7 @@ class TestPlatformUserServiceTest {
     @Test
     void createTestPlatformUser() {
         var user = new TestPlatformUser(0L, "tester", "123456", true, false,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusYears(1L));
+                LocalDateTime.now().plusMonths(6L), LocalDateTime.now(), LocalDateTime.now().plusYears(1L));
         doReturn(Mono.just(user))
                 .when(userRepository)
                 .save(any(TestPlatformUser.class));
@@ -147,8 +145,7 @@ class TestPlatformUserServiceTest {
                 .when(userProfileRepository)
                 .save(any(TestPlatformUserProfile.class));
         var user = new TestPlatformUser(0L, "tester", "123456", true, false,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusYears(1L));
+                LocalDateTime.now().plusMonths(6L), LocalDateTime.now(), LocalDateTime.now().plusYears(1L));
         doReturn(Mono.just(user))
                 .when(userRepository)
                 .findByUsername(anyString());

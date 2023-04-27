@@ -43,7 +43,7 @@ class TestPlatformUserControllerTest {
     TestPlatformUserService userService;
 
     @Test
-    void querySelfUser() {
+    void queryUser() {
         var now = LocalDateTime.of(2000, 1, 1, 1, 1);
         var jack = new UserDetailQueryResponse("jack", List.of(USER, DEV), true, false, now, now.plusDays(1L));
         var response = Mono.just(jack);
@@ -176,7 +176,7 @@ class TestPlatformUserControllerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"renew", "enable", "disable", "lock", "unlock"})
+    @ValueSource(strings = {"renew", "verify", "enable", "disable", "lock", "unlock"})
     void modifyUser(String path) {
         doReturn(Mono.empty())
                 .when(userService)
@@ -193,6 +193,9 @@ class TestPlatformUserControllerTest {
         doReturn(Mono.empty())
                 .when(userService)
                 .renewTestPlatformUser(any(UserModifyRequest.class));
+        doReturn(Mono.empty())
+                .when(userService)
+                .verifyTestPlatformUser(any(UserModifyRequest.class));
         var request = new UserModifyRequest("tester", LocalDateTime.now());
         webClient.mutateWith(csrf())
                  .post()

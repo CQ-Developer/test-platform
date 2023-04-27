@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.time.LocalDateTime;
 
@@ -95,13 +94,13 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                 .map(ConvertUtils::toTestPlatformUserProfile)
                 .flatMap(userProfileRepository::save)
                 .doOnNext(i -> logger.info("save profile {}", i.profileName()));
-        return userRepository
+        var saveAll = userRepository
                 .findByUsername(request.username())
                 .flatMap(i -> Mono.error(new ClientTestPlatformException("save user fail: user exists")))
                 .switchIfEmpty(saveUser)
                 .thenMany(saveRole)
-                .then(saveUserProfile)
-                .then();
+                .then(saveUserProfile);
+        return Mono.when(saveAll);
     }
 
     @Override
@@ -123,53 +122,59 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
                 .deleteByUsername(username)
                 .doOnNext(i -> logger.info("delete {} variable", i))
                 .then();
-        return deleteUser
-                .publishOn(Schedulers.boundedElastic())
-                .then(deleteUserRole)
-                .then(deleteUserProfile)
-                .then(deleteVariable);
+        return Mono.when(deleteUser, deleteUserRole, deleteUserProfile, deleteVariable);
     }
 
     @Override
     public Mono<Void> renewTestPlatformUser(UserModifyRequest request) {
-        LocalDateTime expiredTime = request.expiredTime();
-        expiredTime = ObjectUtil.isNull(expiredTime) ? LocalDateTime.now().plusMonths(1L) : expiredTime;
-        return userRepository
+        var expiredTime = request.expiredTime();
+        expiredTime = ObjectUtil.isNull(expiredTime) ? LocalDateTime.now().plusYears(1L) : expiredTime;
+        var renew = userRepository
                 .setExpiredTimeFor(expiredTime, request.username())
-                .doOnNext(i -> logger.info("renew {} user", i))
-                .then();
+                .doOnNext(i -> logger.info("renew {} user", i));
+        return Mono.when(renew);
+    }
+
+    @Override
+    public Mono<Void> verifyTestPlatformUser(UserModifyRequest request) {
+        var expiredTime = request.expiredTime();
+        expiredTime = ObjectUtil.isNull(expiredTime) ? LocalDateTime.now().plusMonths(6L) : expiredTime;
+        var verify = userRepository
+                .setPasswordTimeFor(expiredTime, request.username())
+                .doOnNext(i -> logger.info("verify {} user", i));
+        return Mono.when(verify);
     }
 
     @Override
     public Mono<Void> enableTestPlatformUser(String username) {
-        return userRepository
+        var enable = userRepository
                 .enableFor(username)
-                .doOnNext(i -> logger.info("enable {} user", i))
-                .then();
+                .doOnNext(i -> logger.info("enable {} user", i));
+        return Mono.when(enable);
     }
 
     @Override
     public Mono<Void> disableTestPlatformUser(String username) {
-        return userRepository
+        var disable = userRepository
                 .disableFor(username)
-                .doOnNext(i -> logger.info("disable {} user", i))
-                .then();
+                .doOnNext(i -> logger.info("disable {} user", i));
+        return Mono.when(disable);
     }
 
     @Override
     public Mono<Void> lockTestPlatformUser(String username) {
-        return userRepository
+        var lock = userRepository
                 .lockFor(username)
-                .doOnNext(i -> logger.info("lock {} user", i))
-                .then();
+                .doOnNext(i -> logger.info("lock {} user", i));
+        return Mono.when(lock);
     }
 
     @Override
     public Mono<Void> unlockTestPlatformUser(String username) {
-        return userRepository
+        var unlock = userRepository
                 .unlockFor(username)
-                .doOnNext(i -> logger.info("unlock {} user", i))
-                .then();
+                .doOnNext(i -> logger.info("unlock {} user", i));
+        return Mono.when(unlock);
     }
 
 }
