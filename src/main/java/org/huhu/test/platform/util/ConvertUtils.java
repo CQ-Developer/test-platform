@@ -122,7 +122,7 @@ public final class ConvertUtils {
                 vo.request().variableName(),
                 vo.request().variableValue(),
                 vo.request().variableScope(),
-                vo.profileName(),
+                vo.variableProfile(),
                 vo.request().variableDescription(),
                 vo.username());
     }

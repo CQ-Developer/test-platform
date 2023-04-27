@@ -35,14 +35,14 @@ public interface TestPlatformVariableRepository extends R2dbcRepository<TestPlat
             String username, String variableProfile, String variableName);
 
     /**
-     * 查询变量
+     * 查询变量是否存在
      *
      * @param username 用户名
      * @param variableProfile 环境名
      * @param variableName 变量名
      * @param variableScope 变量作用域
      */
-    Flux<TestPlatformVariable> findByUsernameAndVariableProfileAndVariableNameAndVariableScope(
+    Mono<Boolean> existsByUsernameAndVariableProfileAndVariableNameAndVariableScope(
             String username, String variableProfile, String variableName, TestPlatformVariableScope variableScope);
 
     /**
