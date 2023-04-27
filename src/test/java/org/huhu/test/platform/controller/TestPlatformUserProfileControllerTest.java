@@ -17,8 +17,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -46,7 +46,7 @@ class TestPlatformUserProfileControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(UserProfileQueryResponse.class)
-                 .value(UserProfileQueryResponse::active, equalTo("default"))
+                 .value(UserProfileQueryResponse::active, is("default"))
                  .value(UserProfileQueryResponse::candidates, hasItems("default", "dev"));
     }
 
@@ -78,7 +78,7 @@ class TestPlatformUserProfileControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(ErrorResponse.class)
-                 .value(ErrorResponse::code, equalTo(1000));
+                 .value(ErrorResponse::code, is(1000));
     }
 
     @Test
@@ -109,7 +109,7 @@ class TestPlatformUserProfileControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(ErrorResponse.class)
-                 .value(ErrorResponse::code, equalTo(1000));
+                 .value(ErrorResponse::code, is(1000));
     }
 
     @Test
@@ -137,7 +137,7 @@ class TestPlatformUserProfileControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(ErrorResponse.class)
-                 .value(ErrorResponse::code, equalTo(1000));
+                 .value(ErrorResponse::code, is(1000));
     }
 
 }

@@ -19,7 +19,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.huhu.test.platform.constant.TestPlatformVariableScope.GLOBAL;
 import static org.huhu.test.platform.constant.TestPlatformVariableScope.SUITE;
 import static org.mockito.ArgumentMatchers.any;
@@ -88,7 +88,7 @@ class TestPlatformVariableControllerTest {
                      .expectStatus()
                      .isOk()
                      .expectBody(ErrorResponse.class)
-                     .value(ErrorResponse::code, equalTo(1000));
+                     .value(ErrorResponse::code, is(1000));
     }
 
     @Test
@@ -125,7 +125,7 @@ class TestPlatformVariableControllerTest {
                      .expectStatus()
                      .isOk()
                      .expectBody(ErrorResponse.class)
-                     .value(ErrorResponse::code, equalTo(1000));
+                     .value(ErrorResponse::code, is(1000));
     }
 
     @Test
@@ -159,7 +159,7 @@ class TestPlatformVariableControllerTest {
                      .expectStatus()
                      .isOk()
                      .expectBody(ErrorResponse.class)
-                     .value(ErrorResponse::code, equalTo(1000));
+                     .value(ErrorResponse::code, is(1000));
     }
 
     @Test

@@ -22,8 +22,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ADMIN;
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.USER;
@@ -45,7 +45,7 @@ class TestPlatformUserControllerTest {
     @Test
     void querySelfUser() {
         var now = LocalDateTime.of(2000, 1, 1, 1, 1);
-        var jack = new UserDetailQueryResponse("jack", List.of(USER), true, false, now, now.plusDays(1L));
+        var jack = new UserDetailQueryResponse("jack", List.of(USER, DEV), true, false, now, now.plusDays(1L));
         var response = Mono.just(jack);
         doReturn(response)
                 .when(userService)
@@ -56,12 +56,12 @@ class TestPlatformUserControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(UserDetailQueryResponse.class)
-                 .value(UserDetailQueryResponse::username, equalTo("jack"))
-                 .value(UserDetailQueryResponse::roleLevels, hasItem(USER))
-                 .value(UserDetailQueryResponse::enabled, equalTo(true))
-                 .value(UserDetailQueryResponse::locked, equalTo(false))
-                 .value(UserDetailQueryResponse::registerTime, equalTo(now))
-                 .value(UserDetailQueryResponse::expiredTime, equalTo(now.plusDays(1L)));
+                 .value(UserDetailQueryResponse::username, is("jack"))
+                 .value(UserDetailQueryResponse::roleLevels, hasItem(DEV))
+                 .value(UserDetailQueryResponse::enabled, is(true))
+                 .value(UserDetailQueryResponse::locked, is(false))
+                 .value(UserDetailQueryResponse::registerTime, is(now))
+                 .value(UserDetailQueryResponse::expiredTime, is(now.plusDays(1L)));
     }
 
     @Test
@@ -78,12 +78,12 @@ class TestPlatformUserControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(UserDetailQueryResponse.class)
-                 .value(UserDetailQueryResponse::username, equalTo("jack"))
+                 .value(UserDetailQueryResponse::username, is("jack"))
                  .value(UserDetailQueryResponse::roleLevels, hasItem(USER))
-                 .value(UserDetailQueryResponse::enabled, equalTo(true))
-                 .value(UserDetailQueryResponse::locked, equalTo(false))
-                 .value(UserDetailQueryResponse::registerTime, equalTo(now))
-                 .value(UserDetailQueryResponse::expiredTime, equalTo(now.plusDays(1L)));
+                 .value(UserDetailQueryResponse::enabled, is(true))
+                 .value(UserDetailQueryResponse::locked, is(false))
+                 .value(UserDetailQueryResponse::registerTime, is(now))
+                 .value(UserDetailQueryResponse::expiredTime, is(now.plusDays(1L)));
     }
 
     @Test
@@ -94,7 +94,7 @@ class TestPlatformUserControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(ErrorResponse.class)
-                 .value(ErrorResponse::code, equalTo(1000));
+                 .value(ErrorResponse::code, is(1000));
     }
 
     @Test
@@ -144,7 +144,7 @@ class TestPlatformUserControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(ErrorResponse.class)
-                 .value(ErrorResponse::code, equalTo(1000));
+                 .value(ErrorResponse::code, is(1000));
     }
 
     @Test
@@ -172,7 +172,7 @@ class TestPlatformUserControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(ErrorResponse.class)
-                 .value(ErrorResponse::code, equalTo(1000));
+                 .value(ErrorResponse::code, is(1000));
     }
 
     @ParameterizedTest
@@ -217,7 +217,7 @@ class TestPlatformUserControllerTest {
                  .expectStatus()
                  .isOk()
                  .expectBody(ErrorResponse.class)
-                 .value(ErrorResponse::code, equalTo(1000));
+                 .value(ErrorResponse::code, is(1000));
     }
 
 }
