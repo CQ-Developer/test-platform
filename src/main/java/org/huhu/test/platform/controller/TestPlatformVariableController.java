@@ -53,8 +53,7 @@ public class TestPlatformVariableController {
         var profile = authentication
                 .map(Authentication::getName)
                 .flatMap(userProfileService::queryTestPlatformUserActiveProfile);
-        return Mono.zip(username, profile)
-                   .map(ConvertUtils::toVariablesQueryVo)
+        return Mono.zip(username, profile, ConvertUtils::toVariablesQueryVo)
                    .flatMapMany(variableService::queryTestPlatformVariables);
     }
 

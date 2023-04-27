@@ -262,10 +262,11 @@ public final class ConvertUtils {
     /**
      * 将 {@link Tuple2} 转换为 {@link VariablesQueryVo}
      *
-     * @param tuple2 用户名 环境名
+     * @param username 用户名
+     * @param profileName 环境名
      */
-    public static VariablesQueryVo toVariablesQueryVo(Tuple2<String, String> tuple2) {
-        return new VariablesQueryVo(tuple2.getT1(), tuple2.getT2());
+    public static VariablesQueryVo toVariablesQueryVo(String username, String profileName) {
+        return new VariablesQueryVo(username, profileName);
     }
 
 }
