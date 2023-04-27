@@ -127,20 +127,20 @@ public class TestPlatformUserServiceImpl implements TestPlatformUserService {
 
     @Override
     public Mono<Void> renewTestPlatformUser(UserModifyRequest request) {
-        var expiredTime = request.expiredTime();
-        expiredTime = ObjectUtil.isNull(expiredTime) ? LocalDateTime.now().plusYears(1L) : expiredTime;
+        var newTime = request.newTime();
+        newTime = ObjectUtil.isNull(newTime) ? LocalDateTime.now().plusYears(1L) : newTime;
         var renew = userRepository
-                .setExpiredTimeFor(expiredTime, request.username())
+                .setExpiredTimeFor(newTime, request.username())
                 .doOnNext(i -> logger.info("renew {} user", i));
         return Mono.when(renew);
     }
 
     @Override
     public Mono<Void> verifyTestPlatformUser(UserModifyRequest request) {
-        var expiredTime = request.expiredTime();
-        expiredTime = ObjectUtil.isNull(expiredTime) ? LocalDateTime.now().plusMonths(6L) : expiredTime;
+        var newTime = request.newTime();
+        newTime = ObjectUtil.isNull(newTime) ? LocalDateTime.now().plusMonths(6L) : newTime;
         var verify = userRepository
-                .setPasswordTimeFor(expiredTime, request.username())
+                .setPasswordTimeFor(newTime, request.username())
                 .doOnNext(i -> logger.info("verify {} user", i));
         return Mono.when(verify);
     }

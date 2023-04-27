@@ -13,6 +13,7 @@ import static org.huhu.test.platform.constant.TestPlatFormRegexPattern.USERNAME;
  * 测试平台用户变更请求
  *
  * @param username 用户名
+ * @param newTime 新时间
  *
  * @author 18551681083@163.com
  * @see org.huhu.test.platform.controller.TestPlatformUserController#modifyUser(TestPlatformUserModifyPath, Mono)
@@ -23,4 +24,4 @@ public record UserModifyRequest(
         @Pattern(regexp = USERNAME)
         String username,
 
-        LocalDateTime expiredTime) {}
+        LocalDateTime newTime) {}
