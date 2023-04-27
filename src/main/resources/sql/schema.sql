@@ -5,7 +5,7 @@ create table if not exists t_test_user (
   password varchar(128) not null,
   enabled boolean not null default 1,
   locked boolean not null default 0,
-  password_time not null default now(),
+  password_time datetime not null default now(),
   register_time datetime not null default now(),
   expired_time datetime not null default now(),
   primary key (user_id),
