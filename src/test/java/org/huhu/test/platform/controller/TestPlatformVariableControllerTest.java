@@ -5,6 +5,7 @@ import org.huhu.test.platform.model.request.VariableUpdateRequest;
 import org.huhu.test.platform.model.response.ErrorResponse;
 import org.huhu.test.platform.model.response.VariableQueryResponse;
 import org.huhu.test.platform.model.vo.VariableCreateVo;
+import org.huhu.test.platform.model.vo.VariableDeleteVo;
 import org.huhu.test.platform.model.vo.VariableQueryVo;
 import org.huhu.test.platform.model.vo.VariableUpdateVo;
 import org.huhu.test.platform.model.vo.VariablesQueryVo;
@@ -164,6 +165,32 @@ class TestPlatformVariableControllerTest {
 
     @Test
     void deleteVariable() {
+        doReturn(Mono.just("default"))
+                .when(userProfileService)
+                .queryTestPlatformUserActiveProfile(anyString());
+        doReturn(Mono.empty())
+                .when(variableService)
+                .deleteTestPlatformVariable(any(VariableDeleteVo.class));
+        webTestClient.mutateWith(csrf())
+                     .delete()
+                     .uri("/variable/{variableName}?variableScope={variableScope}", "name", 4)
+                     .exchange()
+                     .expectStatus()
+                     .isOk()
+                     .expectBody()
+                     .isEmpty();
+    }
+
+    @Test
+    void deleteVariableError() {
+        webTestClient.mutateWith(csrf())
+                     .delete()
+                     .uri("/variable/{variableName}?variableScope={variableScope}", "#n", 4)
+                     .exchange()
+                     .expectStatus()
+                     .isOk()
+                     .expectBody(ErrorResponse.class)
+                     .value(ErrorResponse::code, is(1000));
     }
 
 }
