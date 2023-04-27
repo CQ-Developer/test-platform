@@ -1,7 +1,11 @@
 package org.huhu.test.platform.service;
 
 import org.huhu.test.platform.model.response.VariableQueryResponse;
-import org.huhu.test.platform.model.vo.*;
+import org.huhu.test.platform.model.vo.VariableCreateVo;
+import org.huhu.test.platform.model.vo.VariableDeleteVo;
+import org.huhu.test.platform.model.vo.VariableQueryVo;
+import org.huhu.test.platform.model.vo.VariableUpdateVo;
+import org.huhu.test.platform.model.vo.VariablesQueryVo;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
