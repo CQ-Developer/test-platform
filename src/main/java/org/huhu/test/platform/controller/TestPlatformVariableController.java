@@ -99,7 +99,7 @@ public class TestPlatformVariableController {
 
     @DeleteMapping("/{variableName}")
     public Mono<Void> deleteVariable(Mono<Authentication> authentication,
-            @PathVariable("variableName") @Size(max = 32) @Pattern(regexp = VARIABLE_NAME) String variableName,
+            @PathVariable("variableName") @Pattern(regexp = VARIABLE_NAME) String variableName,
             @RequestParam("variableScope") TestPlatformVariableScope variableScope) {
         var username = authentication
                 .map(Authentication::getName);
