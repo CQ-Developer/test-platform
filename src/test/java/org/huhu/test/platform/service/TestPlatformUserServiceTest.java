@@ -30,6 +30,7 @@ import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.USER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
@@ -65,11 +66,11 @@ class TestPlatformUserServiceTest {
         create(userService.queryTestPlatformUser())
                 .assertNext(i -> {
                     assertEquals("u1", i.username());
-                    assertEquals(List.of(USER), i.userRoles());
+                    assertIterableEquals(List.of(USER), i.userRoles());
                 })
                 .assertNext(i -> {
                     assertEquals("u2", i.username());
-                    assertEquals(List.of(DEV), i.userRoles());
+                    assertIterableEquals(List.of(DEV), i.userRoles());
                 })
                 .verifyComplete();
     }
@@ -89,7 +90,7 @@ class TestPlatformUserServiceTest {
         create(userService.queryTestPlatformUserDetail("tester"))
                 .assertNext(i -> {
                     assertEquals("tester", i.username());
-                    assertEquals(List.of(DEV), i.roleLevels());
+                    assertIterableEquals(List.of(DEV), i.roleLevels());
                     assertTrue(i.enabled());
                     assertFalse(i.locked());
                     assertEquals(LocalDateTime.of(2000, 1, 1, 1, 1), i.registerTime());

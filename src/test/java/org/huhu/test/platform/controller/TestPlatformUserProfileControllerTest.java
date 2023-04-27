@@ -17,8 +17,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.hamcrest.core.IsIterableContaining.hasItems;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItems;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;

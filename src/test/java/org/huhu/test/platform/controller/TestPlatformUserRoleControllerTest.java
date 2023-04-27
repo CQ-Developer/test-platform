@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Set;
 
-import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.Matchers.equalTo;
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.USER;
 import static org.mockito.ArgumentMatchers.any;

@@ -9,7 +9,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @SpringBootTest
 @AutoConfigureWebTestClient
-@WithMockUser(roles = {"DEV", "ADMIN"})
+@WithMockUser(roles = "DEV")
 class TestApplication {
 
     @Autowired
@@ -17,14 +17,14 @@ class TestApplication {
 
     @Test
     void test() {
-        webTestClient
-                .get()
-                .uri("/actuator/health")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .jsonPath("$.status").exists()
-                .jsonPath("$.status").isEqualTo("UP");
+        webTestClient.get()
+                     .uri("/actuator/health")
+                     .exchange()
+                     .expectStatus()
+                     .isOk()
+                     .expectBody()
+                     .jsonPath("$.status")
+                     .isEqualTo("UP");
     }
 
 }

@@ -19,6 +19,7 @@ import java.time.Duration;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -83,7 +84,7 @@ class TestPlatformUserProfileServiceTest {
         create(userProfileService.queryTestPlatformUserProfile("tester"))
                 .assertNext(i -> {
                     assertEquals("default", i.active());
-                    assertEquals(List.of("default", "dev"), i.candidates());
+                    assertIterableEquals(List.of("default", "dev"), i.candidates());
                 })
                 .verifyComplete();
     }

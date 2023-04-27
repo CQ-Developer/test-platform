@@ -22,8 +22,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.hamcrest.core.IsIterableContaining.hasItem;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ADMIN;
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
 import static org.huhu.test.platform.constant.TestPlatformRoleLevel.USER;
