@@ -65,8 +65,7 @@ public interface TestPlatformVariableRepository extends R2dbcRepository<TestPlat
               and variable_scope = :variableScope
             """)
     @Modifying
-    Mono<Integer> setVariableValueAndVariableDescriptionFor(
-            String variableValue, String variableDescription,
+    Mono<Integer> setVariableValueAndVariableDescriptionFor(String variableValue, String variableDescription,
             String username, String variableProfile, String variableName, TestPlatformVariableScope variableScope);
 
     /**

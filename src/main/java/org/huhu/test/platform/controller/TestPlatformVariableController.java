@@ -1,9 +1,9 @@
 package org.huhu.test.platform.controller;
 
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import org.huhu.test.platform.constant.TestPlatformVariableScope;
-import org.huhu.test.platform.model.request.VariableModifyRequest;
+import org.huhu.test.platform.model.request.VariableCreateRequest;
+import org.huhu.test.platform.model.request.VariableUpdateRequest;
 import org.huhu.test.platform.model.response.VariableQueryResponse;
 import org.huhu.test.platform.service.TestPlatformUserProfileService;
 import org.huhu.test.platform.service.TestPlatformVariableService;
@@ -72,7 +72,7 @@ public class TestPlatformVariableController {
 
     @PutMapping
     public Mono<Void> createVariable(Mono<Authentication> authentication,
-            @Validated @RequestBody Mono<VariableModifyRequest> request) {
+            @Validated @RequestBody Mono<VariableCreateRequest> request) {
         var username = authentication
                 .map(Authentication::getName);
         var profile = authentication
@@ -83,16 +83,17 @@ public class TestPlatformVariableController {
                    .flatMap(variableService::createTestPlatformVariable);
     }
 
-    // todo 此处业务逻辑有bug待修复
     @PostMapping("/{variableName}")
     public Mono<Void> updateVariable(Mono<Authentication> authentication,
-            @Validated @RequestBody Mono<VariableModifyRequest> request) {
+            @PathVariable("variableName") @Pattern(regexp = VARIABLE_NAME) String variableName,
+            @RequestParam("variableScope") TestPlatformVariableScope variableScope,
+            @Validated @RequestBody Mono<VariableUpdateRequest> request) {
         var username = authentication
                 .map(Authentication::getName);
-        var profile = authentication
+        var profileName = authentication
                 .map(Authentication::getName)
                 .flatMap(userProfileService::queryTestPlatformUserActiveProfile);
-        return Mono.zip(username, profile, request)
+        return Mono.zip(username, profileName, Mono.just(variableName), Mono.just(variableScope), request)
                    .map(ConvertUtils::toVariableUpdateVo)
                    .flatMap(variableService::updateTestPlatformVariable);
     }

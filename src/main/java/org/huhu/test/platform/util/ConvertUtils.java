@@ -9,7 +9,8 @@ import org.huhu.test.platform.exception.ServerTestPlatformException;
 import org.huhu.test.platform.exception.TestPlatformException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.request.UserRoleCreateRequest;
-import org.huhu.test.platform.model.request.VariableModifyRequest;
+import org.huhu.test.platform.model.request.VariableCreateRequest;
+import org.huhu.test.platform.model.request.VariableUpdateRequest;
 import org.huhu.test.platform.model.response.ErrorResponse;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
@@ -31,6 +32,7 @@ import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuple3;
 import reactor.util.function.Tuple4;
+import reactor.util.function.Tuple5;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -169,12 +171,12 @@ public final class ConvertUtils {
     }
 
     /**
-     * 将 {@link Tuple3} 转换为 {@link VariableUpdateVo}
+     * 将 {@link Tuple5} 转换为 {@link VariableUpdateVo}
      *
-     * @param tuple3 用户名 变量名 变量作用域 变量变更请求
+     * @param group 用户名 环境名 变量名 变量作用域 请求对象
      */
-    public static VariableUpdateVo toVariableUpdateVo(Tuple3<String, String, VariableModifyRequest> tuple3) {
-        return new VariableUpdateVo(tuple3.getT1(), tuple3.getT2(), tuple3.getT3());
+    public static VariableUpdateVo toVariableUpdateVo(Tuple5<String, String, String, TestPlatformVariableScope, VariableUpdateRequest> group) {
+        return new VariableUpdateVo(group.getT1(), group.getT2(), group.getT3(), group.getT4(), group.getT5());
     }
 
     /**
@@ -255,7 +257,7 @@ public final class ConvertUtils {
      *
      * @param tuple3 用户名 环境名 变量变更请求
      */
-    public static VariableCreateVo toVariableCreateVo(Tuple3<String, String, VariableModifyRequest> tuple3) {
+    public static VariableCreateVo toVariableCreateVo(Tuple3<String, String, VariableCreateRequest> tuple3) {
         return new VariableCreateVo(tuple3.getT1(), tuple3.getT2(), tuple3.getT3());
     }
 

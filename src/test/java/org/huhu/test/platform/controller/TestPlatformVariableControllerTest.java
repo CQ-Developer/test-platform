@@ -1,6 +1,7 @@
 package org.huhu.test.platform.controller;
 
-import org.huhu.test.platform.model.request.VariableModifyRequest;
+import org.huhu.test.platform.model.request.VariableCreateRequest;
+import org.huhu.test.platform.model.request.VariableUpdateRequest;
 import org.huhu.test.platform.model.response.ErrorResponse;
 import org.huhu.test.platform.model.response.VariableQueryResponse;
 import org.huhu.test.platform.model.vo.VariableCreateVo;
@@ -98,7 +99,7 @@ class TestPlatformVariableControllerTest {
         doReturn(Mono.empty())
                 .when(variableService)
                 .createTestPlatformVariable(any(VariableCreateVo.class));
-        var request = new VariableModifyRequest("name", "value", GLOBAL, "test");
+        var request = new VariableCreateRequest("name", "value", GLOBAL, "test");
         webTestClient.mutateWith(csrf())
                      .put()
                      .uri("/variable")
@@ -115,7 +116,7 @@ class TestPlatformVariableControllerTest {
         doReturn(Mono.just("default"))
                 .when(userProfileService)
                 .queryTestPlatformUserActiveProfile(anyString());
-        var request = new VariableModifyRequest("", "", null, "");
+        var request = new VariableCreateRequest("", "", null, "");
         webTestClient.mutateWith(csrf())
                      .put()
                      .uri("/variable")
@@ -135,16 +136,30 @@ class TestPlatformVariableControllerTest {
         doReturn(Mono.empty())
                 .when(variableService)
                 .updateTestPlatformVariable(any(VariableUpdateVo.class));
-        var request = new VariableModifyRequest("name", "value", GLOBAL, "test");
+        var request = new VariableUpdateRequest("value", "test");
         webTestClient.mutateWith(csrf())
                      .post()
-                     .uri("/variable/{variableName}", "name")
+                     .uri("/variable/{variableName}?variableScope={variableScope}", "name", 4)
                      .bodyValue(request)
                      .exchange()
                      .expectStatus()
                      .isOk()
                      .expectBody()
                      .isEmpty();
+    }
+
+    @Test
+    void updateVariableError() {
+        var request = new VariableUpdateRequest("", null);
+        webTestClient.mutateWith(csrf())
+                     .post()
+                     .uri("/variable/{variableName}?variableScope={variableScope}", "#a", 8)
+                     .bodyValue(request)
+                     .exchange()
+                     .expectStatus()
+                     .isOk()
+                     .expectBody(ErrorResponse.class)
+                     .value(ErrorResponse::code, equalTo(1000));
     }
 
     @Test

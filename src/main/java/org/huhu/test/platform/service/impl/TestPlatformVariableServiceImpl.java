@@ -55,9 +55,10 @@ public class TestPlatformVariableServiceImpl implements TestPlatformVariableServ
 
     @Override
     public Mono<Void> updateTestPlatformVariable(VariableUpdateVo vo) {
+        var request = vo.request();
         return variableRepository
-                .setVariableValueAndVariableDescriptionFor(vo.request().variableValue(), vo.request().variableDescription(),
-                        vo.username(), vo.variableProfile(), vo.request().variableName(), vo.request().variableScope())
+                .setVariableValueAndVariableDescriptionFor(request.variableValue(), request.variableDescription(),
+                        vo.username(), vo.variableProfile(), vo.variableName(), vo.variableScope())
                 .doOnNext(i -> logger.info("update {} variable", i))
                 .then();
     }

@@ -1,7 +1,7 @@
 package org.huhu.test.platform.model.vo;
 
 import org.huhu.test.platform.controller.TestPlatformVariableController;
-import org.huhu.test.platform.model.request.VariableModifyRequest;
+import org.huhu.test.platform.model.request.VariableCreateRequest;
 import reactor.core.publisher.Mono;
 
 /**
@@ -18,4 +18,4 @@ import reactor.core.publisher.Mono;
 public record VariableCreateVo(
         String username,
         String profileName,
-        VariableModifyRequest request) {}
+        VariableCreateRequest request) {}
