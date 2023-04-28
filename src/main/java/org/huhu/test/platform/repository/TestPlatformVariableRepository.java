@@ -58,7 +58,7 @@ public interface TestPlatformVariableRepository extends R2dbcRepository<TestPlat
     @Query("""
             update t_test_variable
             set variable_value = :variableValue,
-                variable_description = variableDescription
+                variable_description = :variableDescription
             where username = :username
               and variable_profile = :variableProfile
               and variable_name = :variableName

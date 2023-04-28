@@ -34,7 +34,7 @@ dependencies {
 }
 
 tasks.withType<Test> {
-    maxParallelForks = 4
+    maxParallelForks = 6
     useJUnitPlatform()
     finalizedBy(tasks.jacocoTestReport)
 }

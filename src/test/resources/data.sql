@@ -21,5 +21,8 @@ values ('default', 'jack'),
 
 -- 创建测试数据
 insert into t_test_variable (username, variable_name, variable_value, variable_scope, variable_profile)
-values ('root', 'url', 'https://some.path', 4, 'default'),
-       ('chen', 'application-id', 'test-platform', 4, 'default');
+values ('jack', 'base_url', 'https://some.path', 4, 'default'),
+       ('jack', 'base_url', 'https://demo.path', 3, 'default'),
+       ('jack', 'app_name', 'test-platform', 4, 'default'),
+       ('rose', 'application-id', 'test-platform-1', 4, 'default'),
+       ('lucy', 'name', 'tester', 4, 'default');
