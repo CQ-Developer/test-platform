@@ -13,6 +13,8 @@ import org.huhu.test.platform.model.vo.VariablesQueryVo;
 import org.huhu.test.platform.repository.TestPlatformVariableRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.sql.init.SqlInitializationAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Flux;
@@ -27,6 +29,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest
+@ImportAutoConfiguration(exclude = {SqlInitializationAutoConfiguration.class})
 class TestPlatformVariableServiceTest {
 
     @Autowired

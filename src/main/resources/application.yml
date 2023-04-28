@@ -7,11 +7,6 @@ spring:
     url: r2dbc:mysql://127.0.0.1:3306/test-platform?useUnicode=true&characterEncoding=utf8
     username: root
     password: root123
-  sql:
-    init:
-      mode: EMBEDDED
-      schema-locations: classpath:sql/schema.sql
-      data-locations: classpath:sql/data.sql
   data:
     redis:
       host: 127.0.0.1
