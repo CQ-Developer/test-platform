@@ -1,0 +1,13 @@
+spring:
+  r2dbc:
+    url: r2dbc:h2:mem:///test?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL;DATABASE_TO_LOWER=TRUE
+    username: root
+    password: root123
+  sql:
+    init:
+      mode: EMBEDDED
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+logging:
+  level:
+    org.springframework.r2dbc: DEBUG

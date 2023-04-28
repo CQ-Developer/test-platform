@@ -28,6 +28,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("io.projectreactor:reactor-test")
+    testImplementation("io.r2dbc:r2dbc-h2")
     runtimeOnly("com.github.jasync-sql:jasync-r2dbc-mysql:2.1.24")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
