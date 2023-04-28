@@ -10,8 +10,9 @@ values ('root', 3),
 
 -- 创建默认环境
 insert into t_test_user_profile (profile_name, username)
-values ('default', 'root'),
-       ('default', 'chen');
+values ('default', 'jack'),
+       ('dev', 'jack'),
+       ('default', 'rose');
 
 -- 创建测试数据
 insert into t_test_variable (username, variable_name, variable_value, variable_scope, variable_profile)
