@@ -14,6 +14,7 @@ import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.ReactiveValueOperations;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.time.Duration;
 import java.util.List;
@@ -23,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
-import static reactor.test.StepVerifier.create;
 
 @SpringBootTest
 class TestPlatformUserProfileServiceTest {
@@ -57,7 +57,9 @@ class TestPlatformUserProfileServiceTest {
                 .when(valueOperations)
                 .set(anyString(), anyString(), any(Duration.class));
         var vo = new UserProfileModifyVo("u1", "p1");
-        create(userProfileService.activeTestPlatformUserProfile(vo))
+        userProfileService
+                .activeTestPlatformUserProfile(vo)
+                .as(StepVerifier::create)
                 .verifyComplete();
     }
 
@@ -67,7 +69,9 @@ class TestPlatformUserProfileServiceTest {
                 .when(userProfileRepository)
                 .findByUsernameAndProfileName(anyString(), anyString());
         var vo = new UserProfileModifyVo("u1", "p1");
-        create(userProfileService.activeTestPlatformUserProfile(vo))
+        userProfileService
+                .activeTestPlatformUserProfile(vo)
+                .as(StepVerifier::create)
                 .verifyError(ClientTestPlatformException.class);
     }
 
@@ -81,7 +85,9 @@ class TestPlatformUserProfileServiceTest {
         doReturn(Mono.just("default"))
                 .when(valueOperations)
                 .get(anyString());
-        create(userProfileService.queryTestPlatformUserProfile("tester"))
+        userProfileService
+                .queryTestPlatformUserProfile("tester")
+                .as(StepVerifier::create)
                 .assertNext(i -> {
                     assertEquals("default", i.active());
                     assertIterableEquals(List.of("default", "dev"), i.candidates());
@@ -97,7 +103,9 @@ class TestPlatformUserProfileServiceTest {
         doReturn(Mono.just(true))
                 .when(valueOperations)
                 .set(anyString(), anyString(), any(Duration.class));
-        create(userProfileService.queryTestPlatformUserActiveProfile("tester"))
+        userProfileService
+                .queryTestPlatformUserActiveProfile("tester")
+                .as(StepVerifier::create)
                 .assertNext(i -> assertEquals("default", i))
                 .verifyComplete();
     }
@@ -112,7 +120,9 @@ class TestPlatformUserProfileServiceTest {
                 .when(userProfileRepository)
                 .save(any(TestPlatformUserProfile.class));
         var vo = new UserProfileModifyVo("u1", "p1");
-        create(userProfileService.createTestPlatformUserProfile(vo))
+        userProfileService
+                .createTestPlatformUserProfile(vo)
+                .as(StepVerifier::create)
                 .verifyComplete();
     }
 
@@ -123,7 +133,9 @@ class TestPlatformUserProfileServiceTest {
                 .when(userProfileRepository)
                 .findByUsernameAndProfileName(anyString(), anyString());
         var vo = new UserProfileModifyVo("u1", "p1");
-        create(userProfileService.createTestPlatformUserProfile(vo))
+        userProfileService
+                .createTestPlatformUserProfile(vo)
+                .as(StepVerifier::create)
                 .verifyError(ClientTestPlatformException.class);
     }
 
@@ -136,7 +148,9 @@ class TestPlatformUserProfileServiceTest {
                 .when(userProfileRepository)
                 .deleteByUsernameAndProfileName(anyString(), anyString());
         var vo = new UserProfileModifyVo("u1", "p1");
-        create(userProfileService.deleteTestPlatformUserProfile(vo))
+        userProfileService
+                .deleteTestPlatformUserProfile(vo)
+                .as(StepVerifier::create)
                 .verifyComplete();
     }
 
@@ -146,7 +160,9 @@ class TestPlatformUserProfileServiceTest {
                 .when(valueOperations)
                 .get(anyString());
         var vo = new UserProfileModifyVo("u1", "p1");
-        create(userProfileService.deleteTestPlatformUserProfile(vo))
+        userProfileService
+                .deleteTestPlatformUserProfile(vo)
+                .as(StepVerifier::create)
                 .verifyError(ClientTestPlatformException.class);
     }
 

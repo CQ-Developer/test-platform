@@ -33,7 +33,7 @@ import static org.springframework.security.test.web.reactive.server.SecurityMock
 class TestPlatformVariableControllerTest {
 
     @Autowired
-    WebTestClient webTestClient;
+    WebTestClient webClient;
 
     @MockBean
     TestPlatformVariableService variableService;
@@ -51,14 +51,14 @@ class TestPlatformVariableControllerTest {
         doReturn(Flux.just(v1, v2))
                 .when(variableService)
                 .queryTestPlatformVariables(any(VariablesQueryVo.class));
-        webTestClient.get()
-                     .uri("/variable")
-                     .exchange()
-                     .expectStatus()
-                     .isOk()
-                     .expectBodyList(VariableQueryResponse.class)
-                     .hasSize(2)
-                     .contains(v1, v2);
+        webClient.get()
+                 .uri("/variable")
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBodyList(VariableQueryResponse.class)
+                 .hasSize(2)
+                 .contains(v1, v2);
     }
 
     @Test
@@ -71,25 +71,25 @@ class TestPlatformVariableControllerTest {
         doReturn(Flux.just(v1, v2))
                 .when(variableService)
                 .queryTestPlatformVariable(any(VariableQueryVo.class));
-        webTestClient.get()
-                     .uri("/variable/{variableName}", "test")
-                     .exchange()
-                     .expectStatus()
-                     .isOk()
-                     .expectBodyList(VariableQueryResponse.class)
-                     .hasSize(2)
-                     .contains(v1, v2);
+        webClient.get()
+                 .uri("/variable/{variableName}", "test")
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBodyList(VariableQueryResponse.class)
+                 .hasSize(2)
+                 .contains(v1, v2);
     }
 
     @Test
     void queryVariableError() {
-        webTestClient.get()
-                     .uri("/variable/{variableName}", ".@#")
-                     .exchange()
-                     .expectStatus()
-                     .isOk()
-                     .expectBody(ErrorResponse.class)
-                     .value(ErrorResponse::code, is(1000));
+        webClient.get()
+                 .uri("/variable/{variableName}", ".@#")
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBody(ErrorResponse.class)
+                 .value(ErrorResponse::code, is(1000));
     }
 
     @Test
@@ -101,15 +101,15 @@ class TestPlatformVariableControllerTest {
                 .when(variableService)
                 .createTestPlatformVariable(any(VariableCreateVo.class));
         var request = new VariableCreateRequest("name", "value", GLOBAL, "test");
-        webTestClient.mutateWith(csrf())
-                     .put()
-                     .uri("/variable")
-                     .bodyValue(request)
-                     .exchange()
-                     .expectStatus()
-                     .isOk()
-                     .expectBody()
-                     .isEmpty();
+        webClient.mutateWith(csrf())
+                 .put()
+                 .uri("/variable")
+                 .bodyValue(request)
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBody()
+                 .isEmpty();
     }
 
     @Test
@@ -118,15 +118,15 @@ class TestPlatformVariableControllerTest {
                 .when(userProfileService)
                 .queryTestPlatformUserActiveProfile(anyString());
         var request = new VariableCreateRequest("", "", null, "");
-        webTestClient.mutateWith(csrf())
-                     .put()
-                     .uri("/variable")
-                     .bodyValue(request)
-                     .exchange()
-                     .expectStatus()
-                     .isOk()
-                     .expectBody(ErrorResponse.class)
-                     .value(ErrorResponse::code, is(1000));
+        webClient.mutateWith(csrf())
+                 .put()
+                 .uri("/variable")
+                 .bodyValue(request)
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBody(ErrorResponse.class)
+                 .value(ErrorResponse::code, is(1000));
     }
 
     @Test
@@ -138,29 +138,29 @@ class TestPlatformVariableControllerTest {
                 .when(variableService)
                 .updateTestPlatformVariable(any(VariableUpdateVo.class));
         var request = new VariableUpdateRequest("value", "test");
-        webTestClient.mutateWith(csrf())
-                     .post()
-                     .uri("/variable/{variableName}?variableScope={variableScope}", "name", 4)
-                     .bodyValue(request)
-                     .exchange()
-                     .expectStatus()
-                     .isOk()
-                     .expectBody()
-                     .isEmpty();
+        webClient.mutateWith(csrf())
+                 .post()
+                 .uri("/variable/{variableName}?variableScope={variableScope}", "name", 4)
+                 .bodyValue(request)
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBody()
+                 .isEmpty();
     }
 
     @Test
     void updateVariableError() {
         var request = new VariableUpdateRequest("", null);
-        webTestClient.mutateWith(csrf())
-                     .post()
-                     .uri("/variable/{variableName}?variableScope={variableScope}", "#a", 8)
-                     .bodyValue(request)
-                     .exchange()
-                     .expectStatus()
-                     .isOk()
-                     .expectBody(ErrorResponse.class)
-                     .value(ErrorResponse::code, is(1000));
+        webClient.mutateWith(csrf())
+                 .post()
+                 .uri("/variable/{variableName}?variableScope={variableScope}", "#a", 8)
+                 .bodyValue(request)
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBody(ErrorResponse.class)
+                 .value(ErrorResponse::code, is(1000));
     }
 
     @Test
@@ -171,26 +171,26 @@ class TestPlatformVariableControllerTest {
         doReturn(Mono.empty())
                 .when(variableService)
                 .deleteTestPlatformVariable(any(VariableDeleteVo.class));
-        webTestClient.mutateWith(csrf())
-                     .delete()
-                     .uri("/variable/{variableName}?variableScope={variableScope}", "name", 4)
-                     .exchange()
-                     .expectStatus()
-                     .isOk()
-                     .expectBody()
-                     .isEmpty();
+        webClient.mutateWith(csrf())
+                 .delete()
+                 .uri("/variable/{variableName}?variableScope={variableScope}", "name", 4)
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBody()
+                 .isEmpty();
     }
 
     @Test
     void deleteVariableError() {
-        webTestClient.mutateWith(csrf())
-                     .delete()
-                     .uri("/variable/{variableName}?variableScope={variableScope}", "#n", 4)
-                     .exchange()
-                     .expectStatus()
-                     .isOk()
-                     .expectBody(ErrorResponse.class)
-                     .value(ErrorResponse::code, is(1000));
+        webClient.mutateWith(csrf())
+                 .delete()
+                 .uri("/variable/{variableName}?variableScope={variableScope}", "#n", 4)
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBody(ErrorResponse.class)
+                 .value(ErrorResponse::code, is(1000));
     }
 
 }

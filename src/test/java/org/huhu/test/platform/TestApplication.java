@@ -12,20 +12,20 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 class TestApplication {
 
     @Autowired
-    WebTestClient webTestClient;
+    WebTestClient webClient;
 
     /**
      * todo 暂时不执行该测试
      */
     void test() {
-        webTestClient.get()
-                     .uri("/actuator/health")
-                     .exchange()
-                     .expectStatus()
-                     .isOk()
-                     .expectBody()
-                     .jsonPath("$.status")
-                     .isEqualTo("UP");
+        webClient.get()
+                 .uri("/actuator/health")
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBody()
+                 .jsonPath("$.status")
+                 .isEqualTo("UP");
     }
 
 }

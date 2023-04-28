@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.Set;
 
@@ -23,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
-import static reactor.test.StepVerifier.create;
 
 @SpringBootTest
 class TestPlatformUserRoleServiceTest {
@@ -43,7 +43,9 @@ class TestPlatformUserRoleServiceTest {
                 .when(userRoleRepository)
                 .deleteByUsernameAndRoleLevel(anyString(), any(TestPlatformRoleLevel.class));
         var vo = new UserRoleDeleteVo("someone", USER);
-        create(userRoleService.deleteTestPlatformUseRole(vo))
+        userRoleService
+                .deleteTestPlatformUseRole(vo)
+                .as(StepVerifier::create)
                 .verifyComplete();
     }
 
@@ -53,7 +55,9 @@ class TestPlatformUserRoleServiceTest {
                 .when(userRoleRepository)
                 .countByUsername(anyString());
         var vo = new UserRoleDeleteVo("someone", USER);
-        create(userRoleService.deleteTestPlatformUseRole(vo))
+        userRoleService
+                .deleteTestPlatformUseRole(vo)
+                .as(StepVerifier::create)
                 .verifyError(ClientTestPlatformException.class);
     }
 
@@ -68,7 +72,9 @@ class TestPlatformUserRoleServiceTest {
                 .when(userRoleRepository)
                 .saveAll(ArgumentMatchers.<Publisher<TestPlatformUserRole>>any());
         var request = new UserRoleCreateRequest("someone", Set.of(USER, DEV));
-        create(userRoleService.createTestPlatformUserRole(request))
+        userRoleService
+                .createTestPlatformUserRole(request)
+                .as(StepVerifier::create)
                 .verifyComplete();
     }
 
@@ -79,7 +85,9 @@ class TestPlatformUserRoleServiceTest {
         doReturn(Flux.just(user, dev))
                 .when(userRoleRepository)
                 .findByUsername(anyString());
-        create(userRoleService.queryTestPlatformUserRole("someone"))
+        userRoleService
+                .queryTestPlatformUserRole("someone")
+                .as(StepVerifier::create)
                 .assertNext(i -> {
                     assertEquals("USER", i.roleName());
                     assertEquals(USER, i.roleLevel());

@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,7 +37,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
-import static reactor.test.StepVerifier.create;
 
 @SpringBootTest
 class TestPlatformUserServiceTest {
@@ -63,7 +63,9 @@ class TestPlatformUserServiceTest {
         doReturn(Flux.just(u1, u2))
                 .when(userRoleRepository)
                 .findAll();
-        create(userService.queryTestPlatformUser())
+        userService
+                .queryTestPlatformUser()
+                .as(StepVerifier::create)
                 .assertNext(i -> {
                     assertEquals("u1", i.username());
                     assertIterableEquals(List.of(USER), i.userRoles());
@@ -86,7 +88,9 @@ class TestPlatformUserServiceTest {
         doReturn(Flux.just(userRole))
                 .when(userRoleRepository)
                 .findByUsername(anyString());
-        create(userService.queryTestPlatformUserDetail("tester"))
+        userService
+                .queryTestPlatformUserDetail("tester")
+                .as(StepVerifier::create)
                 .assertNext(i -> {
                     assertEquals("tester", i.username());
                     assertIterableEquals(List.of(DEV), i.roleLevels());
@@ -106,7 +110,9 @@ class TestPlatformUserServiceTest {
         doReturn(Flux.empty())
                 .when(userRoleRepository)
                 .findByUsername(anyString());
-        create(userService.queryTestPlatformUserDetail("tester"))
+        userService
+                .queryTestPlatformUserDetail("tester")
+                .as(StepVerifier::create)
                 .verifyError(ClientTestPlatformException.class);
     }
 
@@ -129,7 +135,9 @@ class TestPlatformUserServiceTest {
                 .when(userRepository)
                 .findByUsername(anyString());
         var request = new UserCreateRequest("tester", "123456", Set.of(USER), null);
-        create(userService.createTestPlatformUser(request))
+        userService
+                .createTestPlatformUser(request)
+                .as(StepVerifier::create)
                 .verifyComplete();
     }
 
@@ -150,7 +158,9 @@ class TestPlatformUserServiceTest {
                 .when(userRepository)
                 .findByUsername(anyString());
         var request = new UserCreateRequest("tester", "123456", Set.of(USER), null);
-        create(userService.createTestPlatformUser(request))
+        userService
+                .createTestPlatformUser(request)
+                .as(StepVerifier::create)
                 .verifyError(ClientTestPlatformException.class);
     }
 
@@ -168,7 +178,9 @@ class TestPlatformUserServiceTest {
         doReturn(Mono.just(1))
                 .when(variableRepository)
                 .deleteByUsername(anyString());
-        create(userService.deleteTestPlatformUser("tester"))
+        userService
+                .deleteTestPlatformUser("tester")
+                .as(StepVerifier::create)
                 .verifyComplete();
     }
 
@@ -180,7 +192,9 @@ class TestPlatformUserServiceTest {
                 .when(userRepository)
                 .setExpiredTimeFor(any(LocalDateTime.class), anyString());
         var request = new UserModifyRequest("tester", expiredTime);
-        create(userService.renewTestPlatformUser(request))
+        userService
+                .renewTestPlatformUser(request)
+                .as(StepVerifier::create)
                 .verifyComplete();
     }
 
@@ -189,7 +203,9 @@ class TestPlatformUserServiceTest {
         doReturn(Mono.just(1))
                 .when(userRepository)
                 .enableFor(anyString());
-        create(userService.enableTestPlatformUser("tester"))
+        userService
+                .enableTestPlatformUser("tester")
+                .as(StepVerifier::create)
                 .verifyComplete();
     }
 
@@ -198,7 +214,9 @@ class TestPlatformUserServiceTest {
         doReturn(Mono.just(1))
                 .when(userRepository)
                 .disableFor(anyString());
-        create(userService.disableTestPlatformUser("tester"))
+        userService
+                .disableTestPlatformUser("tester")
+                .as(StepVerifier::create)
                 .verifyComplete();
     }
 
@@ -207,7 +225,9 @@ class TestPlatformUserServiceTest {
         doReturn(Mono.just(1))
                 .when(userRepository)
                 .lockFor(anyString());
-        create(userService.lockTestPlatformUser(anyString()))
+        userService
+                .lockTestPlatformUser("tester")
+                .as(StepVerifier::create)
                 .verifyComplete();
     }
 
@@ -216,7 +236,9 @@ class TestPlatformUserServiceTest {
         doReturn(Mono.just(1))
                 .when(userRepository)
                 .unlockFor(anyString());
-        create(userService.unlockTestPlatformUser("tester"))
+        userService
+                .unlockTestPlatformUser("tester")
+                .as(StepVerifier::create)
                 .verifyComplete();
     }
 

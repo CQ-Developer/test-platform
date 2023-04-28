@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
-import static reactor.test.StepVerifier.create;
 
 @SpringBootTest
 class ReactiveUserDetailsServiceTest {
@@ -50,7 +50,9 @@ class ReactiveUserDetailsServiceTest {
         doReturn(Flux.just(user, dev))
                 .when(userRoleRepository)
                 .findByUsername(anyString());
-        create(reactiveUserDetailsService.findByUsername("tester"))
+        reactiveUserDetailsService
+                .findByUsername("tester")
+                .as(StepVerifier::create)
                 .assertNext(i -> {
                     assertEquals("tester", i.getUsername());
                     assertEquals("123", i.getPassword());

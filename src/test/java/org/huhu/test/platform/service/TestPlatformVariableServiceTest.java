@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import static org.huhu.test.platform.constant.TestPlatformVariableScope.CASE;
 import static org.huhu.test.platform.constant.TestPlatformVariableScope.GLOBAL;
@@ -24,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
-import static reactor.test.StepVerifier.create;
 
 @SpringBootTest
 class TestPlatformVariableServiceTest {
@@ -43,7 +43,9 @@ class TestPlatformVariableServiceTest {
                 .when(variableRepository)
                 .findByUsernameAndVariableProfile(anyString(), anyString());
         var vo = new VariablesQueryVo("tester", "default");
-        create(variableService.queryTestPlatformVariables(vo))
+        variableService
+                .queryTestPlatformVariables(vo)
+                .as(StepVerifier::create)
                 .assertNext(i -> assertEquals(new VariableQueryResponse("v1", "a", GLOBAL, "d1"), i))
                 .assertNext(i -> assertEquals(new VariableQueryResponse("v2", "b", CASE, "d2"), i))
                 .verifyComplete();
@@ -57,7 +59,9 @@ class TestPlatformVariableServiceTest {
                 .when(variableRepository)
                 .findByUsernameAndVariableProfileAndVariableName(anyString(), anyString(), anyString());
         var vo = new VariableQueryVo("tester", "default", "v1");
-        create(variableService.queryTestPlatformVariable(vo))
+        variableService
+                .queryTestPlatformVariable(vo)
+                .as(StepVerifier::create)
                 .assertNext(i -> assertEquals(new VariableQueryResponse("v1", "a", GLOBAL, "d1"), i))
                 .assertNext(i -> assertEquals(new VariableQueryResponse("v1", "b", CASE, "d2"), i))
                 .verifyComplete();
@@ -75,7 +79,9 @@ class TestPlatformVariableServiceTest {
                 .save(any(TestPlatformVariable.class));
         var vo = new VariableCreateVo("tester", "default",
                 new VariableCreateRequest("v1", "a", GLOBAL, "d1"));
-        create(variableService.createTestPlatformVariable(vo))
+        variableService
+                .createTestPlatformVariable(vo)
+                .as(StepVerifier::create)
                 .verifyComplete();
     }
 
@@ -87,7 +93,9 @@ class TestPlatformVariableServiceTest {
                         anyString(), anyString(), anyString(), any(TestPlatformVariableScope.class));
         var vo = new VariableUpdateVo("tester", "default", "v1", GLOBAL,
                 new VariableUpdateRequest("content", "description"));
-        create(variableService.updateTestPlatformVariable(vo))
+        variableService
+                .updateTestPlatformVariable(vo)
+                .as(StepVerifier::create)
                 .verifyComplete();
     }
 
@@ -98,7 +106,9 @@ class TestPlatformVariableServiceTest {
                 .deleteByUsernameAndVariableProfileAndAndVariableNameAndVariableScope(
                         anyString(), anyString(), anyString(), any(TestPlatformVariableScope.class));
         var vo = new VariableDeleteVo("tester", "default", "v1", GLOBAL);
-        create(variableService.deleteTestPlatformVariable(vo))
+        variableService
+                .deleteTestPlatformVariable(vo)
+                .as(StepVerifier::create)
                 .verifyComplete();
     }
 
