@@ -190,13 +190,25 @@ class TestPlatformUserServiceTest {
     @ParameterizedTest
     @ValueSource(strings = {"2000-01-01T01:01:01", "null"})
     void renewTestPlatformUser(@ConvertWith(NullValueArgumentConverter.class) LocalDateTime expiredTime) {
-        System.out.println(expiredTime);
         doReturn(Mono.just(1))
                 .when(userRepository)
                 .setExpiredTimeFor(any(LocalDateTime.class), anyString());
         var request = new UserModifyRequest("tester", expiredTime);
         userService
                 .renewTestPlatformUser(request)
+                .as(StepVerifier::create)
+                .verifyComplete();
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"2000-01-01T01:01:01", "null"})
+    void verifyTestPlatformUser(@ConvertWith(NullValueArgumentConverter.class) LocalDateTime newTime) {
+        doReturn(Mono.just(1))
+                .when(userRepository)
+                .setPasswordTimeFor(any(LocalDateTime.class), anyString());
+        var request = new UserModifyRequest("tester", newTime);
+        userService
+                .verifyTestPlatformUser(request)
                 .as(StepVerifier::create)
                 .verifyComplete();
     }
