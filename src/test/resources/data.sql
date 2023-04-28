@@ -5,8 +5,13 @@ values ('jack', '123456', '2023-04-28 14:00:00', '2099-04-28 14:00:00'),
 
 -- 创建默认角色
 insert into t_test_user_role (username, role_level)
-values ('root', 3),
-       ('chen', 2);
+values ('jack', 1),
+       ('jack', 2),
+       ('jack', 3),
+       ('rose', 1),
+       ('rose', 2),
+       ('rose', 3),
+       ('lucy', 1);
 
 -- 创建默认环境
 insert into t_test_user_profile (profile_name, username)
