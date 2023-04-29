@@ -45,4 +45,5 @@ tasks.withType<JacocoReport> {
         xml.required.set(true)
         csv.required.set(false)
     }
+
 }
