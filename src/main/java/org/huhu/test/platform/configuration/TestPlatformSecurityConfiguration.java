@@ -14,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.context.WebSessionServerSecurityContextRepository;
 import reactor.core.publisher.Flux;
 
 import java.security.NoSuchAlgorithmException;
@@ -66,6 +67,9 @@ public class TestPlatformSecurityConfiguration {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity serverHttpSecurity) {
         return serverHttpSecurity
                 .httpBasic()
+                .securityContextRepository(new WebSessionServerSecurityContextRepository())
+                .and()
+                .formLogin()
                 .and()
                 .authorizeExchange()
                 .pathMatchers(GET, "/user", "/user/role").authenticated()
