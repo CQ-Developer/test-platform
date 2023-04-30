@@ -2,7 +2,7 @@ package org.huhu.test.platform.constant;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.huhu.test.platform.exception.ServerTestPlatformException;
+import org.huhu.test.platform.exception.ClientTestPlatformException;
 import org.huhu.test.platform.model.table.TestPlatformVariable;
 
 /**
@@ -67,6 +67,6 @@ public enum TestPlatformVariableScope {
                 return testPlatformVariableScope;
             }
         }
-        throw new ServerTestPlatformException("client variable scope invalid");
+        throw new ClientTestPlatformException("client variable scope invalid");
     }
 }
