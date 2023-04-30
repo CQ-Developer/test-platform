@@ -2,6 +2,7 @@ package org.huhu.test.platform.util;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import org.huhu.test.platform.constant.TestPlatformCaseMethod;
 import org.huhu.test.platform.constant.TestPlatformErrorCode;
 import org.huhu.test.platform.constant.TestPlatformRoleLevel;
 import org.huhu.test.platform.constant.TestPlatformVariableScope;
@@ -270,6 +271,20 @@ public final class ConvertUtils {
      */
     public static VariablesQueryVo toVariablesQueryVo(String username, String profileName) {
         return new VariablesQueryVo(username, profileName);
+    }
+
+    /**
+     * 将 {@link Byte} 转换为 {@link TestPlatformCaseMethod}
+     *
+     * @param method http请求方法
+     */
+    public static TestPlatformCaseMethod toTestPlatformCaseMethod(Byte method) {
+        for (TestPlatformCaseMethod testPlatformCaseMethod : TestPlatformCaseMethod.values()) {
+            if (testPlatformCaseMethod.getMethod() == method.intValue()) {
+                return testPlatformCaseMethod;
+            }
+        }
+        throw new ServerTestPlatformException("database case method invalid");
     }
 
 }
