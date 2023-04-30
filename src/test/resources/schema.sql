@@ -38,3 +38,14 @@ create table if not exists t_test_variable (
   primary key (variable_id),
   unique key (username, variable_profile, variable_name, variable_scope)
 );
+
+drop table if exists t_test_case;
+create table if not exists t_test_case (
+  case_id bigint not null auto_increment,
+  case_name varchar() not null,
+  case_method tinyint not null,
+  case_uri varchar() not null,
+  username varchar(16) not null,
+  primary key (case_id),
+  unique key (username, case_name)
+);
