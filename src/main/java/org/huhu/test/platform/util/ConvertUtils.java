@@ -12,11 +12,13 @@ import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.request.UserRoleCreateRequest;
 import org.huhu.test.platform.model.request.VariableCreateRequest;
 import org.huhu.test.platform.model.request.VariableUpdateRequest;
+import org.huhu.test.platform.model.response.CaseQueryResponse;
 import org.huhu.test.platform.model.response.ErrorResponse;
 import org.huhu.test.platform.model.response.UserDetailQueryResponse;
 import org.huhu.test.platform.model.response.UserQueryResponse;
 import org.huhu.test.platform.model.response.UserRoleQueryResponse;
 import org.huhu.test.platform.model.response.VariableQueryResponse;
+import org.huhu.test.platform.model.table.TestPlatformCase;
 import org.huhu.test.platform.model.table.TestPlatformUser;
 import org.huhu.test.platform.model.table.TestPlatformUserProfile;
 import org.huhu.test.platform.model.table.TestPlatformUserRole;
@@ -285,6 +287,15 @@ public final class ConvertUtils {
             }
         }
         throw new ServerTestPlatformException("database case method invalid");
+    }
+
+    /**
+     * 将 {@link TestPlatformCase} 转换为 {@link CaseQueryResponse}
+     *
+     * @param testCase 测试用例表对象
+     */
+    public static CaseQueryResponse toCaseQueryResponse(TestPlatformCase testCase) {
+        return new CaseQueryResponse(testCase.caseName(), testCase.caseMethod(), testCase.caseUri());
     }
 
 }
