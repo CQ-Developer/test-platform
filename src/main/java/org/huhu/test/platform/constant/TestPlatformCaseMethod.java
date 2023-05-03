@@ -61,7 +61,7 @@ public enum TestPlatformCaseMethod {
     }
 
     /**
-     * 对客户端发送的http请求参数进行凡序列化
+     * 对客户端发送的http请求参数进行反序列化
      *
      * @param method 客户端请求方法
      */

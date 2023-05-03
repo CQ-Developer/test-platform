@@ -49,3 +49,14 @@ create table if not exists t_test_case (
   primary key (case_id),
   unique key (username, case_name)
 );
+
+drop table if exists t_test_case_auth;
+create table if not exists t_test_case_auth (
+  auth_id bigint not null auto_increment,
+  auth_type tinyint not null,
+  auth_content varchar(512) not null,
+  case_name varchar(256) not null,
+  username varchar(16) not null,
+  primary key (auth_id),
+  unique key (username, auth_type)
+);
