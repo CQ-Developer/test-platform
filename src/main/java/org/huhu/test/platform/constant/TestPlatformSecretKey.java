@@ -1,6 +1,7 @@
 package org.huhu.test.platform.constant;
 
 /**
+ * todo 切换到外部化配置
  * 测试平台密钥枚举类
  *
  * @author 18551681083@163.com
