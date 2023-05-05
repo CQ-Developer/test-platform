@@ -1,11 +1,6 @@
 package org.huhu.test.platform.configuration;
 
-import org.huhu.test.platform.converter.ByteToTestPlatformCaseMethodConverter;
-import org.huhu.test.platform.converter.ByteToTestPlatformRoleLevelConverter;
-import org.huhu.test.platform.converter.ByteToTestPlatformVariableScopeConverter;
-import org.huhu.test.platform.converter.TestPlatformCaseMethodToByteConverter;
-import org.huhu.test.platform.converter.TestPlatformRoleLevelToByteConverter;
-import org.huhu.test.platform.converter.TestPlatformVariableScopeToByteConverter;
+import org.huhu.test.platform.converter.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.r2dbc.convert.R2dbcCustomConversions;
@@ -28,7 +23,8 @@ public class TestPlatformR2dbcConfiguration {
         var converters = List.of(
                 new TestPlatformRoleLevelToByteConverter(), new ByteToTestPlatformRoleLevelConverter(),
                 new TestPlatformVariableScopeToByteConverter(), new ByteToTestPlatformVariableScopeConverter(),
-                new TestPlatformCaseMethodToByteConverter(), new ByteToTestPlatformCaseMethodConverter());
+                new TestPlatformCaseMethodToByteConverter(), new ByteToTestPlatformCaseMethodConverter(),
+                new TestPlatformCaseAuthTypeToByteConverter(), new ByteToTestPlatformCaseAuthTypeConverter());
         var dialect = DialectResolver.getDialect(databaseClient.getConnectionFactory());
         return R2dbcCustomConversions.of(dialect, converters);
     }

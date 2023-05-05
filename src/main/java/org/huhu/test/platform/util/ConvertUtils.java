@@ -2,33 +2,16 @@ package org.huhu.test.platform.util;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
-import org.huhu.test.platform.constant.TestPlatformCaseMethod;
-import org.huhu.test.platform.constant.TestPlatformErrorCode;
-import org.huhu.test.platform.constant.TestPlatformRoleLevel;
-import org.huhu.test.platform.constant.TestPlatformVariableScope;
+import org.huhu.test.platform.constant.*;
 import org.huhu.test.platform.exception.ServerTestPlatformException;
 import org.huhu.test.platform.exception.TestPlatformException;
 import org.huhu.test.platform.model.request.UserCreateRequest;
 import org.huhu.test.platform.model.request.UserRoleCreateRequest;
 import org.huhu.test.platform.model.request.VariableCreateRequest;
 import org.huhu.test.platform.model.request.VariableUpdateRequest;
-import org.huhu.test.platform.model.response.CaseQueryResponse;
-import org.huhu.test.platform.model.response.ErrorResponse;
-import org.huhu.test.platform.model.response.UserDetailQueryResponse;
-import org.huhu.test.platform.model.response.UserQueryResponse;
-import org.huhu.test.platform.model.response.UserRoleQueryResponse;
-import org.huhu.test.platform.model.response.VariableQueryResponse;
-import org.huhu.test.platform.model.table.TestPlatformCase;
-import org.huhu.test.platform.model.table.TestPlatformUser;
-import org.huhu.test.platform.model.table.TestPlatformUserProfile;
-import org.huhu.test.platform.model.table.TestPlatformUserRole;
-import org.huhu.test.platform.model.table.TestPlatformVariable;
-import org.huhu.test.platform.model.vo.UserProfileModifyVo;
-import org.huhu.test.platform.model.vo.VariableCreateVo;
-import org.huhu.test.platform.model.vo.VariableDeleteVo;
-import org.huhu.test.platform.model.vo.VariableQueryVo;
-import org.huhu.test.platform.model.vo.VariableUpdateVo;
-import org.huhu.test.platform.model.vo.VariablesQueryVo;
+import org.huhu.test.platform.model.response.*;
+import org.huhu.test.platform.model.table.*;
+import org.huhu.test.platform.model.vo.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.GroupedFlux;
 import reactor.core.publisher.Mono;
@@ -54,7 +37,8 @@ public final class ConvertUtils {
     /**
      * 私有构造函数
      */
-    private ConvertUtils() {}
+    private ConvertUtils() {
+    }
 
     /**
      * 将 {@link TestPlatformErrorCode} 转换为 {@link ErrorResponse}
@@ -87,7 +71,7 @@ public final class ConvertUtils {
     /**
      * 将 {@link TestPlatformUser} {@link Byte} 转换为 {@link UserDetailQueryResponse}
      *
-     * @param user 用户
+     * @param user       用户
      * @param roleLevels 用户角色
      */
     public static UserDetailQueryResponse toUserDetailQueryResponse(TestPlatformUser user, List<TestPlatformRoleLevel> roleLevels) {
@@ -170,8 +154,8 @@ public final class ConvertUtils {
             roles = Set.of(USER);
         }
         return Flux.fromIterable(roles)
-                   .zipWith(Flux.just(request.username()).repeat())
-                   .map(ConvertUtils::toTestPlatformUserRole);
+                .zipWith(Flux.just(request.username()).repeat())
+                .map(ConvertUtils::toTestPlatformUserRole);
     }
 
     /**
@@ -268,7 +252,7 @@ public final class ConvertUtils {
     /**
      * 将 {@link Tuple2} 转换为 {@link VariablesQueryVo}
      *
-     * @param username 用户名
+     * @param username    用户名
      * @param profileName 环境名
      */
     public static VariablesQueryVo toVariablesQueryVo(String username, String profileName) {
@@ -296,6 +280,20 @@ public final class ConvertUtils {
      */
     public static CaseQueryResponse toCaseQueryResponse(TestPlatformCase testCase) {
         return new CaseQueryResponse(testCase.caseName(), testCase.caseMethod(), testCase.caseUri());
+    }
+
+    /**
+     * 将 {@link Byte} 转换为 {@link TestPlatformCaseAuthType}
+     *
+     * @param type 认证类型
+     */
+    public static TestPlatformCaseAuthType toTestplatformCaseAuthType(Byte type) {
+        for (TestPlatformCaseAuthType authType : TestPlatformCaseAuthType.values()) {
+            if (authType.getType() == type.intValue()) {
+                return authType;
+            }
+        }
+        throw new ServerTestPlatformException("database auth type invalid");
     }
 
 }
