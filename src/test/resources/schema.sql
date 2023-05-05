@@ -39,7 +39,6 @@ create table if not exists t_test_variable (
   unique key (username, variable_profile, variable_name, variable_scope)
 );
 
-drop table if exists t_test_case;
 create table if not exists t_test_case (
   case_id bigint not null auto_increment,
   case_name varchar(256) not null,
@@ -50,11 +49,10 @@ create table if not exists t_test_case (
   unique key (username, case_name)
 );
 
-drop table if exists t_test_case_auth;
 create table if not exists t_test_case_auth (
   auth_id bigint not null auto_increment,
   auth_type tinyint not null,
-  auth_content varchar(512) not null,
+  auth_content varbinary(5120) not null,
   case_name varchar(256) not null,
   username varchar(16) not null,
   primary key (auth_id),

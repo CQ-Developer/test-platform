@@ -1,7 +1,6 @@
 package org.huhu.test.platform.constant;
 
 /**
- * todo 切换到外部化配置
  * 测试平台密钥枚举类
  *
  * @author 18551681083@163.com
@@ -11,6 +10,7 @@ public enum TestPlatformSecretKey {
 
     /**
      * 采用AES算法128位长度的密钥
+     * 使用16进制保存的字符串类型
      */
     AES_128("b54dab8e6c04cccfe4e89a8b8dd54494");
 
