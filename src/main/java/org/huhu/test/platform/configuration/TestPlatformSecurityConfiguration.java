@@ -23,9 +23,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Stream;
 
-import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ADMIN;
-import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
-import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ROLE_PRE;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.*;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.BCryptVersion.$2A;
 
@@ -83,9 +81,14 @@ public class TestPlatformSecurityConfiguration {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() throws NoSuchAlgorithmException {
+    public SecureRandom secureRandom() throws NoSuchAlgorithmException {
         var secureRandom = SecureRandom.getInstanceStrong();
         secureRandom.setSeed(System.currentTimeMillis());
+        return secureRandom;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(SecureRandom secureRandom) {
         return new BCryptPasswordEncoder($2A, 8, secureRandom);
     }
 

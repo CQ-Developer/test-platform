@@ -37,8 +37,7 @@ public final class ConvertUtils {
     /**
      * 私有构造函数
      */
-    private ConvertUtils() {
-    }
+    private ConvertUtils() {}
 
     /**
      * 将 {@link TestPlatformErrorCode} 转换为 {@link ErrorResponse}
