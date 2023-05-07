@@ -4,12 +4,12 @@ spring:
   webflux:
     base-path: /api
   r2dbc:
-    url: r2dbc:mysql://172.22.181.26:3306/test-platform?useUnicode=true&characterEncoding=utf8
+    url: r2dbc:mysql://127.0.0.1:3306/test-platform?useUnicode=true&characterEncoding=utf8
     username: root
     password: root123
   data:
     redis:
-      host: 172.22.181.26
+      host: 127.0.0.1
       port: 6379
       client-name: test-platform
 logging:
