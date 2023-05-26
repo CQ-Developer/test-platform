@@ -19,15 +19,13 @@ public class TestPlatformRedisConfiguration {
     @Bean
     public ReactiveRedisTemplate<Object, Object> reactiveRedisTemplate(
             ReactiveRedisConnectionFactory reactiveRedisConnectionFactory) {
-        var string = RedisSerializer.string();
-        var json = RedisSerializer.json();
-        RedisSerializationContext<Object, Object> serializationContext = RedisSerializationContext
-                .newSerializationContext(string)
-                .string(string)
-                .key(json)
-                .value(json)
-                .hashKey(string)
-                .hashValue(json)
+        var serializationContext = RedisSerializationContext
+                .newSerializationContext(RedisSerializer.string())
+                .string(RedisSerializer.string())
+                .key(RedisSerializer.json())
+                .value(RedisSerializer.json())
+                .hashKey(RedisSerializer.string())
+                .hashValue(RedisSerializer.json())
                 .build();
         return new ReactiveRedisTemplate<>(reactiveRedisConnectionFactory, serializationContext);
     }
