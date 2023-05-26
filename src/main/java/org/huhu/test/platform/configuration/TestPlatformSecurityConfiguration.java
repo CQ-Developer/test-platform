@@ -8,6 +8,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,7 +24,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Stream;
 
-import static org.huhu.test.platform.constant.TestPlatformRoleLevel.*;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ADMIN;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.DEV;
+import static org.huhu.test.platform.constant.TestPlatformRoleLevel.ROLE_PRE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.BCryptVersion.$2A;
 
@@ -46,17 +49,14 @@ public class TestPlatformSecurityConfiguration {
             ServerHttpSecurity serverHttpSecurity, RoleHierarchy roleHierarchy) {
         return serverHttpSecurity
                 .securityMatcher(EndpointRequest.toAnyEndpoint())
-                .httpBasic()
-                .and()
-                .authorizeExchange()
-                .anyExchange().access((authentication, context) -> authentication
+                .httpBasic(Customizer.withDefaults())
+                .authorizeExchange(spec -> spec.anyExchange().access((auth, ctx) -> auth
                         .map(Authentication::getAuthorities)
                         .map(roleHierarchy::getReachableGrantedAuthorities)
                         .flatMapMany(Flux::fromIterable)
                         .map(GrantedAuthority::getAuthority)
                         .any(DEV.getRoleName()::equals)
-                        .map(AuthorizationDecision::new))
-                .and()
+                        .map(AuthorizationDecision::new)))
                 .build();
     }
 
@@ -64,19 +64,16 @@ public class TestPlatformSecurityConfiguration {
     @Order(1)
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity serverHttpSecurity) {
         return serverHttpSecurity
-                .httpBasic()
+                .httpBasic(Customizer.withDefaults())
                 .securityContextRepository(new WebSessionServerSecurityContextRepository())
-                .and()
-                .formLogin()
-                .and()
-                .authorizeExchange()
-                .pathMatchers(GET, "/user", "/user/role").authenticated()
-                .pathMatchers("/user/profile", "/user/profile/**").authenticated()
-                .pathMatchers("/user/**").hasRole(ADMIN.name())
-                .anyExchange().authenticated()
-                .and()
+                .formLogin(Customizer.withDefaults())
+                .authorizeExchange(spec -> spec
+                        .pathMatchers(GET, "/user", "/user/role").authenticated()
+                        .pathMatchers("/user/profile", "/user/profile/**").authenticated()
+                        .pathMatchers("/user/**").hasRole(ADMIN.name())
+                        .anyExchange().authenticated())
                 // todo csrf开发阶段关闭
-                .csrf().disable()
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .build();
     }
 

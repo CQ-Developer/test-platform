@@ -2,20 +2,20 @@ plugins {
     java
     jacoco
     idea
-    id("org.springframework.boot") version "3.0.7"
+    id("org.springframework.boot") version "3.1.0"
     id("io.spring.dependency-management") version "1.1.0"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 idea {
     module {
         isDownloadJavadoc = true
         isDownloadSources = true
-    }
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
