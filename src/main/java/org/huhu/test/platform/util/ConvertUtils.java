@@ -199,7 +199,7 @@ public final class ConvertUtils {
      * @param roleLevel 角色级别
      */
     public static TestPlatformRoleLevel toTestPlatformRoleLevel(Byte roleLevel) {
-        for (TestPlatformRoleLevel testPlatformRoleLevel : TestPlatformRoleLevel.values()) {
+        for (var testPlatformRoleLevel : TestPlatformRoleLevel.values()) {
             if (testPlatformRoleLevel.getLevel() == roleLevel.intValue()) {
                 return testPlatformRoleLevel;
             }
@@ -213,7 +213,7 @@ public final class ConvertUtils {
      * @param variableScope 变量作用域
      */
     public static TestPlatformVariableScope toTestPlatformVariableScope(Byte variableScope) {
-        for (TestPlatformVariableScope testPlatformVariableScope : TestPlatformVariableScope.values()) {
+        for (var testPlatformVariableScope : TestPlatformVariableScope.values()) {
             if (testPlatformVariableScope.getScope() == variableScope.intValue()) {
                 return testPlatformVariableScope;
             }
@@ -282,7 +282,7 @@ public final class ConvertUtils {
      * @param method http请求方法
      */
     public static TestPlatformCaseMethod toTestPlatformCaseMethod(Byte method) {
-        for (TestPlatformCaseMethod testPlatformCaseMethod : TestPlatformCaseMethod.values()) {
+        for (var testPlatformCaseMethod : TestPlatformCaseMethod.values()) {
             if (testPlatformCaseMethod.getMethod() == method.intValue()) {
                 return testPlatformCaseMethod;
             }
@@ -305,7 +305,7 @@ public final class ConvertUtils {
      * @param type 认证类型
      */
     public static TestPlatformCaseAuthType toTestplatformCaseAuthType(Byte type) {
-        for (TestPlatformCaseAuthType authType : TestPlatformCaseAuthType.values()) {
+        for (var authType : TestPlatformCaseAuthType.values()) {
             if (authType.getType() == type.intValue()) {
                 return authType;
             }

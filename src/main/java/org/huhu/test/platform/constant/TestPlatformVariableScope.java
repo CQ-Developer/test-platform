@@ -62,7 +62,7 @@ public enum TestPlatformVariableScope {
 
     @JsonCreator
     public static TestPlatformVariableScope deserialize(int scope) {
-        for (TestPlatformVariableScope testPlatformVariableScope : values()) {
+        for (var testPlatformVariableScope : values()) {
             if (testPlatformVariableScope.getScope() == scope) {
                 return testPlatformVariableScope;
             }

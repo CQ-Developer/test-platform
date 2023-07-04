@@ -65,7 +65,7 @@ public enum TestPlatformRoleLevel {
 
     @JsonCreator
     public static TestPlatformRoleLevel deserialize(int role) {
-        for (TestPlatformRoleLevel testPlatformRoleLevel : values()) {
+        for (var testPlatformRoleLevel : values()) {
             if (testPlatformRoleLevel.level == role) {
                 return testPlatformRoleLevel;
             }

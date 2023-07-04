@@ -67,7 +67,7 @@ public enum TestPlatformCaseMethod {
      */
     @JsonCreator
     public static TestPlatformCaseMethod deserialize(int method) {
-        for (TestPlatformCaseMethod testPlatformCaseMethod : values()) {
+        for (var testPlatformCaseMethod : values()) {
             if (testPlatformCaseMethod.getMethod() == method) {
                 return testPlatformCaseMethod;
             }

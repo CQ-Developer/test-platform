@@ -44,7 +44,7 @@ public enum TestPlatformCaseAuthType {
      */
     @JsonCreator
     public static TestPlatformCaseAuthType deserialize(int type) {
-        for (TestPlatformCaseAuthType testPlatformCaseAuthType : values()) {
+        for (var testPlatformCaseAuthType : values()) {
             if (testPlatformCaseAuthType.getType() == type) {
                 return testPlatformCaseAuthType;
             }
