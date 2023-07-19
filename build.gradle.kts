@@ -44,6 +44,10 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+    archiveFileName = "test-platform.jar"
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
     maxParallelForks = 6
