@@ -1,4 +1,4 @@
-FROM gradle:8.2.1-jdk17-alpine AS builder
+FROM gradle:8.2.1-jdk17 AS builder
 WORKDIR /code
 COPY . .
 RUN gradle clean bootJar
