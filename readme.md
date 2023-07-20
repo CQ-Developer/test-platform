@@ -33,7 +33,7 @@ docker run -it --rm mysql:5.7 --verbose --help
 # 构建镜像
 docker build -t test-platform:latest .
 # 运行容器
-docker run -d -p 8080:8888 --name test-platform-app --link test-platform-mysql:mysql --link test-platform-redis:redis test-platform:latest
+docker run -d -p 8080:8080 --name test-platform-app --link test-platform-mysql:mysql --link test-platform-redis:redis test-platform:latest
 # 查看日志
 docker logs -f test-platform-app
 ```
