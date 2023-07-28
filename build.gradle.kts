@@ -2,7 +2,7 @@ plugins {
     java
     jacoco
     idea
-    id("org.springframework.boot") version "3.1.1"
+    id("org.springframework.boot") version "3.1.2"
     id("io.spring.dependency-management") version "1.1.0"
 }
 
@@ -40,7 +40,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("io.r2dbc:r2dbc-h2")
-    runtimeOnly("com.github.jasync-sql:jasync-r2dbc-mysql:2.2.1")
+    runtimeOnly("com.github.jasync-sql:jasync-r2dbc-mysql:2.2.2")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 
