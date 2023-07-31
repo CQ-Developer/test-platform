@@ -19,7 +19,7 @@ docker exec -it test-platform-redis bash
 docker volume create --driver local test-platform-mysql-volume
 # 使用自定义配置文件
 # docker run -d --name test-platform-mysql -v test-platform-mysql-volume:/var/lib/mysql -v /my/custom:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=root123 mysql:5.7
-# 不适用自定义文件
+# 不使用自定义文件
 docker run -d --name test-platform-mysql -v test-platform-mysql-volume:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root123 mysql:5.7
 # 客户端
 docker run -it --rm --link test-platform-mysql:serverlink mysql:5.7 mysql -hserverlink -uroot -p
