@@ -6,3 +6,4 @@
 build
 readme.md
 gradlew*
+Dockerfile
