@@ -50,7 +50,9 @@ public class TestPlatformSecurityConfiguration {
         return serverHttpSecurity
                 .securityMatcher(EndpointRequest.toAnyEndpoint())
                 .httpBasic(Customizer.withDefaults())
-                .authorizeExchange(spec -> spec.anyExchange().access((auth, ctx) -> auth
+                .authorizeExchange(spec -> spec
+                        .pathMatchers("/actuator/health").permitAll()
+                        .anyExchange().access((auth, ctx) -> auth
                         .map(Authentication::getAuthorities)
                         .map(roleHierarchy::getReachableGrantedAuthorities)
                         .flatMapMany(Flux::fromIterable)
