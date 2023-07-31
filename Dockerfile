@@ -5,5 +5,5 @@ RUN gradle clean bootJar
 
 FROM openjdk:17
 COPY --from=builder /code/build/libs/test-platform.jar /app/test-platform.jar
-EXPOSE 8888
+EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app/test-platform.jar"]
