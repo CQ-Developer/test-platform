@@ -35,12 +35,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
-    implementation("cn.hutool:hutool-all:5.8.21")
+    implementation("cn.hutool:hutool-all:5.8.22")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("io.r2dbc:r2dbc-h2")
-    runtimeOnly("com.github.jasync-sql:jasync-r2dbc-mysql:2.2.3")
+    runtimeOnly("com.github.jasync-sql:jasync-r2dbc-mysql:2.2.4")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 
